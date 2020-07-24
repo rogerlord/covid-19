@@ -2,7 +2,11 @@
 ---
 environment:
   matrix:
-  - TOXENV: py36
+  - JOB: "3.6 64-bit"
+    PYTHON: "C:\\Python36-x64"
+    PYTHON_VERSION: "3.6.11"
+    TOXENV: "py36"
+    PYTHON_ARCH: "64"
 
 build: off
 
