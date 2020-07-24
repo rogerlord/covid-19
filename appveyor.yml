@@ -36,4 +36,7 @@ on_success:
 - git config --global user.name "rogerlord"
 - git add -Af .\data
 - git commit -m "`date +\"%Y-%m-%d\"` - updated data"
+- git fetch --all 
+- git checkout -f master
+- git merge HEAD@{1} -s recursive -X ours
 - git push --all
