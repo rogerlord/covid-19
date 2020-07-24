@@ -27,6 +27,7 @@ test_script:
 - tox
 
 on_success:
+  - pip install -r requirements.txt
   - python covid_19\nl_routines.py
   - git config --global credential.helper store
   - ps: Add-Content -Path "$HOME\.git-credentials" -Value "https://$($env:access_token):x-oauth-basic@github.com`n" -NoNewline
