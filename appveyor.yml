@@ -27,7 +27,7 @@ test_script:
 - tox
 
 on_success:
-- "SET PATH=%PYTHON%; %PYTHON%\Scripts; %PATH%"
+- "SET PATH=%PYTHON%; %PYTHON%\\Scripts; %PATH%"
 - "%PYTHON%\\Scripts\pip install -r requirements.txt"
 - "%PYTHON%\\python covid_19\nl_routines.py"
 - git config --global credential.helper store
