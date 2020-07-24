@@ -34,6 +34,6 @@ on_success:
 - ps: Add-Content -Path "$HOME\.git-credentials" -Value "https://$($env:access_token):x-oauth-basic@github.com`n" -NoNewline
 - git config --global user.email "32603156+rogerlord@users.noreply.github.com"
 - git config --global user.name "rogerlord"
-- git add -Af ./data
-- git commit .\data\
+- git add -Af .\data
+- git commit -m "`date +\"%Y-%m-%d\"` - updated data"
 - git push --all
