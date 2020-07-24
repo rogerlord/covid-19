@@ -19,7 +19,7 @@ build:
   off
 
 install:
-- "SET PATH=%PYTHON%; %PYTHON%\\Scripts; %PATH%"
+- "SET PATH=%PYTHON%; %PYTHON%\Scripts; %PATH%"
 - python -m pip install -U pip
 - pip install tox
 
@@ -27,12 +27,13 @@ test_script:
 - tox
 
 on_success:
-  - pip install -r requirements.txt
-  - python covid_19\nl_routines.py
-  - git config --global credential.helper store
-  - ps: Add-Content -Path "$HOME\.git-credentials" -Value "https://$($env:access_token):x-oauth-basic@github.com`n" -NoNewline
-  - git config --global user.email "32603156+rogerlord@users.noreply.github.com"
-  - git config --global user.name "rogerlord"
-  - git add -Af ./data
-  - git commit .\data\
-  - git push --all
+- "SET PATH=%PYTHON%; %PYTHON%\Scripts; %PATH%"
+- pip install -r requirements.txt
+- python covid_19\nl_routines.py
+- git config --global credential.helper store
+- ps: Add-Content -Path "$HOME\.git-credentials" -Value "https://$($env:access_token):x-oauth-basic@github.com`n" -NoNewline
+- git config --global user.email "32603156+rogerlord@users.noreply.github.com"
+- git config --global user.name "rogerlord"
+- git add -Af ./data
+- git commit .\data\
+- git push --all
