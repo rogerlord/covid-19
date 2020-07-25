@@ -3,7 +3,7 @@ from bokeh.models import ColumnDataSource
 from bokeh.io import export_png
 from bokeh.models import DatetimeTickFormatter
 from bokeh.palettes import Spectral10
-from covid_19.dataretrieval import get_daily_cases, update_daily_cases_with_forecasts
+from dataretrieval import get_daily_cases, update_daily_cases_with_forecasts
 
 
 def generate_plot(folder, show_only_last):
@@ -29,4 +29,4 @@ def generate_plot(folder, show_only_last):
     p.yaxis.axis_label = "Daily new COVID-19 infections"
     p.legend.location = "top_left"
 
-    export_png(p, filename=folder + "COVID-19_daily_cases_plot.png")
+    export_png(p, filename=folder + r"plots\COVID-19_daily_cases_plot.png")

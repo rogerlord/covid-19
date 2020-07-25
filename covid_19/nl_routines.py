@@ -7,4 +7,3 @@ if __name__ == "__main__":
     folder = sys.argv[1]
     update_files(folder)
     generate_plot(folder, 30)
-    
