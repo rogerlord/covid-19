@@ -44,7 +44,6 @@ def update_files(folder):
     df_lagged = df_lagged.append(new_last_row)
     for i in range(1, len(df_lagged.columns)):
         infection_date = last_available_date_rivm - datetime.timedelta(days=i)
-        print(infection_date)
         value_to_add = df_daily_cases_updated[infection_date]
         df_lagged.at[infection_date, str(i)] = value_to_add
     df_lagged.to_csv(folder + r"data\COVID-19_lagged.csv", header=True)

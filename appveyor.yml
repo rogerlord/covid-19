@@ -31,4 +31,4 @@ test_script:
 on_success:
 - "%PYTHON%\\Scripts\\pip install -r requirements.txt"
 - "%PYTHON%\\python covid_19\\nl_routines.py .\\"
-- ps: gitcommit.ps1
+- powershell gitcommit.ps1
