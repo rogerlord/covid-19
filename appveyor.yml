@@ -11,7 +11,7 @@ environment:
   matrix:
   - TOXENV: py36
     PYTHON: "C:\\Python36-x64"
-    MINICONDA: "C:\\Miniconda3"
+    MINICONDA: "C:\\Miniconda36-x64"
   
 init:
   - "ECHO %TOXENV%"
