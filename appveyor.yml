@@ -11,6 +11,7 @@ environment:
   matrix:
   - TOXENV: py36
     PYTHON: "C:\\Python36-x64"
+    MINICONDA: "C:\\Miniconda3"
   
 init:
   - "ECHO %TOXENV%"
@@ -29,6 +30,7 @@ test_script:
 - "%PYTHON%\\Scripts\\tox"
 
 on_success:
+- "%MINICONDA%\\conda install selenium geckodriver firefox -c conda-forge"
 - "%PYTHON%\\Scripts\\pip install -r requirements.txt"
 - "%PYTHON%\\python covid_19\\nl_routines.py .\\"
 - powershell .\gitcommit.ps1
