@@ -38,7 +38,7 @@ on_success:
 - git config --global user.email "32603156+rogerlord@users.noreply.github.com"
 - git config --global user.name "AppVeyor"
 - git add -Af .\data
-- git commit -m "`date +\"%Y-%m-%d\"` - updated data"
+- git commit -m "`date`"
 - git fetch --all 
 - git checkout -f master
 - git merge HEAD@{1} -s recursive -X ours
