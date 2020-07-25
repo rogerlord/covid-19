@@ -18,6 +18,9 @@ init:
 skip_commits:
   author: AppVeyor
   
+before_build:
+  git checkout master
+  
 build:
   off
 

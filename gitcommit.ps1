@@ -6,8 +6,5 @@ git add -Af .\data
 if (git status --porcelain) {
     $dt = (Get-Date).ToString("yyyy-mm-dd")	
 	git commit -m $dt
-    git fetch --all
-    git checkout -f master
-    git merge HEAD@{1} -s recursive -X ours
-    git push --all
+	git push -u origin master -f
 }
