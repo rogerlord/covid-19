@@ -1,6 +1,7 @@
-from dataretrieval import get_latest_rivm_file
+from dataretrieval import update_files
+import sys
+
 
 if __name__ == "__main__":
-    df = get_latest_rivm_file()
-    df.to_csv(r".\data\COVID-19_casus_landelijk.csv")
-
+    folder = sys.argv[1]
+    update_files(folder)
