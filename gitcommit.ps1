@@ -4,7 +4,7 @@ git config --global user.email "32603156+rogerlord@users.noreply.github.com"
 git config --global user.name "AppVeyor"
 git add -Af .\data
 if (git status --porcelain) {
-    git commit -m "Updated files"
+    git commit -m %date%
     git fetch --all
     git checkout -f master
     git merge HEAD@{1} -s recursive -X ours
