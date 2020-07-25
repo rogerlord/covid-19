@@ -4,6 +4,7 @@ Add-Content -Path "$HOME\.git-credentials" -Value "https://$($env:access_token):
 git config --global user.email "32603156+rogerlord@users.noreply.github.com"
 git config --global user.name "AppVeyor"
 git add -Af .\data
+git add -Af .\plots
 if (git status --porcelain) {
     $dt = (Get-Date).ToString("yyyy-mm-dd")	
 	git commit -m $dt
