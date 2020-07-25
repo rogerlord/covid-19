@@ -22,6 +22,7 @@ build:
   off
 
 install:
+- "SET PATH=%PYTHON%; %PYTHON%\\Scripts; %PATH%"
 - "%PYTHON%\\python -m pip install -U pip"
 - "%PYTHON%\\Scripts\\pip install tox"
 
@@ -29,6 +30,7 @@ test_script:
 - tox
 
 on_success:
+- "SET PATH=%PYTHON%; %PYTHON%\\Scripts; %PATH%"
 - "%PYTHON%\\Scripts\\pip install -r requirements.txt"
 - "%PYTHON%\\python covid_19\\nl_routines.py .\\"
 - ps: gitcommit.ps1
