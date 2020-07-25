@@ -31,14 +31,4 @@ test_script:
 on_success:
 - "%PYTHON%\\Scripts\\pip install -r requirements.txt"
 - "%PYTHON%\\python covid_19\\nl_routines.py"
-- git config --global credential.helper store
-- ps: Add-Content -Path "$HOME\.git-credentials" -Value "https://$($env:access_token):x-oauth-basic@github.com`n" -NoNewline
-- git config --global user.email "32603156+rogerlord@users.noreply.github.com"
-- git config --global user.name "AppVeyor"
-- git add -Af .\data
-- ps: if (git status --porcelain) {
-    git commit -m "`date`"
-    git fetch --all
-    git checkout -f master
-    git merge HEAD@{1} -s recursive -X ours
-    git push --all }
+- ps: gitcommit.ps1
