@@ -30,6 +30,7 @@ test_script:
 - "%PYTHON%\\Scripts\\tox"
 
 on_success:
+- "%MINICONDA%\\Scripts\\conda info"
 - "%MINICONDA%\\Scripts\\conda config --add channels conda-forge"
 - "%MINICONDA%\\Scripts\\conda config --set channel_priority strict"
 - "%MINICONDA%\\Scripts\\conda install selenium geckodriver firefox"
