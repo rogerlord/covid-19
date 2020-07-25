@@ -30,7 +30,7 @@ test_script:
 - "%PYTHON%\\Scripts\\tox"
 
 on_success:
-- "%MINICONDA%\\conda install selenium geckodriver firefox -c conda-forge"
+- "%MINICONDA%\\Scripts\\conda install selenium geckodriver firefox -c conda-forge"
 - "%PYTHON%\\Scripts\\pip install -r requirements.txt"
 - "%PYTHON%\\python covid_19\\nl_routines.py .\\"
 - powershell .\gitcommit.ps1
