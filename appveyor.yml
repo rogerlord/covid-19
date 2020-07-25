@@ -43,5 +43,4 @@ on_success:
     git fetch --all
     git checkout -f master
     git merge HEAD@{1} -s recursive -X ours
-    git push --all
-}
+    git push --all }
