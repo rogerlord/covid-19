@@ -11,4 +11,4 @@ The below graph, which will be updated on a daily basis, shows the currently kno
   <img src="https://raw.githubusercontent.com/rogerlord/covid-19/master/plots/COVID-19_daily_cases_plot.png" alt="COVID-19 daily infections in the Netherlands"/>
 </p>
 
-The forecasts have been made possibly by relying on the stored RIVM datasets of [Marino van Zelst](https://github.com/mzelst) and [Edwin van Veldhuizen](https://github.com/edwinveldhuizen) which can be found [here](https://github.com/mzelst/covid-19/).
+The forecasts have been made possible with the stored RIVM datasets of [Marino van Zelst](https://github.com/mzelst) and [Edwin van Veldhuizen](https://github.com/edwinveldhuizen) which can be found [here](https://github.com/mzelst/covid-19/).
