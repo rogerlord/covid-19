@@ -23,7 +23,7 @@ build:
   off
 
 install:
-  "SET PATH=%PYTHON%; %PYTHON%\Scripts; %MINICONDA%; %PATH"
+  "SET PATH=%PYTHON%; %PYTHON%\Scripts; %MINICONDA%; %PATH%"
   "%PYTHON%\\python -m pip install -U pip"
   "%PYTHON%\\Scripts\\pip install tox"
 
