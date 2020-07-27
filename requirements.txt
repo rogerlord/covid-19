@@ -1,4 +1,6 @@
--r requirements-dev.txt
+pandas
+pytest
+numpy
 bokeh
 selenium
 geckodriver
