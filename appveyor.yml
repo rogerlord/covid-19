@@ -23,14 +23,15 @@ build:
   off
 
 install:
-- "%PYTHON%\\python -m pip install -U pip"
-- "%PYTHON%\\Scripts\\pip install tox"
+  "SET PATH=%PYTHON%; %PYTHON%\Scripts; %MINICONDA%; %PATH"
+  "%PYTHON%\\python -m pip install -U pip"
+  "%PYTHON%\\Scripts\\pip install tox"
 
 test_script:
-- "%PYTHON%\\Scripts\\tox"
+  "%PYTHON%\\Scripts\\tox"
 
 on_success:
-- "%MINICONDA%\\Scripts\\conda install -y selenium geckodriver firefox -c conda-forge"
-- "%PYTHON%\\Scripts\\pip install -r requirements.txt"
-- "%PYTHON%\\python covid_19\\nl_routines.py .\\"
-- powershell .\gitcommit.ps1
+  "%MINICONDA%\\Scripts\\conda install -y selenium geckodriver firefox -c conda-forge" 
+  "%PYTHON%\\Scripts\\pip install -r requirements.txt"
+  "%PYTHON%\\python covid_19\\nl_routines.py .\\"
+  powershell .\gitcommit.ps1
