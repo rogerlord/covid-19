@@ -1,6 +1,5 @@
 -r requirements-dev.txt
 bokeh
 matplotlib
-geopandas
 cbsodata
 mapclassify
