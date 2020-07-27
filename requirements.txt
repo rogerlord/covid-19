@@ -3,3 +3,4 @@ bokeh
 matplotlib
 cbsodata
 mapclassify
+selenium
