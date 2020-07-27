@@ -24,14 +24,12 @@ build:
 
 install:
 - "%PYTHON%\\python -m pip install -U pip"
-- "%MINICONDA%\\Scripts\\conda install -y tox-conda -c conda-forge" 
 - "%PYTHON%\\Scripts\\pip install tox"
 
 test_script:
 - "%PYTHON%\\Scripts\\tox"
 
 on_success:
-- "%MINICONDA%\\Scripts\\conda install -y selenium geckodriver firefox -c conda-forge" 
-- "%PYTHON%\\Scripts\\pip install -r requirements.txt"
+- "%MINICONDA%\\Scripts\\conda install -y -c conda-forge --file requirements.txt" 
 - "%PYTHON%\\python covid_19\\nl_routines.py .\\"
 - powershell .\gitcommit.ps1
