@@ -32,6 +32,7 @@ test_script:
 on_success:
 - "%MINICONDA%\\Scripts\\conda install -y selenium geckodriver firefox geopandas -c conda-forge" 
 - "%PYTHON%\\Scripts\\pip install -r requirements.txt" 
+- "%PYTHON%%\\Scripts\\pip show geopandas"
 - "%PYTHON%\\python covid_19\\nl_routines.py .\\"
 - powershell .\gitcommit.ps1
     
