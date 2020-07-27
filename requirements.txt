@@ -1,10 +1,5 @@
-pandas
-pytest
-numpy
+-r requirements-dev.txt
 bokeh
-selenium
-geckodriver
-firefox
 matplotlib
 geopandas
 cbsodata

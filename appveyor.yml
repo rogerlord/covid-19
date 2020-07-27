@@ -30,6 +30,8 @@ test_script:
 - "%PYTHON%\\Scripts\\tox"
 
 on_success:
-- "%MINICONDA%\\Scripts\\conda install -y -c conda-forge --file requirements.txt" 
+- "%MINICONDA%\\Scripts\\conda install -y --file environment.yml" 
+- "%PYTHON%\\Scripts\\pip install -r requirements.txt" 
 - "%PYTHON%\\python covid_19\\nl_routines.py .\\"
 - powershell .\gitcommit.ps1
+    
