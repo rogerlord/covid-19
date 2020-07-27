@@ -23,9 +23,8 @@ build:
   off
 
 install:
-- "SET PATH=%PYTHON%; %PYTHON%\\Scripts; %MINICONDA%\\Scripts; %PATH%"
-- "SET CONDA_EXEC=%MINICONDA%\\Scripts\\conda.exe"
 - "%PYTHON%\\python -m pip install -U pip"
+- "%MINICONDA%\\Scripts\\conda install -y tox-conda -c conda-forge" 
 - "%PYTHON%\\Scripts\\pip install tox"
 
 test_script:
