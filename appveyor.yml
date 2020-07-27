@@ -23,7 +23,7 @@ build:
   off
 
 install:
-- "%PYTHON%\\python -m pip install -U pip""
+- "%PYTHON%\\python -m pip install -U pip"
 - "%MINICONDA%\\conda install -y tox-conda -c conda-forge"
 - "%PYTHON%\\Scripts\\pip install tox"
 
