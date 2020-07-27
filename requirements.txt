@@ -5,3 +5,7 @@ bokeh
 selenium
 geckodriver
 firefox
+matplotlib
+geopandas
+cbsodata
+mapclassify
