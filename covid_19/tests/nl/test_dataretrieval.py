@@ -1,4 +1,4 @@
-from nl.dataretrieval import get_latest_rivm_file
+from covid_19.nl.dataretrieval import get_latest_rivm_file
 
 
 def test_get_latest_rivm_file():

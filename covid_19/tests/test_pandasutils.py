@@ -1,6 +1,6 @@
 import pandas as pd
 import datetime
-from pandasutils import filter_data_frame, filter_series
+from covid_19.pandasutils import filter_data_frame, filter_series
 import pytest
 
 

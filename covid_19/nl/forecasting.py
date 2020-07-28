@@ -1,5 +1,17 @@
 import datetime
 from nl.dataretrieval import get_daily_cases, get_lagged_values, get_scaling_coefficient
+import numpy as np
+from numpy import linalg
+from pandasutils import filter_series
+
+
+def get_scaling_coefficient(lag, df_most_recent, df_lagged_values, first_date, last_date):
+    x = np.array(filter_series(df_lagged_values[str(lag)], first_date, last_date).sort_index().array)
+    y = np.array(filter_series(df_most_recent, first_date, last_date).sort_index().array)
+    x = x[:, np.newaxis]
+
+    scaling, _, _, _ = linalg.lstsq(x, y, rcond=None)
+    return scaling[0]
 
 
 def forecast_daily_cases(folder):
