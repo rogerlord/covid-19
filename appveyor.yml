@@ -37,5 +37,5 @@ on_success:
 - "conda create -q -n script-environment python=%PYTHON_VERSION% selenium geckodriver firefox geopandas -c conda-forge"
 - activate script-environment
 - "pip install -r requirements.txt" 
-- "python covid_19\\nl_routines.py .\\"
+- "python covid_19\\nl\\script.py .\\"
 - powershell .\gitcommit.ps1

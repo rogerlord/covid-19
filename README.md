@@ -8,7 +8,7 @@ The currently available set concerns the number of new COVID-19 infections in th
 The below graph, which will be updated on a daily basis, shows the currently known reported infections for the last 30 days ("*Current data*"), the forecast for the reported infections on a given date ("*Forecast*"), as well as a 7-day rolling average of the number of reported infections (based on the forecasts, "*7-day rolling average*"). As the number of reported infections usually does not seem to change much after 14 days, we only adjust / forecast the last 14 observations. The forecast for T is found by regressing past same day observations on the currently known reported infections for that date, and using the resulting relation on the current observation for T.
 
 <p align="center">
-  <img src="https://raw.githubusercontent.com/rogerlord/covid-19/master/plots/COVID-19_daily_cases_plot.png" alt="COVID-19 daily infections in the Netherlands"/>
+  <img src="https://raw.githubusercontent.com/rogerlord/covid-19/master/plots/nl/COVID-19_daily_cases_plot.png" alt="COVID-19 daily infections in the Netherlands"/>
 </p>
 
 The forecasts have been made possible with the stored RIVM datasets of [Marino van Zelst](https://github.com/mzelst) and [Edwin van Veldhuizen](https://github.com/edwinveldhuizen) which can be found [here](https://github.com/mzelst/covid-19/).

@@ -1,6 +1,6 @@
-from dataretrieval import update_files
-from plotting import generate_plot
 import sys
+from nl.plotting import generate_plot
+from nl.updating import update_files
 
 
 if __name__ == "__main__":

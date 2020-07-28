@@ -1,14 +1,15 @@
-from bokeh.plotting import figure, output_file, show
+from bokeh.plotting import figure
 from bokeh.models import ColumnDataSource
 from bokeh.io import export_png
 from bokeh.models import DatetimeTickFormatter
 from bokeh.palettes import Spectral10
-from dataretrieval import get_daily_cases, update_daily_cases_with_forecasts
+from nl.dataretrieval import get_daily_cases
+from nl.forecasting import forecast_daily_cases
 
 
 def generate_plot(folder, show_only_last):
     df_daily = get_daily_cases(folder)
-    df_updated = update_daily_cases_with_forecasts(folder)
+    df_updated = forecast_daily_cases(folder)
     data_actual = df_daily.dropna()[-show_only_last:]
     data_forecast = df_updated.dropna()[-show_only_last:]
     data_rolling = df_updated.rolling(window=7).mean().dropna()[-show_only_last:]
@@ -29,4 +30,4 @@ def generate_plot(folder, show_only_last):
     p.yaxis.axis_label = "Daily new COVID-19 infections"
     p.legend.location = "top_left"
 
-    export_png(p, filename=folder + r"plots\COVID-19_daily_cases_plot.png")
+    export_png(p, filename=folder + r"plots\nl\COVID-19_daily_cases_plot.png")
