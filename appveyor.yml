@@ -35,7 +35,7 @@ on_success:
 - conda update -q conda
 - conda info -a
 - "conda create -q -n script-environment python=%PYTHON_VERSION% selenium geckodriver firefox geopandas -c conda-forge"
-- CALL conda.bat activate script-environment
+- activate script-environment
 - "pip install -r requirements.txt" 
 - "pip show geopandas" 
 - "python covid_19\\nl_routines.py .\\"
