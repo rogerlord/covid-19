@@ -2,6 +2,9 @@ import pandas as pd
 
 
 def get_latest_rivm_file():
+    # An explanation of variables available in this dataset can be found at:
+    # https://data.rivm.nl/geonetwork/srv/dut/catalog.search#/metadata/2c4357c8-76e4-4662-9574-1deb8a73f724?tab=relations
+    # Currently the dataset is available daily at 14:15 NL time
     url = "https://data.rivm.nl/covid-19/COVID-19_casus_landelijk.csv"
     df_rivm = pd.read_csv(url, sep=";")
     df_rivm["Date_file"] = pd.to_datetime(df_rivm["Date_file"], format='%Y-%m-%d')

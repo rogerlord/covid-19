@@ -1,6 +1,6 @@
 import sys
-from nl.plotting import generate_plot
-from nl.updating import update_files
+from covid_19.nl.plotting import generate_plot
+from covid_19.nl.updating import update_files
 
 
 if __name__ == "__main__":
