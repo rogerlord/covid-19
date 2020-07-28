@@ -3,8 +3,8 @@ from bokeh.models import ColumnDataSource
 from bokeh.io import export_png
 from bokeh.models import DatetimeTickFormatter
 from bokeh.palettes import Spectral10
-from nl.dataretrieval import get_daily_cases
-from nl.forecasting import forecast_daily_cases
+from covid_19.nl.dataretrieval import get_daily_cases
+from covid_19.nl.forecasting import forecast_daily_cases
 
 
 def generate_plot(folder, show_only_last):

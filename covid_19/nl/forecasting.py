@@ -1,8 +1,8 @@
 import datetime
-from nl.dataretrieval import get_daily_cases, get_lagged_values, get_scaling_coefficient
+from covid_19.nl.dataretrieval import get_daily_cases, get_lagged_values
 import numpy as np
 from numpy import linalg
-from pandasutils import filter_series
+from covid_19.pandasutils import filter_series
 
 
 def get_scaling_coefficient(lag, df_most_recent, df_lagged_values, first_date, last_date):

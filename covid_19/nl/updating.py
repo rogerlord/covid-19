@@ -1,8 +1,7 @@
 import pandas as pd
 from dataretrieval import get_daily_cases, get_latest_rivm_file, get_lagged_values
 import datetime
-
-from pandasutils import filter_data_frame
+from covid_19.pandasutils import filter_data_frame
 
 
 def update_files(folder):
