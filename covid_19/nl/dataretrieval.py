@@ -1,6 +1,14 @@
 import pandas as pd
 
 
+def get_rivm_file(file_name):
+    df_rivm = pd.read_csv(file_name)
+    df_rivm["Date_file"] = pd.to_datetime(df_rivm["Date_file"], format='%Y-%m-%d')
+    df_rivm["Date_statistics"] = pd.to_datetime(df_rivm["Date_statistics"], format='%Y-%m-%d')
+    df_rivm.set_index("Date_file", inplace=True)
+    return df_rivm
+
+
 def get_latest_rivm_file():
     # An explanation of variables available in this dataset can be found at:
     # https://data.rivm.nl/geonetwork/srv/dut/catalog.search#/metadata/2c4357c8-76e4-4662-9574-1deb8a73f724?tab=relations
