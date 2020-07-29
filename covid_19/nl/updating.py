@@ -1,7 +1,7 @@
 import pandas as pd
 from dataretrieval import get_daily_cases, get_latest_rivm_file, get_lagged_values
 import datetime
-from covid_19.pandasutils import filter_data_frame
+from covid_19.pandasutils import filter_data_frame, filter_series
 
 
 def update_files(folder):
@@ -17,7 +17,16 @@ def update_files(folder):
     df_daily_cases_updated.to_csv(folder + r"data\nl\COVID-19_daily_cases.csv", header=False)
 
     df_lagged = get_lagged_values(folder)
-    new_last_row = pd.Series(data=[df_daily_cases_updated[last_available_date_rivm]],
+    last_contribution = filter_series(df_daily_cases_updated, last_available_date_rivm, last_available_date_rivm)
+    if len(last_contribution) == 0:
+        print("Zero patients reported on {dt}".format(dt=last_available_date_rivm))
+        last_contribution = 0
+    elif len(last_contribution) > 1:
+        raise Exception("More than one contribution on {dt}".format(dt=last_available_date_rivm))
+    else:
+        last_contribution = last_contribution.iloc[0]
+
+    new_last_row = pd.Series(data=[last_contribution],
                              index=['0'],
                              name=datetime.datetime.combine(last_available_date_rivm, datetime.datetime.min.time()))
     df_lagged = df_lagged.append(new_last_row)
