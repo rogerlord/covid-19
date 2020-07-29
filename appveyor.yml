@@ -31,6 +31,9 @@ test_script:
 
 on_success:
 - "SET PATH=%MINICONDA%;%MINICONDA%\\Scripts;%PATH%"
+- ps: |
+    $culture = Get-Culture
+    $culture.DateTimeFormat.ShortDatePattern
 - conda config --set always_yes yes --set changeps1 no
 - conda update -q conda
 - conda info -a
@@ -40,3 +43,4 @@ on_success:
 - "SET PYTHONPATH=%PYTHONPATH%;%CD%"
 - "python covid_19\\nl\\script.py .\\"
 - powershell .\gitcommit.ps1
+    
