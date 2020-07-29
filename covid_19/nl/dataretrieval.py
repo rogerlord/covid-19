@@ -1,6 +1,5 @@
 import pandas as pd
-
-from pandasutils import filter_data_frame
+from covid_19.pandasutils import filter_data_frame
 
 
 def get_rivm_file(file_name):
