@@ -3,12 +3,12 @@ from bokeh.models import ColumnDataSource
 from bokeh.io import export_png
 from bokeh.models import DatetimeTickFormatter
 from bokeh.palettes import Spectral10
-from covid_19.nl.dataretrieval import get_daily_cases
+from covid_19.nl.dataretrieval import get_cases_per_day_from_file
 from covid_19.nl.forecasting import forecast_daily_cases
 
 
 def generate_plot(folder, show_only_last):
-    df_daily = get_daily_cases(folder)
+    df_daily = get_cases_per_day_from_file(folder)
     df_updated = forecast_daily_cases(folder)
     data_actual = df_daily.dropna()[-show_only_last:]
     data_forecast = df_updated.dropna()[-show_only_last:]

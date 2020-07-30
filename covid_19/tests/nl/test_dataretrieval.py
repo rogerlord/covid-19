@@ -1,4 +1,4 @@
-from covid_19.nl.dataretrieval import get_latest_rivm_file, get_rivm_file, get_cases_per_day
+from covid_19.nl.dataretrieval import get_latest_rivm_file, get_rivm_file, get_cases_per_day_from_data_frame
 import os
 import datetime
 
@@ -17,7 +17,7 @@ def test_get_cases_per_day():
     dir_path = os.path.dirname(os.path.realpath(__file__))
     file_name = os.path.join(dir_path, r".\fixtures\COVID-19_casus_landelijk_2020-07-24.csv")
     df_rivm = get_rivm_file(file_name)
-    ds_cases_per_day = get_cases_per_day(df_rivm, datetime.date(2020, 7, 24))
+    ds_cases_per_day = get_cases_per_day_from_data_frame(df_rivm, datetime.date(2020, 7, 24))
     assert sum(ds_cases_per_day) == 52595
 
 
@@ -30,4 +30,3 @@ def assertions_for_rivm_df(df):
     assert "DOO" in unique_types
     assert "DPL" in unique_types
     assert "DON" in unique_types
-

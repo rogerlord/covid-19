@@ -1,5 +1,5 @@
 import datetime
-from covid_19.nl.dataretrieval import get_daily_cases, get_lagged_values
+from covid_19.nl.dataretrieval import get_cases_per_day_from_file, get_lagged_values
 import numpy as np
 from numpy import linalg
 from covid_19.pandasutils import filter_series
@@ -15,7 +15,7 @@ def get_scaling_coefficient(lag, df_most_recent, df_lagged_values, first_date, l
 
 
 def forecast_daily_cases(folder):
-    df_daily_cases = get_daily_cases(folder).sort_index()
+    df_daily_cases = get_cases_per_day_from_file(folder).sort_index()
     df_daily_cases_forecast = df_daily_cases.copy()
     df_lagged_values = get_lagged_values(folder).copy().sort_index()
     first_date = min(df_lagged_values.index).date()

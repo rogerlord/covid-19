@@ -22,7 +22,7 @@ def get_latest_rivm_file():
     return df_rivm
 
 
-def get_cases_per_day(df_rivm: pd.DataFrame, date_file=None) -> pd.Series:
+def get_cases_per_day_from_data_frame(df_rivm: pd.DataFrame, date_file=None) -> pd.Series:
     if date_file is None:
         date_file = df_rivm.index.unique()
         if len(date_file) > 1:
@@ -33,7 +33,7 @@ def get_cases_per_day(df_rivm: pd.DataFrame, date_file=None) -> pd.Series:
     return df_filtered["Date_statistics"].value_counts().sort_index()
 
 
-def get_daily_cases(folder):
+def get_cases_per_day_from_file(folder):
     return pd.read_csv(folder + r"data\nl\COVID-19_daily_cases.csv", squeeze=True, index_col=0, header=None, parse_dates=True)
 
 
