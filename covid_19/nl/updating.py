@@ -47,25 +47,29 @@ def update_measures(df_measures):
     dt_rivm_file = max(df_rivm_latest.index).date()
 
     if dt_last_measure_present == dt_rivm_file:
-        return
+        return df_measures
 
     net_increases_21 = lambda df1, df2: net_increases(df1, df2, 21)
     gross_increases_21 = lambda df1, df2: gross_increases(df1, df2, 21)
 
     df_rivm_previous_day = get_rivm_file_historical(dt_rivm_file - datetime.timedelta(days=1))
     ggd_regions = get_ggd_regions()
-    key = dt_rivm_file.strftime(format="%Y-%m-%d")
-    for ggd_region in ggd_regions:
-        df_measures.at[key, "net_" + ggd_region] = __calculate_measure(df_rivm_latest, df_rivm_previous_day, net_increases)
-        df_measures.at[key, "gross_" + ggd_region] = __calculate_measure(df_rivm_latest, df_rivm_previous_day, gross_increases)
-        df_measures.at[key, "net_21_" + ggd_region] = __calculate_measure(df_rivm_latest, df_rivm_previous_day, net_increases_21)
-        df_measures.at[key, "gross_21_" + ggd_region] = __calculate_measure(df_rivm_latest, df_rivm_previous_day, gross_increases_21)
+    new_row = pd.Series(dtype="float64")
+    for ggd_region in ggd_regions["Municipal_health_service"]:
+        new_row["net_" + ggd_region] = __calculate_measure(df_rivm_latest, df_rivm_previous_day, net_increases, ggd_region)
+        new_row["gross_" + ggd_region] = __calculate_measure(df_rivm_latest, df_rivm_previous_day, gross_increases, ggd_region)
+        new_row["net_21_" + ggd_region] = __calculate_measure(df_rivm_latest, df_rivm_previous_day, net_increases_21, ggd_region)
+        new_row["gross_21_" + ggd_region] = __calculate_measure(df_rivm_latest, df_rivm_previous_day, gross_increases_21, ggd_region)
 
-    df_measures.at[key, "net_nl"] = __calculate_measure(df_rivm_latest, df_rivm_previous_day, net_increases)
-    df_measures.at[key, "gross_nl"] = __calculate_measure(df_rivm_latest, df_rivm_previous_day, gross_increases)
-    df_measures.at[key, "net_21_nl"] = __calculate_measure(df_rivm_latest, df_rivm_previous_day, net_increases_21)
-    df_measures.at[key, "gross_21_nl"] = __calculate_measure(df_rivm_latest, df_rivm_previous_day, gross_increases_21)
-    return df_measures
+    new_row["net_nl"] = __calculate_measure(df_rivm_latest, df_rivm_previous_day, net_increases)
+    new_row["gross_nl"] = __calculate_measure(df_rivm_latest, df_rivm_previous_day, gross_increases)
+    new_row["net_21_nl"] = __calculate_measure(df_rivm_latest, df_rivm_previous_day, net_increases_21)
+    new_row["gross_21_nl"] = __calculate_measure(df_rivm_latest, df_rivm_previous_day, gross_increases_21)
+    new_row.name = dt_rivm_file
+
+    df_measures_updated = df_measures.append(new_row)
+    df_measures_updated.index = pd.to_datetime(df_measures_updated.index, format="%Y-%m-%d")
+    return df_measures_updated
 
 
 def __calculate_measure(df_t, df_tminus1, measure, ggd_region=None):
