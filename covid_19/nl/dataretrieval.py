@@ -1,5 +1,24 @@
 import pandas as pd
 from covid_19.pandasutils import filter_data_frame
+import datetime
+
+
+def get_rivm_file_historical(date_file):
+    # Marino van Zelst (mzelst) kindly stores the history of the RIVM files in his GitHub repository
+    uri = "https://raw.githubusercontent.com/mzelst/covid-19/master/data-rivm/casus-datasets/"
+    file_name_start = "COVID-19_casus_landelijk_"
+    return get_rivm_file(uri + file_name_start + date_file.strftime("%Y-%m-%d") + ".csv")
+
+
+def get_rivm_files_historical(from_date, to_date):
+    print("Starting data retrieval")
+    df_list = []
+    for i in range((to_date - from_date).days + 1):
+        dt = from_date + datetime.timedelta(days=i)
+        df_list.append(get_rivm_file_historical(dt))
+        print("Retrieved data for date {dt}".format(dt=dt))
+
+    return pd.concat(df_list, axis=0, sort=True)
 
 
 def get_rivm_file(file_name):
@@ -22,7 +41,7 @@ def get_latest_rivm_file():
     return df_rivm
 
 
-def get_cases_per_day_from_data_frame(df_rivm: pd.DataFrame, date_file=None) -> pd.Series:
+def get_cases_per_day_from_data_frame(df_rivm: pd.DataFrame, date_file=None, ggd_region=None) -> pd.Series:
     if date_file is None:
         date_file = df_rivm.index.unique()
         if len(date_file) > 1:
@@ -30,6 +49,9 @@ def get_cases_per_day_from_data_frame(df_rivm: pd.DataFrame, date_file=None) -> 
         date_file = date_file[0]
 
     df_filtered = filter_data_frame(df_rivm, date_file)
+    if ggd_region is not None:
+        df_filtered = df_filtered[df_filtered["Municipal_health_service"] == ggd_region]
+
     return df_filtered["Date_statistics"].value_counts().sort_index()
 
 
@@ -39,3 +61,7 @@ def get_cases_per_day_from_file(folder):
 
 def get_lagged_values(folder):
     return pd.read_csv(folder + r"data\nl\COVID-19_lagged.csv", index_col=0, header=0, parse_dates=True)
+
+
+def get_measures(folder):
+    return pd.read_csv(folder + r"data\nl\COVID-19_measures.csv", index_col=0, header=0, parse_dates=True)

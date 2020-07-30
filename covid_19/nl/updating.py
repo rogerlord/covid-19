@@ -1,7 +1,10 @@
 import pandas as pd
-from dataretrieval import get_cases_per_day_from_file, get_latest_rivm_file, get_lagged_values, get_cases_per_day_from_data_frame
 import datetime
-from covid_19.pandasutils import filter_data_frame, filter_series
+from covid_19.pandasutils import filter_series
+from covid_19.nl.demography import get_ggd_regions
+from covid_19.nl.dataretrieval import get_cases_per_day_from_file, get_latest_rivm_file, get_lagged_values, \
+    get_cases_per_day_from_data_frame, get_rivm_file_historical
+from covid_19.nl.measures import net_increases, gross_increases
 
 
 def update_files(folder):
@@ -36,3 +39,36 @@ def update_files(folder):
         value_to_add = ds_daily_cases_updated[infection_date.strftime("%Y-%m-%d")]
         df_lagged.at[infection_date.strftime("%Y-%m-%d"), str(i)] = value_to_add
     df_lagged.to_csv(folder + r"data\nl\COVID-19_lagged.csv", header=True)
+
+
+def update_measures(df_measures):
+    dt_last_measure_present = max(df_measures.index).date()
+    df_rivm_latest = get_latest_rivm_file()
+    dt_rivm_file = max(df_rivm_latest.index).date()
+
+    if dt_last_measure_present == dt_rivm_file:
+        return
+
+    net_increases_21 = lambda df1, df2: net_increases(df1, df2, 21)
+    gross_increases_21 = lambda df1, df2: gross_increases(df1, df2, 21)
+
+    df_rivm_previous_day = get_rivm_file_historical(dt_rivm_file - datetime.timedelta(days=1))
+    ggd_regions = get_ggd_regions()
+    key = dt_rivm_file.strftime(format="%Y-%m-%d")
+    for ggd_region in ggd_regions:
+        df_measures.at[key, "net_" + ggd_region] = __calculate_measure(df_rivm_latest, df_rivm_previous_day, net_increases)
+        df_measures.at[key, "gross_" + ggd_region] = __calculate_measure(df_rivm_latest, df_rivm_previous_day, gross_increases)
+        df_measures.at[key, "net_21_" + ggd_region] = __calculate_measure(df_rivm_latest, df_rivm_previous_day, net_increases_21)
+        df_measures.at[key, "gross_21_" + ggd_region] = __calculate_measure(df_rivm_latest, df_rivm_previous_day, gross_increases_21)
+
+    df_measures.at[key, "net_nl"] = __calculate_measure(df_rivm_latest, df_rivm_previous_day, net_increases)
+    df_measures.at[key, "gross_nl"] = __calculate_measure(df_rivm_latest, df_rivm_previous_day, gross_increases)
+    df_measures.at[key, "net_21_nl"] = __calculate_measure(df_rivm_latest, df_rivm_previous_day, net_increases_21)
+    df_measures.at[key, "gross_21_nl"] = __calculate_measure(df_rivm_latest, df_rivm_previous_day, gross_increases_21)
+    return df_measures
+
+
+def __calculate_measure(df_t, df_tminus1, measure, ggd_region=None):
+    return measure(
+        get_cases_per_day_from_data_frame(df_t, ggd_region=ggd_region),
+        get_cases_per_day_from_data_frame(df_tminus1, ggd_region=ggd_region))

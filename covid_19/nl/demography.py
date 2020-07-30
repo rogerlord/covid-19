@@ -1,5 +1,6 @@
 import cbsodata
 import pandas as pd
+import os
 
 
 def get_population_per_ggd_region():
@@ -9,3 +10,9 @@ def get_population_per_ggd_region():
     cbs_df = pd.DataFrame(cbs_data).groupby("Code_14").sum()
     cbs_df.index = cbs_df.index.str.strip()
     return cbs_df.to_dict()["Inwonertal_50"]
+
+
+def get_ggd_regions():
+    dir_path = os.path.dirname(os.path.realpath(__file__))
+    file_name = os.path.join(dir_path, '../../config/nl/ggd_regios.csv')
+    return pd.read_csv(file_name)
