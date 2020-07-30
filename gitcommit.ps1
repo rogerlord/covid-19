@@ -6,7 +6,7 @@ git config --global user.name "AppVeyor"
 git add -Af .\data
 git add -Af .\plots
 if (git status --porcelain) {
-    $dt = (Get-Date).ToString("yyyy-mm-dd")	
+    $dt = (Get-Date).ToString("yyyy-MM-dd")	
 	git commit -m $dt
 	git push -u origin master -f
 }
