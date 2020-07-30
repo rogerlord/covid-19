@@ -32,8 +32,11 @@ test_script:
 on_success:
 - "SET PATH=%MINICONDA%;%MINICONDA%\\Scripts;%PATH%"
 - ps: |
-    $culture = Get-Culture
-    $culture.DateTimeFormat.ShortDatePattern = "yyyy/MM/dd"
+    $currentThread = [System.Threading.Thread]::CurrentThread
+    $culture = [CultureInfo]::InvariantCulture.Clone()
+    $culture.DateTimeFormat.ShortDatePattern = 'yyyy-MM-dd'
+    $currentThread.CurrentCulture = $culture
+    $currentThread.CurrentUICulture = $culture
 - conda config --set always_yes yes --set changeps1 no
 - conda update -q conda
 - conda info -a
