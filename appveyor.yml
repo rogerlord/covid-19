@@ -33,7 +33,7 @@ on_success:
 - "SET PATH=%MINICONDA%;%MINICONDA%\\Scripts;%PATH%"
 - ps: |
     $culture = Get-Culture
-    $culture.DateTimeFormat.ShortDatePattern = @"yyyy/MM/dd"
+    $culture.DateTimeFormat.ShortDatePattern = "yyyy/MM/dd"
 - conda config --set always_yes yes --set changeps1 no
 - conda update -q conda
 - conda info -a
