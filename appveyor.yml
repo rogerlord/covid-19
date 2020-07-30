@@ -41,4 +41,3 @@ on_success:
 - "SET PYTHONPATH=%PYTHONPATH%;%CD%"
 - "python covid_19\\nl\\script.py .\\"
 - powershell .\gitcommit.ps1
-    
