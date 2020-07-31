@@ -37,7 +37,7 @@ def generate_plot_national_cases_per_day(folder, show_only_last):
     export_png(p, filename=folder + r"plots\nl\COVID-19_daily_cases_plot.png")
 
 
-def generate_data_frame_for_plot_weekly_cases_per_ggd_region(folder, measure):
+def generate_data_frame_for_plot_daily_cases_per_ggd_region(folder, measure):
     ggd_regions = get_ggd_regions()
     df_measures = get_measures(folder)
     ds = dict()
@@ -58,8 +58,8 @@ def generate_data_frame_for_plot_weekly_cases_per_ggd_region(folder, measure):
     return measure_for_country, df_data
 
 
-def generate_plot_weekly_cases_per_ggd_region(folder, measure):
-    measure_for_country, df_data = generate_data_frame_for_plot_weekly_cases_per_ggd_region(folder, measure)
+def generate_plot_daily_cases_per_ggd_region(folder, measure):
+    measure_for_country, df_data = generate_data_frame_for_plot_daily_cases_per_ggd_region(folder, measure)
     fig = df_data.plot(column="Infections_per_100K", figsize=(10,8), cmap="YlOrRd", legend=True, vmax=50.0/7,
                        edgecolor="gray", linewidth=0.25)
     [l.set_family("Arial") for l in fig.figure.axes[1].yaxis.get_ticklabels()]
@@ -74,4 +74,4 @@ def generate_plot_weekly_cases_per_ggd_region(folder, measure):
     _ = plt.title(
         '7-day average of new COVID-19 infections per 100,000 inhabitants \n NL overall average: {measure_for_country}'.format(measure_for_country=round(measure_for_country, 1)), fontname="Arial", fontsize=13)
 
-    plt.savefig(folder + r"plots\nl\COVID-19_weekly_cases_per_ggd_region_plot.png")
+    plt.savefig(folder + r"plots\nl\COVID-19_daily_cases_per_ggd_region_plot.png")

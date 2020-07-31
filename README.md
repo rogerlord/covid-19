@@ -12,3 +12,12 @@ The below graph, which will be updated on a daily basis, shows the currently kno
 </p>
 
 The forecasts have been made possible with the stored RIVM datasets of [Marino van Zelst](https://github.com/mzelst) and [Edwin van Veldhuizen](https://github.com/edwinveldhuizen) which can be found [here](https://github.com/mzelst/covid-19/).
+
+Additionally, the below graph shows a 7-day rolling average of the number of reported infections per municipal health region (*GGD regio*). As it is difficult to
+adjust / forecast in regions where little to no infections are occurring, the measure used here is the increase in the reported infections over the last 21 days. We
+use a period of 21 days here as the number of reported infections for a given date is usually very stable after 21 days. Changes for older dates (usually downward
+corrections) reflect errors in reporting, rather than actual reported infections in the last weeks, which is what we are interested in here.
+
+<p align="center">
+  <img src="https://raw.githubusercontent.com/rogerlord/covid-19/master/plots/nl/COVID-19_daily_cases_per_ggd_region.jpg" alt="COVID-19 daily infections per municipal health region in the Netherlands"/>
+</p>
