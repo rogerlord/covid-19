@@ -16,7 +16,7 @@ The forecasts have been made possible with the stored RIVM datasets of [Marino v
 Additionally, the below graph shows a 7-day rolling average of the number of reported infections per municipal health region (*GGD regio*). As it is difficult to
 adjust / forecast in regions where little to no infections are occurring, the measure used here is the increase in the reported infections over the last 21 days. We
 use a period of 21 days here as the number of reported infections for a given date is usually very stable after 21 days. Changes for older dates (usually downward
-corrections) reflect errors in reporting, rather than actual reported infections in the last weeks, which is what we are interested in here.
+corrections) reflect errors in reporting, rather than actual reported infections in the last weeks, which is what we are interested in here. The chosen threshold (50.0 / 7, roughly 7.1) is based on the threshold in Germany, where measures are imposed on a region if the number of reported infections in a 7-day period rises to the level of 50.0 or above.
 
 <p align="center">
   <img src="https://raw.githubusercontent.com/rogerlord/covid-19/master/plots/nl/COVID-19_daily_cases_per_ggd_region_plot.jpg" alt="COVID-19 daily infections per municipal health region in the Netherlands"/>
