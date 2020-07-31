@@ -74,4 +74,4 @@ def generate_plot_daily_cases_per_ggd_region(folder, measure):
     _ = plt.title(
         '7-day average of new COVID-19 infections per 100,000 inhabitants \n NL overall average: {measure_for_country}'.format(measure_for_country=round(measure_for_country, 1)), fontname="Arial", fontsize=13)
 
-    plt.savefig(folder + r"plots\nl\COVID-19_daily_cases_per_ggd_region_plot.png")
+    plt.savefig(folder + r"plots\nl\COVID-19_daily_cases_per_ggd_region_plot.jpg")
