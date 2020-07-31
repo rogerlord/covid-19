@@ -1,7 +1,6 @@
 import cbsodata
 import pandas as pd
 import os
-import geopandas as gpd
 
 
 def get_population_per_ggd_region():
@@ -20,6 +19,7 @@ def get_ggd_regions():
 
 
 def get_ggd_regions_geographical_boundaries():
+    import geopandas as gpd
     geodata_url = 'https://geodata.nationaalgeoregister.nl/cbsgebiedsindelingen/wfs?request=GetFeature&service=WFS' \
                   '&version=2.0.0&typeName=cbs_ggdregio_2019_gegeneraliseerd&outputFormat=json '
     return gpd.read_file(geodata_url)
