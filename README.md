@@ -19,5 +19,5 @@ use a period of 21 days here as the number of reported infections for a given da
 corrections) reflect errors in reporting, rather than actual reported infections in the last weeks, which is what we are interested in here.
 
 <p align="center">
-  <img src="https://raw.githubusercontent.com/rogerlord/covid-19/master/plots/nl/COVID-19_daily_cases_per_ggd_region.jpg" alt="COVID-19 daily infections per municipal health region in the Netherlands"/>
+  <img src="https://raw.githubusercontent.com/rogerlord/covid-19/master/plots/nl/COVID-19_daily_cases_per_ggd_region_plot.jpg" alt="COVID-19 daily infections per municipal health region in the Netherlands"/>
 </p>
