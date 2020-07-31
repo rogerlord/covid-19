@@ -4,6 +4,7 @@ from covid_19.nl.demography import get_ggd_regions
 from covid_19.nl.dataretrieval import get_rivm_files_historical
 from covid_19.nl.measures import calculate_measure_historically, net_increases, gross_increases
 from covid_19.nl.updating import update_measures
+from covid_19.nl.plotting import generate_plot_weekly_cases_per_ggd_region
 import pytest
 
 
@@ -28,7 +29,7 @@ def test_create_data_frame_with_measures():
     df_big["net_nl"] = calculate_measure_historically(df_rivm_historical, net_increases)
     df_big["gross_nl"] = calculate_measure_historically(df_rivm_historical, gross_increases)
     df_big["net_21_nl"] = calculate_measure_historically(df_rivm_historical, net_increases_21)
-    df_big["gross_nl"] = calculate_measure_historically(df_rivm_historical, gross_increases_21)
+    df_big["gross_21_nl"] = calculate_measure_historically(df_rivm_historical, gross_increases_21)
 
     df_big.to_csv(r"c:\temp\df_big_measures.csv")
 
@@ -40,3 +41,7 @@ def test_update_measures():
     df_measures.index = pd.to_datetime(df_measures.index, format='%Y-%m-%d')
     df_measures_updated = update_measures(df_measures)
     df_measures_updated.to_csv(r"c:\temp\df_measures.csv", date_format="%Y-%m-%d")
+
+
+def test_generate_plot():
+    generate_plot_weekly_cases_per_ggd_region(r"C:\Projects\covid-19\\", "gross_21")

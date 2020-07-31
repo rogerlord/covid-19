@@ -1,6 +1,7 @@
 import cbsodata
 import pandas as pd
 import os
+import geopandas as gpd
 
 
 def get_population_per_ggd_region():
@@ -14,5 +15,11 @@ def get_population_per_ggd_region():
 
 def get_ggd_regions():
     dir_path = os.path.dirname(os.path.realpath(__file__))
-    file_name = os.path.join(dir_path, '../../config/nl/ggd_regios.csv')
+    file_name = os.path.join(dir_path, '../../config/nl/ggd_regions.csv')
     return pd.read_csv(file_name)
+
+
+def get_ggd_regions_geographical_boundaries():
+    geodata_url = 'https://geodata.nationaalgeoregister.nl/cbsgebiedsindelingen/wfs?request=GetFeature&service=WFS' \
+                  '&version=2.0.0&typeName=cbs_ggdregio_2019_gegeneraliseerd&outputFormat=json '
+    return gpd.read_file(geodata_url)

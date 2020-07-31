@@ -3,3 +3,4 @@ bokeh
 matplotlib
 mapclassify
 selenium
+geopandas
