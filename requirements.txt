@@ -4,3 +4,4 @@ matplotlib
 mapclassify
 selenium
 geopandas
+descartes
