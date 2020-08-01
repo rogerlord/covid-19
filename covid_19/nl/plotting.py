@@ -89,7 +89,7 @@ def generate_data_frame_for_plot_heatmap():
     df_filtered["Percent"] = df_filtered.groupby('Date_statistics')['Count'].transform(lambda x: x / sum(x))
     df_filtered = df_filtered.set_index(["Agegroup", "Date_statistics"])
     age_groups = ['90+', '80-89', '70-79', '60-69', '50-59', '40-49', '30-39', '20-29', '10-19', '0-9']
-    date_range = pd.date_range(min(df_rivm["Date_statistics"]).date(), max(df_rivm["Date_statistics"].date()))
+    date_range = pd.date_range(min(df_rivm["Date_statistics"]).date(), max(df_rivm["Date_statistics"]).date())
     df_filtered = df_filtered.reindex(
         pd.MultiIndex.from_product([age_groups, date_range], names=["Agegroup", "Date"]),
         fill_value=0.0).reset_index().pivot("Agegroup", "Date", "Percent")
