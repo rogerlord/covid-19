@@ -106,7 +106,7 @@ def generate_plot_heatmap(folder):
     _ = ax.set_ylabel("Age group")
     _ = ax.text(
         -0.1,
-        -0.5,
+        -0.35,
         f"Each pixel represents a 1-day time period and age group\n"
         f"Intensity indicates the % of infections in the age group\n"
         f"relative to all cases reported on that day\n",
