@@ -15,7 +15,7 @@ The forecasts have been made possible with the stored RIVM datasets of [Marino v
 
 Additionally, the below graph shows the reported number of infections in the last 7 days per municipal health region (*GGD regio*). As it is difficult to
 adjust / forecast in regions where little to no infections are occurring, the measure used here is the increase in the reported infections over the last 21 days. We
-use a period of 21 days as the number of reported infections for a given date is usually very stable after 21 days. Changes for older dates (usually downward
+use a period of 21 days as the number of reported infections for a given date is usually very stable thereafter Changes for older dates (usually downward
 corrections) reflect errors in reporting, rather than actual reported infections in the last weeks, which is what we are interested in here. The chosen threshold is the threshold used in Germany, where measures are imposed on a region if the number of reported infections in a 7-day period rises to the level of 50.0 or above.
 
 <p align="center">

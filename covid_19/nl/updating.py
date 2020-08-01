@@ -33,7 +33,6 @@ def update_files(folder):
                              index=['0'],
                              name=datetime.datetime.combine(last_available_date_rivm, datetime.datetime.min.time()))
     df_lagged = df_lagged.append(new_last_row)
-    print(ds_daily_cases_updated.index)
     for i in range(1, len(df_lagged.columns)):
         infection_date = last_available_date_rivm - datetime.timedelta(days=i)
         value_to_add = ds_daily_cases_updated[infection_date.strftime("%Y-%m-%d")]
