@@ -76,6 +76,7 @@ def generate_plot_daily_cases_per_ggd_region(folder, measure):
         'New COVID-19 infections per 7 days per 100,000 inhabitants \n NL overall average: {measure_for_country}'.format(measure_for_country=round(measure_for_country, 1)), fontname="Arial", fontsize=13)
 
     plt.savefig(folder + r"plots\nl\COVID-19_daily_cases_per_ggd_region_plot.jpg")
+    plt.close()
 
 
 def generate_data_frame_for_plot_heatmap():
@@ -117,3 +118,4 @@ def generate_plot_heatmap(folder):
     cbar.set_ticks(cbar.get_ticks())
     cbar.set_ticklabels(list(map(lambda x: "{:.0%}".format(x), cbar.get_ticks())))
     ax.figure.savefig(folder + r"plots\nl\COVID-19_heatmap_plot.jpg", bbox_inches='tight')
+    plt.close()
