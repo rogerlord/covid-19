@@ -21,3 +21,10 @@ corrections) reflect errors in reporting, rather than actual reported infections
 <p align="center">
   <img src="https://raw.githubusercontent.com/rogerlord/covid-19/master/plots/nl/COVID-19_daily_cases_per_ggd_region_plot.jpg" alt="COVID-19 daily infections per municipal health region in the Netherlands"/>
 </p>
+
+Finally, the plot below has been inspired by [Marc Bevand](https://github.com/mbevand)'s heatmap of COVID-19 cases in Florida, which can be found [here](https://github.com/mbevand/florida-covid19-line-list-data). Each pixel represents a 1-day time period and age group. The intensity of each pixel indicates the
+percentage of infections in that age group, relative to all cases reported on that day.
+
+<p align="center">
+  <img src="https://raw.githubusercontent.com/rogerlord/covid-19/master/plots/nl/COVID-19_heatmap_plot.jpg" alt="Heatmap of COVID-19 cases in the Netherlands"/>
+</p>
