@@ -3,6 +3,7 @@ import datetime
 import pandas as pd
 import pytest
 
+
 @pytest.mark.skip("Work in progress")
 def test_get_daily_cases_historical():
     start_date = datetime.date(2020, 7, 1)
