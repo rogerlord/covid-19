@@ -3,3 +3,4 @@ pytest
 numpy
 cbsodata
 seaborn
+xlrd

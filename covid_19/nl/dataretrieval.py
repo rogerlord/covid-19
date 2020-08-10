@@ -11,12 +11,10 @@ def get_rivm_file_historical(date_file):
 
 
 def get_rivm_files_historical(from_date, to_date):
-    print("Starting data retrieval")
     df_list = []
     for i in range((to_date - from_date).days + 1):
         dt = from_date + datetime.timedelta(days=i)
         df_list.append(get_rivm_file_historical(dt))
-        print("Retrieved data for date {dt}".format(dt=dt))
 
     return pd.concat(df_list, axis=0, sort=True)
 

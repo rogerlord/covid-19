@@ -45,12 +45,3 @@ def test_get_scaling_coefficient_default_weight(covid_19_daily_cases, covid_19_l
     scaling_weight_specified = get_scaling_coefficient(0, covid_19_daily_cases, covid_19_lagged_values,
                                                        datetime.date(2020, 7, 1), datetime.date(2020, 7, 26), beta=0.0)
     assert scaling == pytest.approx(scaling_weight_specified)
-
-
-def test_bla():
-    df_rivm = get_rivm_files_historical(datetime.date(2020, 7, 1), datetime.date(2020, 7, 26))
-    df_lagged = get_lagged_values(r"c:\projects\covid-19\\")
-
-    df_daily = get_cases_per_day_from_data_frame(df_rivm, date_file=datetime.date(2020, 7, 14))
-
-    forecast_daily_cases_from_data_frames()
