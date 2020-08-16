@@ -4,7 +4,7 @@ import pandas as pd
 import datetime
 
 from covid_19.nl.dataretrieval import get_rivm_files_historical, get_lagged_values, get_cases_per_day_from_data_frame
-from covid_19.nl.forecasting import get_scaling_coefficient
+from covid_19.nl.forecasting import get_scaling_coefficient, forecast_daily_cases_from_data_frames, recreate_lagged_data
 
 
 @pytest.fixture
@@ -45,3 +45,23 @@ def test_get_scaling_coefficient_default_weight(covid_19_daily_cases, covid_19_l
     scaling_weight_specified = get_scaling_coefficient(0, covid_19_daily_cases, covid_19_lagged_values,
                                                        datetime.date(2020, 7, 1), datetime.date(2020, 7, 26), beta=0.0)
     assert scaling == pytest.approx(scaling_weight_specified)
+
+
+@pytest.mark.skip("Run manually")
+def test_reperform_forecasting():
+    first_date = datetime.date(2020, 7, 1)
+    most_recent_date = datetime.date(2020, 8, 16)
+    current_path = os.path.dirname(os.path.realpath(__file__))
+    df_lagged_most_recent = get_lagged_values(os.path.join(current_path, r"../../../"))
+    df_rivm = get_rivm_files_historical(first_date, most_recent_date)
+
+    start_date = datetime.date(2020, 8, 1)
+    end_date = most_recent_date
+    for i in range(0, (end_date - start_date).days + 1):
+        dt = start_date + datetime.timedelta(days=i)
+        df_daily_cases = get_cases_per_day_from_data_frame(df_rivm, dt)
+        df_lagged = recreate_lagged_data(df_lagged_most_recent, dt)
+        df_lagged = df_lagged[first_date:dt]
+        df_forecast = forecast_daily_cases_from_data_frames(df_daily_cases, df_lagged)
+        df_forecast = df_forecast.rolling(window=7).mean().dropna()
+        print(df_forecast.iloc[-1])

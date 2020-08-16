@@ -5,6 +5,7 @@ from covid_19.nl.demography import get_ggd_regions
 from covid_19.nl.dataretrieval import get_cases_per_day_from_file, get_latest_rivm_file, get_lagged_values, \
     get_cases_per_day_from_data_frame, get_rivm_file_historical
 from covid_19.nl.measures import net_increases, gross_increases
+from nl.forecasting import forecast_daily_cases
 
 
 def update_files(folder):
@@ -40,7 +41,7 @@ def update_files(folder):
     df_lagged.to_csv(folder + r"data\nl\COVID-19_lagged.csv", header=True)
 
 
-def update_measures(df_measures):
+def update_measures(df_measures, folder):
     dt_last_measure_present = max(df_measures.index).date()
     df_rivm_latest = get_latest_rivm_file()
     dt_rivm_file = max(df_rivm_latest.index).date()
@@ -64,6 +65,10 @@ def update_measures(df_measures):
     new_row["gross_nl"] = __calculate_measure(df_rivm_latest, df_rivm_previous_day, gross_increases)
     new_row["net_21_nl"] = __calculate_measure(df_rivm_latest, df_rivm_previous_day, net_increases_21)
     new_row["gross_21_nl"] = __calculate_measure(df_rivm_latest, df_rivm_previous_day, gross_increases_21)
+
+    nowcast_value = forecast_daily_cases(folder).rolling(window=7).mean().dropna().iloc[-1]
+    new_row["nowcast_nl"] = nowcast_value
+
     new_row.name = dt_rivm_file
 
     df_measures_updated = df_measures.append(new_row)

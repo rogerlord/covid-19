@@ -35,3 +35,14 @@ def forecast_daily_cases_from_data_frames(df_daily_cases, df_lagged_values):
         scaling = get_scaling_coefficient(i, df_daily_cases, df_lagged_values, first_date, last_accurate_date)
         df_daily_cases_forecast.iloc[-(i+1)] = df_daily_cases_forecast.iloc[-(i+1)] * scaling
     return df_daily_cases_forecast
+
+
+def recreate_lagged_data(df_lagged, dt: datetime.date):
+    df = df_lagged.copy()
+    first_date = min(df.index)
+    df = df[first_date:dt]
+    num_columns = len(df.columns)
+    for i in range(1, num_columns):
+        for j in range(i + 1, num_columns + 1):
+            df.iat[-i, j - 1] = np.nan
+    return df
