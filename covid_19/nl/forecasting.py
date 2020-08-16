@@ -37,7 +37,7 @@ def forecast_daily_cases_from_data_frames(df_daily_cases, df_lagged_values):
     return df_daily_cases_forecast
 
 
-def recreate_lagged_data(df_lagged, dt: datetime.date):
+def recreate_lagged_values(df_lagged, dt: datetime.date):
     df = df_lagged.copy()
     first_date = min(df.index)
     df = df[first_date:dt]
