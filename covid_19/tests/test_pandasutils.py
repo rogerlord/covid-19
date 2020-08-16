@@ -2,6 +2,8 @@ import pandas as pd
 import datetime
 from covid_19.pandasutils import filter_data_frame, filter_series
 import pytest
+from pandas.util.testing import assert_frame_equal as pd_assert_frame_equal
+from pandas.util.testing import assert_series_equal as pd_assert_series_equal
 
 
 @pytest.mark.parametrize("hour", [0, 10])
@@ -40,3 +42,11 @@ def test_filter_series(hour):
     for dt in series_filtered.index:
         assert dt.month == 7 and dt.year == 2020
         assert dt.day == 3 or dt.day == 4
+
+
+def assert_frame_equal(actual_df, expected_df):
+    if type(expected_df) is pd.Series:
+        assert len(actual_df) == 1
+        pd_assert_series_equal(actual_df.iloc[0], expected_df)
+    else:
+        pd_assert_frame_equal(actual_df.reset_index(drop=True), expected_df.reset_index(drop=True), check_dtype=False)
