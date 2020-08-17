@@ -56,7 +56,7 @@ def update_measures(df_measures, folder):
     ggd_regions = get_ggd_regions()
 
     df_measures_updated = df_measures.copy()
-    if dt_rivm_file in df_measures.index:
+    if max(df_measures_updated.index).date() == dt_rivm_file:
         return df_measures_updated
 
     new_row = pd.Series(dtype="float64")
