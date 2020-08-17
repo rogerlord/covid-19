@@ -42,7 +42,7 @@ def update_files(folder):
 
 
 def update_measures(df_measures, folder):
-    dt_last_measure_present = max(df_measures.index).date()
+    dt_last_measure_present = df_measures.index[-1].date()
     df_rivm_latest = get_latest_rivm_file()
     dt_rivm_file = max(df_rivm_latest.index).date()
 
@@ -56,9 +56,6 @@ def update_measures(df_measures, folder):
     ggd_regions = get_ggd_regions()
 
     df_measures_updated = df_measures.copy()
-    if max(df_measures_updated.index).date() == dt_rivm_file:
-        return df_measures_updated
-
     new_row = pd.Series(dtype="float64")
     for ggd_region in ggd_regions["Municipal_health_service"]:
         new_row["net_" + ggd_region] = __calculate_measure(df_rivm_latest, df_rivm_previous_day, net_increases,
