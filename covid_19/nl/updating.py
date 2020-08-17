@@ -57,7 +57,7 @@ def update_measures(df_measures, folder):
 
     df_measures_updated.index = pd.to_datetime(df_measures_updated.index, format="%Y-%m-%d")
     if dt_rivm_file in df_measures.index:
-        retrn df_measures_updated
+        return df_measures_updated
 
     new_row = pd.Series(dtype="float64")
     for ggd_region in ggd_regions["Municipal_health_service"]:
