@@ -54,12 +54,21 @@ def update_measures(df_measures, folder):
 
     df_rivm_previous_day = get_rivm_file_historical(dt_rivm_file - datetime.timedelta(days=1))
     ggd_regions = get_ggd_regions()
+
+    df_measures_updated.index = pd.to_datetime(df_measures_updated.index, format="%Y-%m-%d")
+    if dt_rivm_file in df_measures.index:
+        retrn df_measures_updated
+
     new_row = pd.Series(dtype="float64")
     for ggd_region in ggd_regions["Municipal_health_service"]:
-        new_row["net_" + ggd_region] = __calculate_measure(df_rivm_latest, df_rivm_previous_day, net_increases, ggd_region)
-        new_row["gross_" + ggd_region] = __calculate_measure(df_rivm_latest, df_rivm_previous_day, gross_increases, ggd_region)
-        new_row["net_21_" + ggd_region] = __calculate_measure(df_rivm_latest, df_rivm_previous_day, net_increases_21, ggd_region)
-        new_row["gross_21_" + ggd_region] = __calculate_measure(df_rivm_latest, df_rivm_previous_day, gross_increases_21, ggd_region)
+        new_row["net_" + ggd_region] = __calculate_measure(df_rivm_latest, df_rivm_previous_day, net_increases,
+                                                           ggd_region)
+        new_row["gross_" + ggd_region] = __calculate_measure(df_rivm_latest, df_rivm_previous_day, gross_increases,
+                                                             ggd_region)
+        new_row["net_21_" + ggd_region] = __calculate_measure(df_rivm_latest, df_rivm_previous_day,
+                                                              net_increases_21, ggd_region)
+        new_row["gross_21_" + ggd_region] = __calculate_measure(df_rivm_latest, df_rivm_previous_day,
+                                                                gross_increases_21, ggd_region)
 
     new_row["net_nl"] = __calculate_measure(df_rivm_latest, df_rivm_previous_day, net_increases)
     new_row["gross_nl"] = __calculate_measure(df_rivm_latest, df_rivm_previous_day, gross_increases)
@@ -70,9 +79,7 @@ def update_measures(df_measures, folder):
     new_row["nowcast_nl"] = nowcast_value
 
     new_row.name = dt_rivm_file
-
     df_measures_updated = df_measures.append(new_row)
-    df_measures_updated.index = pd.to_datetime(df_measures_updated.index, format="%Y-%m-%d")
     return df_measures_updated
 
 
