@@ -55,6 +55,7 @@ def update_measures(df_measures, folder):
     df_rivm_previous_day = get_rivm_file_historical(dt_rivm_file - datetime.timedelta(days=1))
     ggd_regions = get_ggd_regions()
 
+    df_measures_updated = df_measures.copy()
     df_measures_updated.index = pd.to_datetime(df_measures_updated.index, format="%Y-%m-%d")
     if dt_rivm_file in df_measures.index:
         return df_measures_updated
@@ -79,7 +80,7 @@ def update_measures(df_measures, folder):
     new_row["nowcast_nl"] = nowcast_value
 
     new_row.name = dt_rivm_file
-    df_measures_updated = df_measures.append(new_row)
+    df_measures_updated = df_measures_updated.append(new_row)
     return df_measures_updated
 
 
