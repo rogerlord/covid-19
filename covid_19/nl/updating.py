@@ -56,7 +56,6 @@ def update_measures(df_measures, folder):
     ggd_regions = get_ggd_regions()
 
     df_measures_updated = df_measures.copy()
-    df_measures_updated.index = pd.to_datetime(df_measures_updated.index, format="%Y-%m-%d")
     if dt_rivm_file in df_measures.index:
         return df_measures_updated
 
@@ -81,6 +80,8 @@ def update_measures(df_measures, folder):
 
     new_row.name = dt_rivm_file
     df_measures_updated = df_measures_updated.append(new_row)
+    df_measures_updated.index = pd.to_datetime(df_measures_updated.index, format="%Y-%m-%d")
+
     return df_measures_updated
 
 
