@@ -40,3 +40,4 @@ def test_update_measures():
     df_measures.index = pd.to_datetime(df_measures.index, format='%Y-%m-%d')
     df_measures_updated = update_measures(df_measures)
     df_measures_updated.to_csv(r"c:\temp\df_measures.csv", date_format="%Y-%m-%d")
+

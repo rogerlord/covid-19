@@ -4,7 +4,8 @@ import pandas as pd
 import datetime
 
 from covid_19.nl.dataretrieval import get_rivm_files_historical, get_lagged_values, get_cases_per_day_from_data_frame
-from covid_19.nl.forecasting import get_scaling_coefficient, forecast_daily_cases_from_data_frames, recreate_lagged_values
+from covid_19.nl.forecasting import get_scaling_coefficient, forecast_daily_cases_from_data_frames, \
+    recreate_lagged_values
 from covid_19.tests.test_pandasutils import assert_frame_equal
 
 

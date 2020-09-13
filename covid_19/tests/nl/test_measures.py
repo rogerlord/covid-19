@@ -1,7 +1,9 @@
 import pytest
-from covid_19.nl.dataretrieval import get_rivm_file, get_cases_per_day_from_data_frame
+from covid_19.nl.dataretrieval import get_rivm_file, get_cases_per_day_from_data_frame, get_cases_per_day_from_file
 from covid_19.nl.measures import net_increases, gross_increases
 import os
+
+from forecasting import forecast_daily_cases
 
 
 @pytest.fixture
@@ -32,3 +34,13 @@ def test_gross_increases(covid_19_cases_2020_07_25, covid_19_cases_2020_07_24):
 
 def test_gross_increases_last_21_days(covid_19_cases_2020_07_25, covid_19_cases_2020_07_24):
     assert gross_increases(covid_19_cases_2020_07_25, covid_19_cases_2020_07_24, 21) == 141
+
+
+@pytest.mark.skip("Only run locally")
+def test_generate_nowcasts():
+    current_path = os.path.dirname(os.path.realpath(__file__))
+    folder = os.path.join(current_path, r"../../../")
+    df_updated = forecast_daily_cases(folder)
+    data_forecast = df_updated.dropna()
+    data_rolling = data_forecast.rolling(window=7).mean().dropna()
+    data_rolling.to_csv("c:\\temp\\nowcasts.csv")
