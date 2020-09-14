@@ -1,5 +1,5 @@
 import pytest
-from covid_19.nl.dataretrieval import get_rivm_file, get_cases_per_day_from_data_frame, get_cases_per_day_from_file
+from covid_19.nl.dataretrieval import get_rivm_file, get_cases_per_day_from_data_frame
 from covid_19.nl.measures import net_increases, gross_increases
 import os
 
