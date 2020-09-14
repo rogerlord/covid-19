@@ -3,7 +3,7 @@ from covid_19.nl.dataretrieval import get_rivm_file, get_cases_per_day_from_data
 from covid_19.nl.measures import net_increases, gross_increases
 import os
 
-from forecasting import forecast_daily_cases
+from covid_19.nl.forecasting import forecast_daily_cases
 
 
 @pytest.fixture
