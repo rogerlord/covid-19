@@ -57,6 +57,17 @@ def get_cases_per_day_from_file(folder):
     return pd.read_csv(folder + r"data\nl\COVID-19_daily_cases.csv", squeeze=True, index_col=0, header=None, parse_dates=True)
 
 
+def get_cases_per_day_historical(from_date, to_date):
+    cases_per_day_list = []
+
+    for i in range((to_date - from_date).days + 1):
+        dt = from_date + datetime.timedelta(days=i)
+        df = get_cases_per_day_from_data_frame(get_rivm_file_historical(dt))
+        cases_per_day_list.append((dt, df))
+
+    return cases_per_day_list
+
+
 def get_lagged_values(folder):
     return pd.read_csv(folder + r"data\nl\COVID-19_lagged.csv", index_col=0, header=0, parse_dates=True)
 
