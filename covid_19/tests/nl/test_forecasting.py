@@ -2,7 +2,6 @@ import pytest
 import os
 import pandas as pd
 import datetime
-import numpy as np
 
 from covid_19.nl.dataretrieval import get_rivm_files_historical, get_lagged_values, get_cases_per_day_from_data_frame, \
     get_rivm_file_historical
