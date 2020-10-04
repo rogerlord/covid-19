@@ -1,5 +1,5 @@
 import datetime
-from covid_19.nl.dataretrieval import get_cases_per_day_from_file, get_lagged_values, get_cases_per_day_from_data_frame
+from covid_19.nl.dataretrieval import get_cases_per_day_from_file, get_lagged_values
 import numpy as np
 from numpy import linalg
 from covid_19.pandasutils import filter_series

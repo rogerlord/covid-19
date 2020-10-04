@@ -77,3 +77,29 @@ def test_reperform_forecasting():
         df_forecast = forecast_daily_cases_from_data_frames(df_daily_cases, df_lagged, beta)
         df_forecast = df_forecast.rolling(window=7).mean().dropna()
         print(df_forecast.iloc[-1])
+
+
+@pytest.mark.skip("Only run locally")
+def test_generate_differences():
+    start_date = datetime.date(2020, 7, 1)
+    end_date = datetime.date(2020, 10, 3)
+
+    df_list = []
+    date_list = []
+    for i in range((end_date - start_date).days + 1):
+        dt = start_date + datetime.timedelta(days=i)
+        df_list.append(get_cases_per_day_from_data_frame(get_rivm_file_historical(dt)))
+        date_list.append(dt)
+
+    num_lags = (end_date - start_date).days + 1
+    bla = create_lagged_values(df_list, date_list)
+    df = pd.DataFrame(bla, index=pd.date_range(start=start_date.strftime("%Y-%m-%d"),
+                                               end=end_date.strftime("%Y-%m-%d")),
+                      columns=range(num_lags))
+    df.to_csv(r"c:\temp\df_lagged.csv")
+
+    blabla = create_lagged_values_differences(bla)
+    df_differences = pd.DataFrame(blabla, index=pd.date_range(start=start_date.strftime("%Y-%m-%d"),
+                                                              end=end_date.strftime("%Y-%m-%d")),
+                                  columns=range(num_lags))
+    df_differences.to_csv(r"c:\temp\df_differences.csv")
