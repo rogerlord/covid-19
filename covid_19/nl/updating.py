@@ -67,7 +67,7 @@ def update_measures(df_measures, folder):
     new_row["nowcast_nl"] = nowcast_value
 
     nowcast_value_beta_0_2 = forecast_daily_cases(folder, 0.2).rolling(window=7).mean().dropna().iloc[-1]
-    #new_row["nowcast_nl_0_2"] = nowcast_value_beta_0_2
+    new_row["nowcast_nl_0_2"] = nowcast_value_beta_0_2
 
     new_row.name = dt_rivm_file.strftime("%Y-%m-%d")
     df_measures_updated = df_measures_updated.append(new_row)
