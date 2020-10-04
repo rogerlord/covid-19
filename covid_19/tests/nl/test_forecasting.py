@@ -3,12 +3,9 @@ import os
 import pandas as pd
 import datetime
 
-from covid_19.nl.dataretrieval import get_rivm_files_historical, get_lagged_values, get_cases_per_day_from_data_frame, \
-    get_rivm_file_historical, get_cases_per_day_historical
-from covid_19.nl.forecasting import get_scaling_coefficient, forecast_daily_cases_from_data_frames, \
-    recreate_lagged_values, create_lagged_values_array, create_lagged_values_differences, \
-    create_lagged_values_data_frame
-from covid_19.tests.test_pandasutils import assert_frame_equal
+from covid_19.nl.dataretrieval import get_lagged_values, get_cases_per_day_historical
+from covid_19.nl.forecasting import get_scaling_coefficient, forecast_daily_cases_from_data_frames
+from manipulation import recreate_lagged_values
 
 
 @pytest.fixture
@@ -51,13 +48,6 @@ def test_get_scaling_coefficient_default_weight(covid_19_daily_cases, covid_19_l
     assert scaling == pytest.approx(scaling_weight_specified)
 
 
-def test_recreate_lagged_values(covid_19_lagged_values):
-    current_path = os.path.dirname(os.path.realpath(__file__))
-    df_lagged_most_recent = get_lagged_values(os.path.join(current_path, r"../../../"))
-    df_lagged_recreated = recreate_lagged_values(df_lagged_most_recent, datetime.date(2020, 8, 8))
-    assert_frame_equal(df_lagged_recreated, covid_19_lagged_values)
-
-
 @pytest.mark.skip("Run manually")
 def test_reperform_forecasting():
     first_date = datetime.date(2020, 7, 1)
@@ -78,40 +68,3 @@ def test_reperform_forecasting():
         df_forecast = forecast_daily_cases_from_data_frames(df_daily_cases, df_lagged, beta)
         df_forecast = df_forecast.rolling(window=7).mean().dropna()
         print(df_forecast.iloc[-1])
-
-
-@pytest.mark.skip("Only run locally")
-def test_generate_lagged_values():
-    start_date = datetime.date(2020, 7, 1)
-    end_date = datetime.date(2020, 10, 4)
-
-    cases_per_day_list = get_cases_per_day_historical(start_date, end_date)
-    lagged_values_df = create_lagged_values_data_frame(cases_per_day_list, maximum_lag=31)
-
-    lagged_values_df.to_csv(r"c:\temp\df_lagged.csv")
-
-
-@pytest.mark.skip("Only run locally")
-def test_generate_differences():
-    start_date = datetime.date(2020, 7, 1)
-    end_date = datetime.date(2020, 10, 3)
-
-    df_list = []
-    date_list = []
-    for i in range((end_date - start_date).days + 1):
-        dt = start_date + datetime.timedelta(days=i)
-        df_list.append(get_cases_per_day_from_data_frame(get_rivm_file_historical(dt)))
-        date_list.append(dt)
-
-    num_lags = (end_date - start_date).days + 1
-    bla = create_lagged_values_array(df_list, date_list)
-    df = pd.DataFrame(bla, index=pd.date_range(start=start_date.strftime("%Y-%m-%d"),
-                                               end=end_date.strftime("%Y-%m-%d")),
-                      columns=range(num_lags))
-    df.to_csv(r"c:\temp\df_lagged.csv")
-
-    blabla = create_lagged_values_differences(bla)
-    df_differences = pd.DataFrame(blabla, index=pd.date_range(start=start_date.strftime("%Y-%m-%d"),
-                                                              end=end_date.strftime("%Y-%m-%d")),
-                                  columns=range(num_lags))
-    df_differences.to_csv(r"c:\temp\df_differences.csv")

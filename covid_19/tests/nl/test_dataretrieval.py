@@ -1,5 +1,5 @@
 from covid_19.nl.dataretrieval import get_latest_rivm_file, get_rivm_file, get_cases_per_day_from_data_frame, \
-    get_rivm_file_historical, get_rivm_files_historical, get_cases_per_day_historical
+    get_rivm_file_historical, get_rivm_files_historical, get_cases_per_day_historical, get_daily_reported_values
 import os
 import datetime
 import pytest

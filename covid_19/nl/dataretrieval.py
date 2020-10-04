@@ -76,5 +76,10 @@ def get_lagged_values(folder, maximum_lag=np.inf):
     return df[df.columns[0:maximum_lag]]
 
 
+def get_daily_reported_values(folder):
+    df_lagged = get_lagged_values(folder)
+    return create_lagged_values_differences(df_lagged.to_numpy())
+
+
 def get_measures(folder):
     return pd.read_csv(folder + r"data\nl\COVID-19_measures.csv", index_col=0, header=0, parse_dates=True)
