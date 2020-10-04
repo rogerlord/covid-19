@@ -4,3 +4,4 @@ numpy
 cbsodata
 seaborn
 xlrd
+scipy
