@@ -49,9 +49,6 @@ def update_measures(df_measures, folder):
     if dt_last_measure_present == dt_rivm_file:
         return df_measures
 
-    net_increases_21 = lambda df1, df2: net_increases(df1, df2, 21)
-    gross_increases_21 = lambda df1, df2: gross_increases(df1, df2, 21)
-
     df_rivm_previous_day = get_rivm_file_historical(dt_rivm_file - datetime.timedelta(days=1))
     ggd_regions = get_ggd_regions()
 
@@ -62,15 +59,9 @@ def update_measures(df_measures, folder):
                                                            ggd_region)
         new_row["gross_" + ggd_region] = __calculate_measure(df_rivm_latest, df_rivm_previous_day, gross_increases,
                                                              ggd_region)
-        new_row["net_21_" + ggd_region] = __calculate_measure(df_rivm_latest, df_rivm_previous_day,
-                                                              net_increases_21, ggd_region)
-        new_row["gross_21_" + ggd_region] = __calculate_measure(df_rivm_latest, df_rivm_previous_day,
-                                                                gross_increases_21, ggd_region)
 
     new_row["net_nl"] = __calculate_measure(df_rivm_latest, df_rivm_previous_day, net_increases)
     new_row["gross_nl"] = __calculate_measure(df_rivm_latest, df_rivm_previous_day, gross_increases)
-    new_row["net_21_nl"] = __calculate_measure(df_rivm_latest, df_rivm_previous_day, net_increases_21)
-    new_row["gross_21_nl"] = __calculate_measure(df_rivm_latest, df_rivm_previous_day, gross_increases_21)
 
     nowcast_value = forecast_daily_cases(folder).rolling(window=7).mean().dropna().iloc[-1]
     new_row["nowcast_nl"] = nowcast_value
