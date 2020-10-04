@@ -11,15 +11,15 @@ def test_calculate_probabilities():
 
 
 def test_calculate_log_likelihood():
-    total_reported_numbers = [25, 14, 15, 75, 100]
-    daily_increments = np.array([[10, 5, 0, 0, 0],
-                                 [9, 4, 0, 0, np.nan],
-                                 [12, 3, 0, np.nan, np.nan],
-                                 [50, 20, np.nan, np.nan, np.nan],
-                                 [100, np.nan, np.nan, np.nan, np.nan]])
+    total_reported_numbers = [25, 14, 15, 70, 100]
+    daily_increments = np.array([[10, 5, 10],
+                                 [9, 4, 1],
+                                 [12, 3, 1],
+                                 [50, 20, np.nan],
+                                 [100, np.nan, np.nan]])
 
     log_likelihood = calculate_log_likelihood(total_reported_numbers, daily_increments, [0.25, 0.5])
-    assert log_likelihood == pytest.approx(-70.08175172)
+    assert log_likelihood == pytest.approx(-105.5483161)
 
 
 def test_corrected_daily_increments():
