@@ -1,6 +1,7 @@
 import pandas as pd
 from covid_19.pandasutils import filter_data_frame
 import datetime
+import numpy as np
 
 
 def get_rivm_file_historical(date_file):
@@ -68,8 +69,11 @@ def get_cases_per_day_historical(from_date, to_date):
     return cases_per_day_list
 
 
-def get_lagged_values(folder):
-    return pd.read_csv(folder + r"data\nl\COVID-19_lagged.csv", index_col=0, header=0, parse_dates=True)
+def get_lagged_values(folder, maximum_lag=np.inf):
+    df = pd.read_csv(folder + r"data\nl\COVID-19_lagged.csv", index_col=0, header=0, parse_dates=True)
+    if maximum_lag is np.inf:
+        return df
+    return df[df.columns[0:maximum_lag]]
 
 
 def get_measures(folder):

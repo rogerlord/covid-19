@@ -57,5 +57,3 @@ def test_update_lagged_values():
     df_lagged_updated_expected = pd.read_csv(file_name_lagged_updated_expected, index_col=0, header=0, parse_dates=True)
 
     assert_frame_equal(df_lagged_updated, df_lagged_updated_expected)
-
-

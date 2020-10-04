@@ -4,6 +4,7 @@ import numpy as np
 from numpy import linalg
 from covid_19.pandasutils import filter_series
 import math
+import pandas as pd
 
 
 def get_scaling_coefficient(lag, df_most_recent, df_lagged_values, first_date, last_date, beta=0.0):
@@ -30,6 +31,7 @@ def forecast_daily_cases_from_data_frames(df_daily_cases, df_lagged_values, beta
     first_date = min(df_lagged_values.index).date()
     last_column = df_lagged_values.columns[-1]
     last_accurate_date = min(df_lagged_values[df_lagged_values[last_column].isna()].index - datetime.timedelta(days=1))
+    last_accurate_date = last_accurate_date.date()
 
     for i in range(len(df_lagged_values.columns)):
         scaling = get_scaling_coefficient(i, df_daily_cases, df_lagged_values, first_date, last_accurate_date, beta)
@@ -48,7 +50,22 @@ def recreate_lagged_values(df_lagged, dt: datetime.date):
     return df
 
 
-def create_lagged_values(cases_per_day_list, maximum_lag=np.inf):
+def create_lagged_values_data_frame(cases_per_day_list, maximum_lag=np.inf):
+    lagged_values_array = create_lagged_values_array(cases_per_day_list, maximum_lag)
+    date_list = list(map(lambda x: x[0], cases_per_day_list))
+    first_date = min(date_list)
+    last_date = max(date_list)
+
+    if maximum_lag is np.inf:
+        maximum_lag = (last_date - first_date).days
+
+    return pd.DataFrame(lagged_values_array, index=pd.date_range(
+        start=first_date.strftime("%Y-%m-%d"),
+        end=last_date.strftime("%Y-%m-%d")),
+                      columns=list(range(maximum_lag+1)))
+
+
+def create_lagged_values_array(cases_per_day_list, maximum_lag=np.inf):
     date_list = list(map(lambda x: x[0], cases_per_day_list))
     first_date = min(date_list)
     last_date = max(date_list)
@@ -61,10 +78,13 @@ def create_lagged_values(cases_per_day_list, maximum_lag=np.inf):
         df_cases_i = cases_per_day_list[i][1]
         for j in range(i + 1):
             dt_j = (first_date + datetime.timedelta(days=j)).strftime("%Y-%m-%d")
+            if i-j > maximum_lag:
+                continue
+
             if dt_j in df_cases_i.index:
                 lagged_array[j, i-j] = df_cases_i[dt_j]
             else:
-                lagged_array[j, i - j] = 0
+                lagged_array[j, i-j] = 0
 
     return lagged_array
 
