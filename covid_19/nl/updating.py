@@ -21,24 +21,34 @@ def update_files(folder):
     ds_daily_cases_updated.to_csv(folder + r"data\nl\COVID-19_daily_cases.csv", header=False)
 
     df_lagged = get_lagged_values(folder)
-    last_contribution = filter_series(ds_daily_cases_updated, last_available_date_rivm, last_available_date_rivm)
+    df_lagged = update_lagged_values(df_lagged, ds_daily_cases_updated, last_available_date_rivm)
+
+    df_lagged.to_csv(folder + r"data\nl\COVID-19_lagged.csv", header=True)
+
+
+def update_lagged_values(df_lagged, ds_daily_cases, dt):
+    df = df_lagged.copy()
+
+    last_contribution = filter_series(ds_daily_cases, dt, dt)
     if len(last_contribution) == 0:
-        print("Zero patients reported on {dt}".format(dt=last_available_date_rivm))
+        print("Zero patients reported on {dt}".format(dt=dt))
         last_contribution = 0
     elif len(last_contribution) > 1:
-        raise Exception("More than one contribution on {dt}".format(dt=last_available_date_rivm))
+        raise Exception("More than one contribution on {dt}".format(dt=dt))
     else:
         last_contribution = last_contribution.iloc[0]
 
     new_last_row = pd.Series(data=[last_contribution],
                              index=['0'],
-                             name=datetime.datetime.combine(last_available_date_rivm, datetime.datetime.min.time()))
-    df_lagged = df_lagged.append(new_last_row)
+                             name=datetime.datetime.combine(dt, datetime.datetime.min.time()))
+
+    df = df.append(new_last_row)
     for i in range(1, len(df_lagged.columns)):
-        infection_date = last_available_date_rivm - datetime.timedelta(days=i)
-        value_to_add = ds_daily_cases_updated[infection_date.strftime("%Y-%m-%d")]
-        df_lagged.at[infection_date.strftime("%Y-%m-%d"), str(i)] = value_to_add
-    df_lagged.to_csv(folder + r"data\nl\COVID-19_lagged.csv", header=True)
+        infection_date = dt - datetime.timedelta(days=i)
+        value_to_add = ds_daily_cases[infection_date.strftime("%Y-%m-%d")]
+        df.at[infection_date.strftime("%Y-%m-%d"), str(i)] = value_to_add
+
+    return df
 
 
 def update_measures(df_measures, folder):
