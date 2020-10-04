@@ -1,5 +1,5 @@
 from covid_19.nl.dataretrieval import get_cases_per_day_historical, get_cases_per_day_from_data_frame, \
-    get_rivm_file_historical, get_lagged_values
+    get_rivm_file_historical, get_lagged_values, get_daily_reported_values
 from covid_19.nl.manipulation import create_lagged_values_data_frame, create_lagged_values_differences, \
     create_lagged_values_array, recreate_lagged_values
 import pandas as pd
@@ -58,3 +58,9 @@ def test_recreate_lagged_values(covid_19_lagged_values):
     df_lagged_most_recent = get_lagged_values(os.path.join(current_path, r"../../../"), maximum_lag=14)
     df_lagged_recreated = recreate_lagged_values(df_lagged_most_recent, datetime.date(2020, 8, 8))
     assert_frame_equal(df_lagged_recreated, covid_19_lagged_values)
+
+
+@pytest.mark.skip("Work in progress")
+def test_work_in_progress():
+    current_path = os.path.dirname(os.path.realpath(__file__))
+    daily_reported_values = get_daily_reported_values(os.path.join(current_path, r"../../../"))
