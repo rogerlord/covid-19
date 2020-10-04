@@ -66,7 +66,10 @@ def update_measures(df_measures, folder):
     nowcast_value = forecast_daily_cases(folder).rolling(window=7).mean().dropna().iloc[-1]
     new_row["nowcast_nl"] = nowcast_value
 
-    new_row.name = dt_rivm_file
+    nowcast_value_beta_0_2 = forecast_daily_cases(folder, 0.2).rolling(window=7).mean().dropna().iloc[-1]
+    #new_row["nowcast_nl_0_2"] = nowcast_value_beta_0_2
+
+    new_row.name = dt_rivm_file.strftime("%Y-%m-%d")
     df_measures_updated = df_measures_updated.append(new_row)
     df_measures_updated.index = pd.to_datetime(df_measures_updated.index, format="%Y-%m-%d")
 

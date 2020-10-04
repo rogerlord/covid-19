@@ -2,10 +2,12 @@ import pytest
 import os
 import pandas as pd
 import datetime
+import numpy as np
 
-from covid_19.nl.dataretrieval import get_rivm_files_historical, get_lagged_values, get_cases_per_day_from_data_frame
+from covid_19.nl.dataretrieval import get_rivm_files_historical, get_lagged_values, get_cases_per_day_from_data_frame, \
+    get_rivm_file_historical
 from covid_19.nl.forecasting import get_scaling_coefficient, forecast_daily_cases_from_data_frames, \
-    recreate_lagged_values
+    recreate_lagged_values, create_lagged_values, create_lagged_values_differences
 from covid_19.tests.test_pandasutils import assert_frame_equal
 
 
@@ -59,7 +61,8 @@ def test_recreate_lagged_values(covid_19_lagged_values):
 @pytest.mark.skip("Run manually")
 def test_reperform_forecasting():
     first_date = datetime.date(2020, 7, 1)
-    most_recent_date = datetime.date(2020, 8, 16)
+    most_recent_date = datetime.date(2020, 10, 3)
+    beta = 0.2
     current_path = os.path.dirname(os.path.realpath(__file__))
     df_lagged_most_recent = get_lagged_values(os.path.join(current_path, r"../../../"))
     df_rivm = get_rivm_files_historical(first_date, most_recent_date)
@@ -71,6 +74,6 @@ def test_reperform_forecasting():
         df_daily_cases = get_cases_per_day_from_data_frame(df_rivm, dt)
         df_lagged = recreate_lagged_values(df_lagged_most_recent, dt)
         df_lagged = df_lagged[first_date:dt]
-        df_forecast = forecast_daily_cases_from_data_frames(df_daily_cases, df_lagged)
+        df_forecast = forecast_daily_cases_from_data_frames(df_daily_cases, df_lagged, beta)
         df_forecast = df_forecast.rolling(window=7).mean().dropna()
         print(df_forecast.iloc[-1])

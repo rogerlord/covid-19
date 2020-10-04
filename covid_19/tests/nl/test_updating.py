@@ -4,6 +4,7 @@ from covid_19.nl.demography import get_ggd_regions
 from covid_19.nl.dataretrieval import get_rivm_files_historical
 from covid_19.nl.measures import calculate_measure_historically, net_increases, gross_increases
 from covid_19.nl.updating import update_measures
+import os
 import pytest
 
 
@@ -28,8 +29,11 @@ def test_create_data_frame_with_measures():
 
 @pytest.mark.skip("Only run manually")
 def test_update_measures():
+    current_path = os.path.dirname(os.path.realpath(__file__))
+    folder = os.path.join(current_path, r"../../../")
+
     df_measures = pd.read_csv(r"C:\Projects\covid-19\covid_19\tests\nl\fixtures\COVID-19_measures.csv"
                               , index_col=0, header=0, parse_dates=True)
     df_measures.index = pd.to_datetime(df_measures.index, format='%Y-%m-%d')
-    df_measures_updated = update_measures(df_measures)
+    df_measures_updated = update_measures(df_measures, folder)
     df_measures_updated.to_csv(r"c:\temp\df_measures.csv", date_format="%Y-%m-%d")
