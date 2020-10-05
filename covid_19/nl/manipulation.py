@@ -15,7 +15,7 @@ def create_lagged_values_data_frame(cases_per_day_list, maximum_lag=np.inf):
     return pd.DataFrame(lagged_values_array, index=pd.date_range(
         start=first_date.strftime("%Y-%m-%d"),
         end=last_date.strftime("%Y-%m-%d")),
-                      columns=list(range(maximum_lag+1)))
+                      columns=list(range(maximum_lag)))
 
 
 def create_lagged_values_array(cases_per_day_list, maximum_lag=np.inf):
@@ -26,12 +26,12 @@ def create_lagged_values_array(cases_per_day_list, maximum_lag=np.inf):
     if maximum_lag is np.inf:
         maximum_lag = (last_date - first_date).days
 
-    lagged_array = np.empty(((last_date - first_date).days + 1, maximum_lag + 1)) * np.nan
+    lagged_array = np.empty(((last_date - first_date).days + 1, maximum_lag)) * np.nan
     for i in range((last_date - first_date).days + 1):
         df_cases_i = cases_per_day_list[i][1]
         for j in range(i + 1):
             dt_j = (first_date + datetime.timedelta(days=j)).strftime("%Y-%m-%d")
-            if i-j > maximum_lag:
+            if i-j >= maximum_lag:
                 continue
 
             if dt_j in df_cases_i.index:
@@ -57,7 +57,7 @@ def create_lagged_values_differences(lagged_array):
 
 def recreate_lagged_values(df_lagged, dt: datetime.date):
     df = df_lagged.copy()
-    first_date = min(df.index)
+    first_date = min(df.index).date()
     df = df[first_date:dt]
     num_columns = len(df.columns)
     for i in range(1, num_columns):

@@ -9,10 +9,10 @@ import os
 from covid_19.tests.test_pandasutils import assert_frame_equal
 
 
-@pytest.mark.skip("Only run locally")
+#@pytest.mark.skip("Only run locally")
 def test_generate_lagged_values():
     start_date = datetime.date(2020, 7, 1)
-    end_date = datetime.date(2020, 10, 4)
+    end_date = datetime.date(2020, 10, 5)
 
     cases_per_day_list = get_cases_per_day_historical(start_date, end_date)
     lagged_values_df = create_lagged_values_data_frame(cases_per_day_list, maximum_lag=31)

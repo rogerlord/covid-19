@@ -2,6 +2,13 @@ import math
 from itertools import accumulate
 import numpy as np
 
+from dataretrieval import get_rivm_file_historical, get_cases_per_day_from_data_frame, get_lagged_values
+from manipulation import recreate_lagged_values, create_lagged_values_differences
+
+from scipy.optimize import minimize
+
+from pandasutils import filter_series
+
 
 def calculate_probabilities(delta_parameters):
     alphas = list(map(lambda x: math.exp(x), delta_parameters))
@@ -57,3 +64,27 @@ def calculate_log_likelihood(total_reported_numbers, daily_increments, delta_par
             log_likelihood += daily_increments[i, d] * log_probabilities[d]
 
     return log_likelihood
+
+
+def optimise_log_likelihood(dt, folder, maximum_lag=np.inf):
+    df_lagged = get_lagged_values(folder, maximum_lag)
+    df_lagged = recreate_lagged_values(df_lagged, dt)
+    first_date = df_lagged.index.unique().min()
+    last_date = df_lagged.index.unique().max()
+
+    cases_per_day = get_cases_per_day_from_data_frame(get_rivm_file_historical(dt))
+    cases_per_day = filter_series(cases_per_day, first_date, last_date).to_numpy()
+
+    if maximum_lag is np.inf:
+        maximum_lag = len(df_lagged.columns)
+
+    daily_increments = create_lagged_values_differences(df_lagged.to_numpy())
+    daily_increments = correct_daily_increments(cases_per_day, daily_increments, maximum_lag)
+
+    initial_delta_parameters = np.zeros(maximum_lag)
+
+    def log_likelihood_function(x):
+        return -calculate_log_likelihood(cases_per_day, daily_increments, x)
+
+    res = minimize(fun=log_likelihood_function, x0=initial_delta_parameters, method="Powell")
+    return res
