@@ -61,7 +61,7 @@ def generate_data_frame_for_plot_daily_cases_per_ggd_region(folder, measure):
 
 def generate_plot_daily_cases_per_ggd_region(folder, measure):
     measure_for_country, df_data = generate_data_frame_for_plot_daily_cases_per_ggd_region(folder, measure)
-    fig = df_data.plot(column="Infections_per_100K", figsize=(10, 8), cmap="YlOrRd", legend=True, vmax=50.0,
+    fig = df_data.plot(column="Infections_per_100K", figsize=(10, 8), cmap="YlOrRd", legend=True, vmin=0.0, vmax=50.0,
                        edgecolor="gray", linewidth=0.25)
     [l.set_family("Arial") for l in fig.figure.axes[1].yaxis.get_ticklabels()]
     df_data["coords"] = df_data["geometry"].apply(lambda x: x.representative_point().coords[:])
