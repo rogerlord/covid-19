@@ -20,7 +20,7 @@ def update_files(folder):
     ds_daily_cases_updated.sort_index(inplace=True)
     ds_daily_cases_updated.to_csv(folder + r"data\nl\COVID-19_daily_cases.csv", header=False)
 
-    df_lagged = get_lagged_values(folder, maximum_lag=14)
+    df_lagged = get_lagged_values(folder)
     df_lagged = update_lagged_values(df_lagged, ds_daily_cases_updated, last_available_date_rivm)
 
     df_lagged.to_csv(folder + r"data\nl\COVID-19_lagged.csv", header=True)

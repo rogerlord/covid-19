@@ -19,9 +19,9 @@ def get_scaling_coefficient(lag, df_most_recent, df_lagged_values, first_date, l
     return scaling[0]
 
 
-def forecast_daily_cases(folder, beta=0.0):
+def forecast_daily_cases(folder, beta=0.0, maximum_lag=np.inf):
     df_daily_cases = get_cases_per_day_from_file(folder).sort_index()
-    df_lagged_values = get_lagged_values(folder).copy().sort_index()
+    df_lagged_values = get_lagged_values(folder, maximum_lag).copy().sort_index()
     return forecast_daily_cases_from_data_frames(df_daily_cases, df_lagged_values, beta)
 
 

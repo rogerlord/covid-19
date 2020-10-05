@@ -14,7 +14,7 @@ import seaborn as sns
 
 def generate_plot_national_cases_per_day(folder, show_only_last):
     df_daily = get_cases_per_day_from_file(folder)
-    df_updated = forecast_daily_cases(folder)
+    df_updated = forecast_daily_cases(folder, maximum_lag=14)
     data_actual = df_daily.dropna()[-show_only_last:]
     data_forecast = df_updated.dropna()[-show_only_last:]
     data_rolling = df_updated.rolling(window=7).mean().dropna()[-show_only_last:]
