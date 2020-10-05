@@ -4,10 +4,9 @@ import numpy as np
 
 from covid_19.nl.dataretrieval import get_rivm_file_historical, get_cases_per_day_from_data_frame, get_lagged_values
 from covid_19.nl.manipulation import recreate_lagged_values, create_lagged_values_differences
+from covid_19.pandasutils import filter_series
 
 from scipy.optimize import minimize
-
-from pandasutils import filter_series
 
 
 def calculate_probabilities(delta_parameters):
