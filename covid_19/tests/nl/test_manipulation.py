@@ -9,7 +9,7 @@ import os
 from covid_19.tests.test_pandasutils import assert_frame_equal
 
 
-#@pytest.mark.skip("Only run locally")
+@pytest.mark.skip("Only run locally")
 def test_generate_lagged_values():
     start_date = datetime.date(2020, 7, 1)
     end_date = datetime.date(2020, 10, 5)

@@ -1,5 +1,5 @@
 from covid_19.nl.chainladder import calculate_probabilities, calculate_log_likelihood, correct_daily_increments, \
-    optimise_log_likelihood
+    correct_cases_per_day
 import pytest
 import numpy as np
 import os
@@ -38,12 +38,12 @@ def test_corrected_daily_increments():
     assert (row_sum == total_reported_numbers).all()
 
 
-@pytest.mark.skip("Only run locally")
+#@pytest.mark.skip("Only run locally")
 def test_optimise():
     current_path = os.path.dirname(os.path.realpath(__file__))
     folder = os.path.join(current_path, r"../../../")
 
-    res = optimise_log_likelihood(datetime.date(2020, 10, 5), folder)
-    probabilities = calculate_probabilities(res.x)
-    for prob in probabilities:
-        print(prob)
+    corrected_cases_per_day, probabilities = correct_cases_per_day(datetime.date(2020, 10, 5), folder)
+    for i in corrected_cases_per_day:
+        print(i)
+

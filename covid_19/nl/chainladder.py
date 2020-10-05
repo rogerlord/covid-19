@@ -65,7 +65,7 @@ def calculate_log_likelihood(total_reported_numbers, daily_increments, delta_par
     return log_likelihood
 
 
-def optimise_log_likelihood(dt, folder, maximum_lag=np.inf):
+def correct_cases_per_day(dt, folder, maximum_lag=np.inf):
     df_lagged = get_lagged_values(folder, maximum_lag)
     df_lagged = recreate_lagged_values(df_lagged, dt)
     first_date = df_lagged.index.unique().min()
@@ -86,4 +86,11 @@ def optimise_log_likelihood(dt, folder, maximum_lag=np.inf):
         return -calculate_log_likelihood(cases_per_day, daily_increments, x)
 
     res = minimize(fun=log_likelihood_function, x0=initial_delta_parameters, method="Powell")
-    return res
+    probabilities = calculate_probabilities(res.x)
+    cumulative_probabilities = list(accumulate(probabilities))
+    corrected_cases_per_day = []
+    for i in range(len(cases_per_day)):
+        p = cumulative_probabilities[min(len(cases_per_day) - i - 1, maximum_lag)]
+        corrected_cases_per_day.append(cases_per_day[i] / p)
+
+    return corrected_cases_per_day, probabilities
