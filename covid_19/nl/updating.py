@@ -73,10 +73,10 @@ def update_measures(df_measures, folder):
     new_row["net_nl"] = __calculate_measure(df_rivm_latest, df_rivm_previous_day, net_increases)
     new_row["gross_nl"] = __calculate_measure(df_rivm_latest, df_rivm_previous_day, gross_increases)
 
-    nowcast_value = forecast_daily_cases(folder).rolling(window=7).mean().dropna().iloc[-1]
+    nowcast_value = forecast_daily_cases(folder, maximum_lag=14).rolling(window=7).mean().dropna().iloc[-1]
     new_row["nowcast_nl"] = nowcast_value
 
-    nowcast_value_beta_0_2 = forecast_daily_cases(folder, 0.2).rolling(window=7).mean().dropna().iloc[-1]
+    nowcast_value_beta_0_2 = forecast_daily_cases(folder, beta=0.2, maximum_lag=14).rolling(window=7).mean().dropna().iloc[-1]
     new_row["nowcast_nl_0_2"] = nowcast_value_beta_0_2
 
     new_row.name = dt_rivm_file.strftime("%Y-%m-%d")
