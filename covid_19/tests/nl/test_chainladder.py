@@ -2,6 +2,7 @@ from covid_19.nl.chainladder import calculate_probabilities, calculate_log_likel
     correct_cases_per_day
 import pytest
 import numpy as np
+import pandas as pd
 import os
 import datetime
 
@@ -38,12 +39,16 @@ def test_corrected_daily_increments():
     assert (row_sum == total_reported_numbers).all()
 
 
-#@pytest.mark.skip("Only run locally")
+@pytest.mark.skip("Only run locally")
 def test_optimise():
     current_path = os.path.dirname(os.path.realpath(__file__))
     folder = os.path.join(current_path, r"../../../")
 
-    corrected_cases_per_day, probabilities = correct_cases_per_day(datetime.date(2020, 10, 5), folder)
-    for i in corrected_cases_per_day:
-        print(i)
-
+    start_date = datetime.date(2020, 8, 1)
+    end_date = datetime.date(2020, 10, 5)
+    for i in range(0, (end_date - start_date).days + 1):
+        dt = start_date + datetime.timedelta(days=i)
+        corrected_cases_per_day, probabilities = correct_cases_per_day(dt, folder)
+        avg = pd.Series(corrected_cases_per_day).rolling(window=7).mean().dropna()
+        print(avg.iloc[-1])
+        #print(avg.iloc[-1] - corrected_cases_per_day[-1]/7 + corrected_cases_per_day[-2]/7)

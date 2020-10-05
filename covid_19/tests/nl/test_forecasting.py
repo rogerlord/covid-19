@@ -48,11 +48,11 @@ def test_get_scaling_coefficient_default_weight(covid_19_daily_cases, covid_19_l
     assert scaling == pytest.approx(scaling_weight_specified)
 
 
-@pytest.mark.skip("Run manually")
+#@pytest.mark.skip("Run manually")
 def test_reperform_forecasting():
     first_date = datetime.date(2020, 7, 1)
-    most_recent_date = datetime.date(2020, 10, 4)
-    beta = 0.0
+    most_recent_date = datetime.date(2020, 10, 5)
+    beta = 0.2
     current_path = os.path.dirname(os.path.realpath(__file__))
     df_lagged_most_recent = get_lagged_values(os.path.join(current_path, r"../../../"), 14)
     cases_per_day_list = get_cases_per_day_historical(first_date, most_recent_date)
@@ -66,5 +66,6 @@ def test_reperform_forecasting():
         df_lagged = recreate_lagged_values(df_lagged_most_recent, dt)
         df_lagged = df_lagged[first_date:dt]
         df_forecast = forecast_daily_cases_from_data_frames(df_daily_cases, df_lagged, beta)
-        df_forecast = df_forecast.rolling(window=7).mean().dropna()
-        print(df_forecast.iloc[-1])
+        avg = df_forecast.rolling(window=7).mean().dropna()
+        print(avg.iloc[-1])
+        #print(avg.iloc[-1] - df_forecast.iloc[-1]/7 + df_forecast.iloc[-2]/7)
