@@ -40,7 +40,7 @@ def test_gross_increases_last_21_days(covid_19_cases_2020_07_25, covid_19_cases_
 def test_generate_nowcasts():
     current_path = os.path.dirname(os.path.realpath(__file__))
     folder = os.path.join(current_path, r"../../../")
-    df_updated = forecast_daily_cases(folder, beta=0.0)
+    df_updated = forecast_daily_cases(folder, beta=0.2, maximum_lag=14)
     data_forecast = df_updated.dropna()
     data_rolling = data_forecast.rolling(window=7).mean().dropna()
     data_rolling.to_csv("c:\\temp\\nowcasts.csv")

@@ -3,7 +3,7 @@ import os
 import pandas as pd
 import datetime
 
-from covid_19.nl.dataretrieval import get_lagged_values, get_cases_per_day_historical
+from covid_19.nl.dataretrieval import get_lagged_values, get_cases_per_day_historical, get_cases_per_day_from_file
 from covid_19.nl.forecasting import get_scaling_coefficient, forecast_daily_cases_from_data_frames
 from covid_19.nl.manipulation import recreate_lagged_values
 
@@ -48,10 +48,10 @@ def test_get_scaling_coefficient_default_weight(covid_19_daily_cases, covid_19_l
     assert scaling == pytest.approx(scaling_weight_specified)
 
 
-#@pytest.mark.skip("Run manually")
+@pytest.mark.skip("Run manually")
 def test_reperform_forecasting():
     first_date = datetime.date(2020, 7, 1)
-    most_recent_date = datetime.date(2020, 10, 5)
+    most_recent_date = datetime.date(2020, 10, 10)
     beta = 0.2
     current_path = os.path.dirname(os.path.realpath(__file__))
     df_lagged_most_recent = get_lagged_values(os.path.join(current_path, r"../../../"), 14)

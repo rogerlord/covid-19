@@ -10,9 +10,14 @@ from scipy.optimize import minimize
 
 
 def calculate_probabilities(delta_parameters):
-    alphas = list(map(lambda x: math.exp(x), delta_parameters))
+    def safe_exp(x):
+        if x > 13.81551056:
+            return 1e06
+        return math.exp(x)
+
+    alphas = list(map(lambda x: safe_exp(x), delta_parameters))
     sum_alphas = list(accumulate(alphas))
-    intermediate = list(map(lambda x: 1.0 - math.exp(-x), sum_alphas))
+    intermediate = list(map(lambda x: 1.0 - safe_exp(-x), sum_alphas))
 
     probabilities = [intermediate[0]]
     for i in range(1, len(alphas)):
@@ -38,7 +43,7 @@ def correct_daily_increments(total_reported_numbers, daily_increments, maximum_l
     return corrected_daily_increments
 
 
-def calculate_log_likelihood(total_reported_numbers, daily_increments, delta_parameters):
+def calculate_log_likelihood(total_reported_numbers, daily_increments, delta_parameters, beta=0.0):
     probabilities = calculate_probabilities(delta_parameters)
     cumulative_probabilities = list(accumulate(probabilities))
     number_of_days = len(total_reported_numbers)
@@ -55,17 +60,19 @@ def calculate_log_likelihood(total_reported_numbers, daily_increments, delta_par
     log_likelihood = 0.0
     j = 2
     for i in range(skip_first, number_of_days):
-        log_likelihood -= total_reported_numbers[i] * safe_log(cumulative_probabilities[-j])
+        weight = math.exp(-beta * (number_of_days - 1 - i))
+        log_likelihood -= weight * (total_reported_numbers[i] * safe_log(cumulative_probabilities[-j]))
         j = j + 1
 
     for i in range(number_of_days):
+        weight = math.exp(-beta * (number_of_days - 1 - i))
         for d in range(min(number_of_days - i, maximum_lag + 1)):
-            log_likelihood += daily_increments[i, d] * log_probabilities[d]
+            log_likelihood += weight * (daily_increments[i, d] * log_probabilities[d])
 
     return log_likelihood
 
 
-def correct_cases_per_day(dt, folder, maximum_lag=np.inf):
+def correct_cases_per_day(dt, folder, maximum_lag=np.inf, beta=0.0):
     df_lagged = get_lagged_values(folder, maximum_lag)
     df_lagged = recreate_lagged_values(df_lagged, dt)
     first_date = df_lagged.index.unique().min()
@@ -83,7 +90,7 @@ def correct_cases_per_day(dt, folder, maximum_lag=np.inf):
     initial_delta_parameters = np.zeros(maximum_lag)
 
     def log_likelihood_function(x):
-        return -calculate_log_likelihood(cases_per_day, daily_increments, x)
+        return -calculate_log_likelihood(cases_per_day, daily_increments, x, beta=beta)
 
     res = minimize(fun=log_likelihood_function, x0=initial_delta_parameters, method="Powell")
     probabilities = calculate_probabilities(res.x)

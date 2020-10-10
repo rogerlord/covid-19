@@ -40,15 +40,21 @@ def test_corrected_daily_increments():
 
 
 @pytest.mark.skip("Only run locally")
-def test_optimise():
+def test_reperform_chainladder_nowcasts():
     current_path = os.path.dirname(os.path.realpath(__file__))
     folder = os.path.join(current_path, r"../../../")
 
     start_date = datetime.date(2020, 8, 1)
-    end_date = datetime.date(2020, 10, 5)
+    end_date = datetime.date(2020, 10, 10)
+    beta = 0.2
+
+    corrected_cases_per_day, probabilities = correct_cases_per_day(end_date, folder, beta=beta)
+    avg = pd.Series(corrected_cases_per_day).rolling(window=7).mean().dropna()
+    avg.to_csv(r"c:\temp\chainladder.csv")
+
     for i in range(0, (end_date - start_date).days + 1):
         dt = start_date + datetime.timedelta(days=i)
-        corrected_cases_per_day, probabilities = correct_cases_per_day(dt, folder)
+        corrected_cases_per_day, probabilities = correct_cases_per_day(dt, folder, beta=beta)
         avg = pd.Series(corrected_cases_per_day).rolling(window=7).mean().dropna()
         print(avg.iloc[-1])
         #print(avg.iloc[-1] - corrected_cases_per_day[-1]/7 + corrected_cases_per_day[-2]/7)
