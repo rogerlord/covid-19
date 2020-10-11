@@ -7,8 +7,11 @@ from covid_19.nl.dataretrieval import get_cases_per_day_from_file, get_measures,
 from covid_19.nl.forecasting import forecast_daily_cases
 from covid_19.nl.demography import get_ggd_regions, get_ggd_regions_geographical_boundaries, \
     get_population_per_ggd_region
+import numpy as np
 import pandas as pd
+import matplotlib
 import matplotlib.pyplot as plt
+from matplotlib.colors import LinearSegmentedColormap
 import seaborn as sns
 
 
@@ -59,10 +62,18 @@ def generate_data_frame_for_plot_daily_cases_per_ggd_region(folder, measure):
     return measure_for_country, df_data
 
 
+def get_custom_colourmap():
+    colours = ["yellow", "orange", "red", "darkred", "maroon", "black"]
+    nodes = np.array([0.0, 25.0, 50.0, 100.0, 125.0, 150.0]) / 200.0
+    return LinearSegmentedColormap.from_list("customcmap", list(zip(nodes, colours)))
+
+
 def generate_plot_daily_cases_per_ggd_region(folder, measure):
     measure_for_country, df_data = generate_data_frame_for_plot_daily_cases_per_ggd_region(folder, measure)
-    fig = df_data.plot(column="Infections_per_100K", figsize=(10, 8), cmap="YlOrRd", legend=True, vmin=0.0, vmax=50.0,
-                       edgecolor="gray", linewidth=0.25)
+
+    matplotlib.rcParams["text.color"] = 'white'
+    fig = df_data.plot(column="Infections_per_100K", figsize=(10, 8), cmap=get_custom_colourmap(), legend=True,
+                       vmin=0.0, vmax=150.0, edgecolor="gray", linewidth=0.25)
     [l.set_family("Arial") for l in fig.figure.axes[1].yaxis.get_ticklabels()]
     df_data["coords"] = df_data["geometry"].apply(lambda x: x.representative_point().coords[:])
     df_data["coords"] = [coords[0] for coords in df_data["coords"]]

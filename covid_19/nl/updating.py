@@ -1,6 +1,5 @@
 import pandas as pd
 import datetime
-import os
 from covid_19.pandasutils import filter_series
 from covid_19.nl.demography import get_ggd_regions
 from covid_19.nl.dataretrieval import get_cases_per_day_from_file, get_latest_rivm_file, get_lagged_values, \
@@ -82,10 +81,10 @@ def update_measures(df_measures, folder):
     new_row["nowcast_nl_0_2"] = nowcast_value_beta_0_2
 
     nowcast_chainladder_value = chainladder.correct_cases_per_day(dt_rivm_file, folder, beta=0.0)[0].rolling(window=7).mean().dropna().iloc[-1]
-    new_row["nowcast_chainladder"] = nowcast_chainladder_value
+    new_row["nowcast_nl_chainladder"] = nowcast_chainladder_value
 
     nowcast_chainladder_value_beta_0_2 = chainladder.correct_cases_per_day(dt_rivm_file, folder, beta=0.2)[0].rolling(window=7).mean().dropna().iloc[-1]
-    new_row["nowcast_chainladder_0_2"] = nowcast_chainladder_value_beta_0_2
+    new_row["nowcast_nl_chainladder_0_2"] = nowcast_chainladder_value_beta_0_2
 
     new_row.name = dt_rivm_file.strftime("%Y-%m-%d")
     df_measures_updated = df_measures_updated.append(new_row)
