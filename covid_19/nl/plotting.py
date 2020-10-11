@@ -64,7 +64,7 @@ def generate_data_frame_for_plot_daily_cases_per_ggd_region(folder, measure):
 
 def get_custom_colourmap():
     colours = ["yellow", "orange", "red", "darkred", "maroon", "black"]
-    nodes = np.array([0.0, 25.0, 50.0, 100.0, 125.0, 150.0]) / 200.0
+    nodes = np.array([0.0, 25.0, 50.0, 100.0, 125.0, 150.0]) / 150.0
     return LinearSegmentedColormap.from_list("customcmap", list(zip(nodes, colours)))
 
 
