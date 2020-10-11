@@ -80,10 +80,12 @@ def update_measures(df_measures, folder):
     nowcast_value_beta_0_2 = forecast_daily_cases(folder, beta=0.2, maximum_lag=14).rolling(window=7).mean().dropna().iloc[-1]
     new_row["nowcast_nl_0_2"] = nowcast_value_beta_0_2
 
-    nowcast_chainladder_value = chainladder.correct_cases_per_day(dt_rivm_file, folder, beta=0.0)[0].rolling(window=7).mean().dropna().iloc[-1]
+    corrected_cases_per_day, _ = chainladder.correct_cases_per_day(dt_rivm_file, folder, beta=0.0)
+    nowcast_chainladder_value = pd.Series(corrected_cases_per_day).rolling(window=7).mean().dropna().iloc[-1]
     new_row["nowcast_nl_chain"] = nowcast_chainladder_value
 
-    nowcast_chainladder_value_beta_0_2 = chainladder.correct_cases_per_day(dt_rivm_file, folder, beta=0.2)[0].rolling(window=7).mean().dropna().iloc[-1]
+    corrected_cases_per_day, _ = chainladder.correct_cases_per_day(dt_rivm_file, folder, beta=0.2)
+    nowcast_chainladder_value_beta_0_2 = pd.Series(corrected_cases_per_day).rolling(window=7).mean().dropna().iloc[-1]
     new_row["nowcast_nl_chain_0_2"] = nowcast_chainladder_value_beta_0_2
 
     new_row.name = dt_rivm_file.strftime("%Y-%m-%d")
