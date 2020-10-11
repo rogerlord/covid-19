@@ -9,7 +9,6 @@ from covid_19.nl.demography import get_ggd_regions, get_ggd_regions_geographical
     get_population_per_ggd_region
 import numpy as np
 import pandas as pd
-import matplotlib
 import matplotlib.pyplot as plt
 from matplotlib.colors import LinearSegmentedColormap
 import seaborn as sns
@@ -71,7 +70,7 @@ def get_custom_colourmap():
 def generate_plot_daily_cases_per_ggd_region(folder, measure):
     measure_for_country, df_data = generate_data_frame_for_plot_daily_cases_per_ggd_region(folder, measure)
 
-    matplotlib.rcParams["text.color"] = 'white'
+    plt.rcParams["text.color"] = 'white'
     fig = df_data.plot(column="Infections_per_100K", figsize=(10, 8), cmap=get_custom_colourmap(), legend=True,
                        vmin=0.0, vmax=150.0, edgecolor="gray", linewidth=0.25)
     [l.set_family("Arial") for l in fig.figure.axes[1].yaxis.get_ticklabels()]
