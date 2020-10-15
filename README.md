@@ -13,13 +13,13 @@ The below graph, which will be updated on a daily basis, shows the currently kno
 
 The forecasts have been made possible with the stored RIVM datasets of [Marino van Zelst](https://github.com/mzelst) and [Edwin van Veldhuizen](https://github.com/edwinveldhuizen) which can be found [here](https://github.com/mzelst/covid-19/).
 
-The below graph puts shows the 7-day rolling averages of the nowcast ("*Nowcast*") based on all information that is currently available, together with the past performance of the nowcast ("*Nowcast (same-day)*"), the gross reported number of positive tests ("*Gross*") as well as the actual data ("*Actual (not fully known)*").
+The next graph puts shows the 7-day rolling averages of the nowcast ("*Nowcast*") based on all information that is currently available, together with the past performance of the nowcast ("*Nowcast (same-day)*"), the gross reported number of positive tests ("*Gross*") as well as the actual data ("*Actual (not fully known)*").
 
 <p align="center">
   <img src="https://raw.githubusercontent.com/rogerlord/covid-19/master/plots/nl/COVID-19_daily_cases_nowcast_performance.png" alt="COVID-19 daily infections in the Netherlands"/>
 </p>
 
-The error of the (7-day rolling average of the) nowcast can be seen in the below graph, where the error of the nowcast for various parameters ($\beta$ = 0 corresponds to equal weights for all observations, the higher the value of $\beta$, the more weight is placed on recent observations) is compared to the error of the gross reported number of infections.
+The error of the (7-day rolling average of the) nowcast can be seen in the graph below, where the error of the nowcast for various parameters (β = 0 corresponds to equal weights for all observations, the higher the value of β, the more weight is placed on recent observations) is compared to the error of the gross reported number of infections.
 
 <p align="center">
   <img src="https://raw.githubusercontent.com/rogerlord/covid-19/master/plots/nl/COVID-19_daily_cases_nowcast_error.png" alt="COVID-19 daily infections in the Netherlands"/>
