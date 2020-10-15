@@ -35,11 +35,14 @@ def generate_plot_national_cases_per_day_chainladder(folder, show_only_last):
     source_rolling = ColumnDataSource(data_rolling_dict)
 
     p = figure(x_axis_type="datetime", plot_width=800, plot_height=350)
+    p.title.text = "Positive tests - actual vs. nowcast"
+    p.title.align = "center"
+    p.title.text_font_size = "18px"
     p.line('Date', 'Value', source=source, line_dash="dashed", line_width=3, legend_label="Actual (not fully known)", line_color="black")
     p.line('Date', 'Value', source=source_forecast, line_dash="dashed", line_width=3, legend_label="Nowcast", line_color=Spectral10[2])
     p.line('Date', 'Value', source=source_rolling, line_width=4, legend_label="Nowcast (7-day rolling average)", line_color=Spectral10[0])
     p.xaxis.formatter = DatetimeTickFormatter(days="%d/%b", months="%d/%b", hours="%d/%b", minutes="%d/%b")
-    p.yaxis.axis_label = "Daily new COVID-19 infections"
+    p.yaxis.axis_label = "Positive tests"
     p.legend.location = "top_left"
 
     export_png(p, filename=folder + r"plots\nl\COVID-19_daily_cases_plot.png")
