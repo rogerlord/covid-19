@@ -3,7 +3,7 @@ import datetime
 from covid_19.pandasutils import filter_series
 from covid_19.nl.demography import get_ggd_regions
 from covid_19.nl.dataretrieval import get_cases_per_day_from_file, get_latest_rivm_file, get_lagged_values, \
-    get_cases_per_day_from_data_frame, get_rivm_file_historical
+    get_cases_per_day_from_data_frame, get_rivm_file_historical, RivmRepository
 from covid_19.nl.measures import net_increases, gross_increases
 from covid_19.nl.forecasting import forecast_daily_cases
 from covid_19.nl import chainladder
@@ -56,6 +56,7 @@ def update_measures(df_measures, folder):
     dt_last_measure_present = df_measures.index[-1].date()
     df_rivm_latest = get_latest_rivm_file()
     dt_rivm_file = max(df_rivm_latest.index).date()
+    rivm_repository = RivmRepository(dt_rivm_file)
 
     if dt_last_measure_present == dt_rivm_file:
         return df_measures
@@ -80,11 +81,11 @@ def update_measures(df_measures, folder):
     nowcast_value_beta_0_2 = forecast_daily_cases(folder, beta=0.2, maximum_lag=14).rolling(window=7).mean().dropna().iloc[-1]
     new_row["nowcast_nl_0_2"] = nowcast_value_beta_0_2
 
-    corrected_cases_per_day, _ = chainladder.correct_cases_per_day(dt_rivm_file, folder, beta=0.0)
+    corrected_cases_per_day, _ = chainladder.nowcast_cases_per_day(dt_rivm_file, folder, rivm_repository, beta=0.0)
     nowcast_chainladder_value = pd.Series(corrected_cases_per_day).rolling(window=7).mean().dropna().iloc[-1]
     new_row["nowcast_nl_chain"] = nowcast_chainladder_value
 
-    corrected_cases_per_day, _ = chainladder.correct_cases_per_day(dt_rivm_file, folder, beta=0.2)
+    corrected_cases_per_day, _ = chainladder.nowcast_cases_per_day(dt_rivm_file, folder, rivm_repository, beta=0.2)
     nowcast_chainladder_value_beta_0_2 = pd.Series(corrected_cases_per_day).rolling(window=7).mean().dropna().iloc[-1]
     new_row["nowcast_nl_chain_0_2"] = nowcast_chainladder_value_beta_0_2
 

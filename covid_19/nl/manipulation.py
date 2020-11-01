@@ -55,7 +55,16 @@ def create_lagged_values_differences(lagged_array):
     return differences_array
 
 
-def recreate_lagged_values(df_lagged, dt: datetime.date):
+def recreate_lagged_values(df_lagged: pd.DataFrame, dt: datetime.date) -> pd.DataFrame:
+    """
+
+    Args:
+        df_lagged (pandas.DataFrame): Dataframe with observations at multiple lags - indexed by observation date, columns equal to observations at lags (0 = same day, 1 = after one day, etc.)
+        dt (datetime.date): The date as of which the user wants to recreate the dataframe with lagged values.
+
+    Returns:
+        pandas.DataFrame: A dataframe with observations at multiple lags as observed at date dt.
+    """
     df = df_lagged.copy()
     first_date = min(df.index).date()
     df = df[first_date:dt]

@@ -5,6 +5,28 @@ import datetime
 import numpy as np
 
 
+class RivmRepository:
+    def __init__(self, dt: datetime.date):
+        self.dt = dt
+
+    def get_dataset(self, dt: datetime.date):
+        if dt != self.dt:
+            raise Exception("The RIVM only stores the most recently available casus datasets.")
+
+        df_rivm = get_latest_rivm_file()
+        if df_rivm.index().unique() != self.dt:
+            raise Exception("The RIVM file available online does not correspond to the requested date " +
+                            self.dt.strftime("%Y-%m-%d"))
+
+        return df_rivm
+
+
+class GithubRepository:
+    @staticmethod
+    def get_dataset(dt: datetime.date):
+        return get_rivm_file_historical(dt)
+
+
 def get_rivm_file_historical(date_file):
     # Marino van Zelst (mzelst) kindly stores the history of the RIVM files in his GitHub repository
     uri = "https://raw.githubusercontent.com/mzelst/covid-19/master/data-rivm/casus-datasets/"

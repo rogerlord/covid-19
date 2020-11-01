@@ -1,5 +1,6 @@
 from covid_19.nl.chainladder import calculate_probabilities, calculate_log_likelihood, correct_daily_increments, \
-    correct_cases_per_day
+    nowcast_cases_per_day
+from covid_19.nl.dataretrieval import GithubRepository
 import pytest
 import numpy as np
 import pandas as pd
@@ -48,13 +49,13 @@ def test_reperform_chainladder_nowcasts():
     end_date = datetime.date(2020, 10, 10)
     beta = 0.2
 
-    corrected_cases_per_day, probabilities = correct_cases_per_day(end_date, folder, beta=beta)
+    corrected_cases_per_day, probabilities = nowcast_cases_per_day(end_date, folder, GithubRepository(), beta=beta)
     avg = pd.Series(corrected_cases_per_day).rolling(window=7).mean().dropna()
     avg.to_csv(r"c:\temp\chainladder.csv")
 
     for i in range(0, (end_date - start_date).days + 1):
         dt = start_date + datetime.timedelta(days=i)
-        corrected_cases_per_day, probabilities = correct_cases_per_day(dt, folder, beta=beta)
+        corrected_cases_per_day, probabilities = nowcast_cases_per_day(dt, folder, GithubRepository(), beta=beta)
         avg = pd.Series(corrected_cases_per_day).rolling(window=7).mean().dropna()
         print(avg.iloc[-1])
         #print(avg.iloc[-1] - corrected_cases_per_day[-1]/7 + corrected_cases_per_day[-2]/7)

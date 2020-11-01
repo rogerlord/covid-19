@@ -72,13 +72,13 @@ def calculate_log_likelihood(total_reported_numbers, daily_increments, delta_par
     return log_likelihood
 
 
-def correct_cases_per_day(dt, folder, maximum_lag=np.inf, beta=0.0):
+def nowcast_cases_per_day(dt, folder, data_repository, maximum_lag=np.inf, beta=0.0):
     df_lagged = get_lagged_values(folder, maximum_lag)
     df_lagged = recreate_lagged_values(df_lagged, dt)
     first_date = df_lagged.index.unique().min()
     last_date = df_lagged.index.unique().max()
 
-    cases_per_day = get_cases_per_day_from_data_frame(get_rivm_file_historical(dt))
+    cases_per_day = get_cases_per_day_from_data_frame(data_repository.get_dataset(dt))
     cases_per_day = filter_series(cases_per_day, first_date, last_date).to_numpy()
 
     if maximum_lag is np.inf:
