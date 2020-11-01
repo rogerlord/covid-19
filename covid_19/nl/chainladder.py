@@ -59,13 +59,16 @@ def calculate_log_likelihood(total_reported_numbers, daily_increments, delta_par
 
     log_likelihood = 0.0
     j = 2
+    weight = math.exp(-beta * (number_of_days - skip_first))
+    weight_multiplier = math.exp(-beta)
     for i in range(skip_first, number_of_days):
-        weight = math.exp(-beta * (number_of_days - 1 - i))
+        weight *= weight_multiplier
         log_likelihood -= weight * (total_reported_numbers[i] * safe_log(cumulative_probabilities[-j]))
         j = j + 1
 
+    weight = math.exp(-beta * number_of_days)
     for i in range(number_of_days):
-        weight = math.exp(-beta * (number_of_days - 1 - i))
+        weight *= weight_multiplier
         for d in range(min(number_of_days - i, maximum_lag + 1)):
             log_likelihood += weight * (daily_increments[i, d] * log_probabilities[d])
 
