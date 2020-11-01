@@ -52,9 +52,7 @@ def generate_plots_chainladder(folder, start_date, skip_last):
     df_daily = get_cases_per_day_from_file(folder)
     dt = df_daily.index.unique().max()
 
-    RivmRepository(dt)
-
-    nowcast_cases_per_day = chainladder.nowcast_cases_per_day(dt, folder, beta=0.2)[0]
+    nowcast_cases_per_day = chainladder.nowcast_cases_per_day(dt, folder, RivmRepository(dt), beta=0.2)[0]
     df_updated = pd.Series(data=nowcast_cases_per_day, index=df_daily.index[-len(nowcast_cases_per_day):])
     df_measures = get_measures(folder)
     nowcast_same_day_chain_0_2 = df_measures["nowcast_nl_chain_0_2"]
