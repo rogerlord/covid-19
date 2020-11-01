@@ -14,7 +14,7 @@ class RivmRepository:
             raise Exception("The RIVM only stores the most recently available casus datasets.")
 
         df_rivm = get_latest_rivm_file()
-        if df_rivm.index().unique() != self.dt:
+        if df_rivm.index.unique()[0].date() != self.dt:
             raise Exception("The RIVM file available online does not correspond to the requested date " +
                             self.dt.strftime("%Y-%m-%d"))
 
