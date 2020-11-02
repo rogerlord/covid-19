@@ -59,16 +59,13 @@ def calculate_log_likelihood(total_reported_numbers, daily_increments, delta_par
 
     log_likelihood = 0.0
     j = 2
-    weight = math.exp(-beta * (number_of_days - skip_first))
-    weight_multiplier = math.exp(-beta)
     for i in range(skip_first, number_of_days):
-        weight *= weight_multiplier
+        weight = math.exp(-beta * (number_of_days - 1 - i))
         log_likelihood -= weight * (total_reported_numbers[i] * safe_log(cumulative_probabilities[-j]))
         j = j + 1
 
-    weight = math.exp(-beta * number_of_days)
     for i in range(number_of_days):
-        weight *= weight_multiplier
+        weight = math.exp(-beta * (number_of_days - 1 - i))
         for d in range(min(number_of_days - i, maximum_lag + 1)):
             log_likelihood += weight * (daily_increments[i, d] * log_probabilities[d])
 
@@ -101,6 +98,8 @@ def nowcast_cases_per_day(dt, folder, data_repository, maximum_lag=np.inf, beta=
     corrected_cases_per_day = []
     for i in range(len(cases_per_day)):
         p = cumulative_probabilities[min(len(cases_per_day) - i - 1, maximum_lag)]
+        if abs(p) < 0.00000001:
+            print(str(p) + " " + str(i))
         corrected_cases_per_day.append(cases_per_day[i] / p)
 
     return corrected_cases_per_day, probabilities
