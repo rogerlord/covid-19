@@ -98,8 +98,6 @@ def nowcast_cases_per_day(dt, folder, data_repository, maximum_lag=np.inf, beta=
     corrected_cases_per_day = []
     for i in range(len(cases_per_day)):
         p = cumulative_probabilities[min(len(cases_per_day) - i - 1, maximum_lag)]
-        if abs(p) < 0.00000001:
-            print(str(p) + " " + str(i))
         corrected_cases_per_day.append(cases_per_day[i] / p)
 
     return corrected_cases_per_day, probabilities
