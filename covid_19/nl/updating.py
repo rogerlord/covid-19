@@ -3,7 +3,7 @@ import datetime
 from covid_19.pandasutils import filter_series
 from covid_19.nl.demography import get_ggd_regions
 from covid_19.nl.dataretrieval import get_cases_per_day_from_file, get_latest_rivm_file, get_lagged_values, \
-    get_cases_per_day_from_data_frame, get_rivm_file_historical, RivmRepository
+    get_cases_per_day_from_data_frame, get_rivm_file_historical, RivmRepository, GithubRepository
 from covid_19.nl.measures import net_increases, gross_increases
 from covid_19.nl.forecasting import forecast_daily_cases
 from covid_19.nl import chainladder
@@ -12,6 +12,7 @@ from covid_19.nl import chainladder
 def update_files(folder):
     ds_daily_cases = get_cases_per_day_from_file(folder)
     df_rivm = get_latest_rivm_file()
+    #df_rivm = get_rivm_file_historical(datetime.date(2020, 11, 11))
     last_available_date = max(ds_daily_cases.index).date()
     last_available_date_rivm = max(df_rivm.index).date()
     if not last_available_date_rivm > last_available_date:
@@ -46,17 +47,19 @@ def update_lagged_values(df_lagged, ds_daily_cases, dt):
     df = df.append(new_last_row)
     for i in range(1, len(df_lagged.columns)):
         infection_date = dt - datetime.timedelta(days=i)
-        value_to_add = ds_daily_cases[infection_date.strftime("%Y-%m-%d")]
-        df.at[infection_date.strftime("%Y-%m-%d"), str(i)] = value_to_add
+        value_to_add = ds_daily_cases[infection_date]
+        infection_date_datetime = datetime.datetime.combine(infection_date, datetime.datetime.min.time())
+        df.at[infection_date_datetime, str(i)] = value_to_add
 
     return df
 
 
 def update_measures(df_measures, folder):
     dt_last_measure_present = df_measures.index[-1].date()
-    df_rivm_latest = get_latest_rivm_file()
+    df_rivm_latest = get_rivm_file_historical(datetime.date(2020, 11, 11))
     dt_rivm_file = max(df_rivm_latest.index).date()
     rivm_repository = RivmRepository(dt_rivm_file)
+    #rivm_repository = GithubRepository()
 
     if dt_last_measure_present == dt_rivm_file:
         return df_measures
