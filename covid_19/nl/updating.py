@@ -9,10 +9,14 @@ from covid_19.nl.forecasting import forecast_daily_cases
 from covid_19.nl import chainladder
 
 
-def update_files(folder):
+def update_files(folder, date_to_run=None):
     ds_daily_cases = get_cases_per_day_from_file(folder)
-    df_rivm = get_latest_rivm_file()
-    #df_rivm = get_rivm_file_historical(datetime.date(2020, 11, 11))
+
+    if date_to_run is None:
+        df_rivm = get_latest_rivm_file()
+    else:
+        df_rivm = get_rivm_file_historical(date_to_run)
+
     last_available_date = max(ds_daily_cases.index).date()
     last_available_date_rivm = max(df_rivm.index).date()
     if not last_available_date_rivm > last_available_date:
@@ -54,12 +58,20 @@ def update_lagged_values(df_lagged, ds_daily_cases, dt):
     return df
 
 
-def update_measures(df_measures, folder):
+def update_measures(df_measures, folder, date_to_run=None):
     dt_last_measure_present = df_measures.index[-1].date()
-    df_rivm_latest = get_rivm_file_historical(datetime.date(2020, 11, 11))
+
+    if date_to_run is None:
+        df_rivm_latest = get_latest_rivm_file()
+    else:
+        df_rivm_latest = get_rivm_file_historical(date_to_run)
+
     dt_rivm_file = max(df_rivm_latest.index).date()
-    rivm_repository = RivmRepository(dt_rivm_file)
-    #rivm_repository = GithubRepository()
+
+    if date_to_run is None:
+        rivm_repository = RivmRepository(dt_rivm_file)
+    else:
+        rivm_repository = GithubRepository()
 
     if dt_last_measure_present == dt_rivm_file:
         return df_measures
