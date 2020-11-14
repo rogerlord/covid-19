@@ -31,7 +31,7 @@ def calculate_probabilities(delta_parameters):
 def correct_daily_increments(total_reported_numbers, daily_increments, maximum_lag):
     number_of_days = len(total_reported_numbers)
     skip_first = max(number_of_days - maximum_lag, 0)
-    corrected_daily_increments = np.empty((number_of_days, maximum_lag + 1)) * np.nan
+    corrected_daily_increments = np.full((number_of_days, maximum_lag + 1), np.nan)
 
     for i in range(number_of_days):
         for j in range(maximum_lag):
