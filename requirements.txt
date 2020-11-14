@@ -5,4 +5,4 @@ mapclassify
 selenium
 geopandas
 descartes
-requests==2.23.0
+requests==2.25.0
