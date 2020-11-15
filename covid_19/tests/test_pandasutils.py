@@ -2,8 +2,8 @@ import pandas as pd
 import datetime
 from covid_19.pandasutils import filter_data_frame, filter_series
 import pytest
-from pandas.util.testing import assert_frame_equal as pd_assert_frame_equal
-from pandas.util.testing import assert_series_equal as pd_assert_series_equal
+from pandas.testing import assert_frame_equal as pd_assert_frame_equal
+from pandas.testing import assert_series_equal as pd_assert_series_equal
 
 
 @pytest.mark.parametrize("hour", [0, 10])
