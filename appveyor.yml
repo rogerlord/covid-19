@@ -1,9 +1,5 @@
 # appveyor.yml
 ---
-branches:
-  only:
-    - master
-
 environment:
   access_token:
     secure: oZKFgPgc7mmfMPDsnGfifLxZx/6CcErYTzKZCpmcwjlPybJeovJuZt4P+Wl3hPbs
@@ -35,8 +31,7 @@ on_success:
 - conda config --set always_yes yes --set changeps1 no
 - conda update -q conda
 - conda info -a
-- "conda create -q -n script-environment python=%PYTHON_VERSION% selenium geckodriver firefox geopandas descartes -c conda-forge"
-- activate script-environment
+- "conda install selenium geckodriver firefox geopandas descartes -c conda-forge"
 - "pip install -r requirements.txt" 
 - "SET PYTHONPATH=%PYTHONPATH%;%CD%"
 - "python covid_19\\nl\\script.py .\\"
