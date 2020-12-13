@@ -48,11 +48,6 @@ def assertions_for_rivm_df(df):
     assert df.index.name == "Date_file"
     assert "Date_statistics" in df
     assert "Municipal_health_service" in df
-    unique_types = df["Date_statistics_type"].unique()
-    assert len(unique_types) == 3
-    assert "DOO" in unique_types
-    assert "DPL" in unique_types
-    assert "DON" in unique_types
 
 
 def test_get_cases_per_day_historical():

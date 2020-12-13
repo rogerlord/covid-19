@@ -44,7 +44,7 @@ def get_rivm_files_historical(from_date, to_date):
 
 
 def get_rivm_file(file_name):
-    df_rivm = pd.read_csv(file_name)
+    df_rivm = pd.read_csv(file_name, usecols=["Date_file", "Date_statistics", "Agegroup", "Municipal_health_service"])
     df_rivm["Date_file"] = pd.to_datetime(df_rivm["Date_file"], format='%Y-%m-%d')
     df_rivm["Date_statistics"] = pd.to_datetime(df_rivm["Date_statistics"], format='%Y-%m-%d')
     df_rivm.set_index("Date_file", inplace=True)
@@ -56,7 +56,7 @@ def get_latest_rivm_file():
     # https://data.rivm.nl/geonetwork/srv/dut/catalog.search#/metadata/2c4357c8-76e4-4662-9574-1deb8a73f724?tab=relations
     # Currently the dataset is available daily at 14:15 NL time
     url = "https://data.rivm.nl/covid-19/COVID-19_casus_landelijk.csv"
-    df_rivm = pd.read_csv(url, sep=";")
+    df_rivm = pd.read_csv(url, sep=";", usecols=["Date_file", "Date_statistics", "Agegroup", "Municipal_health_service"])
     df_rivm["Date_file"] = pd.to_datetime(df_rivm["Date_file"], format='%Y-%m-%d')
     df_rivm["Date_statistics"] = pd.to_datetime(df_rivm["Date_statistics"], format='%Y-%m-%d')
     df_rivm.set_index("Date_file", inplace=True)

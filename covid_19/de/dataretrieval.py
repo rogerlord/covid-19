@@ -59,7 +59,8 @@ def get_latest_rki_file():
     # https://npgeo-corona-npgeo-de.hub.arcgis.com/datasets/dd4580c810204019a7b8eb3e0b329dd6_0
     # The dataset is available daily
     url = "https://opendata.arcgis.com/datasets/dd4580c810204019a7b8eb3e0b329dd6_0.csv"
-    df_rki = pd.read_csv(url, sep=",")
+    df_rki = pd.read_csv(url, sep=",", usecols=["AnzahlFall", "Meldedatum", "Datenstand",
+                                                "NeuerFall", "Refdatum"])
     df_rki["Meldedatum"] = pd.to_datetime(df_rki["Meldedatum"], format='%Y/%m/%d')
     df_rki["Refdatum"] = pd.to_datetime(df_rki["Refdatum"], format='%Y/%m/%d')
     df_rki["Datenstand"] = pd.to_datetime(df_rki["Datenstand"], format="%d.%m.%Y, %H:%M Uhr", errors="ignore")
