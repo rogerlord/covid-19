@@ -28,6 +28,9 @@ import numpy as np
 #
 #
 # def get_rivm_file_historical(date_file):
+#     # The first does not have a consistent history, the second does - maybe use a combination?
+#     # https://github.com/ihucos/rki-covid19-data/releases
+#     # https://github.com/CharlesStr/CSV-Dateien-mit-Covid-19-Infektionen-
 #     # Marino van Zelst (mzelst) kindly stores the history of the RIVM files in his GitHub repository
 #     uri = "https://raw.githubusercontent.com/mzelst/covid-19/master/data-rivm/casus-datasets/"
 #     file_name_start = "COVID-19_casus_landelijk_"
