@@ -6,7 +6,7 @@ from covid_19.nl.dataretrieval import get_cases_per_day_from_file, get_latest_ri
     get_cases_per_day_from_data_frame, get_rivm_file_historical, RivmRepository, GithubRepository
 from covid_19.nl.measures import net_increases, gross_increases
 from covid_19.nl.forecasting import forecast_daily_cases
-from covid_19.nl import chainladder
+from covid_19 import chainladder
 
 
 def update_files(folder, date_to_run=None):
@@ -96,7 +96,12 @@ def update_measures(df_measures, folder, date_to_run=None):
     nowcast_value_beta_0_2 = forecast_daily_cases(folder, beta=0.2, maximum_lag=14).rolling(window=7).mean().dropna().iloc[-1]
     new_row["nowcast_nl_0_2"] = nowcast_value_beta_0_2
 
-    corrected_cases_per_day, _ = chainladder.nowcast_cases_per_day(dt_rivm_file, folder, rivm_repository, beta=0.0)
+    get_lagged_values_func = lambda x: get_lagged_values(folder, x)
+
+    corrected_cases_per_day, _ = chainladder.nowcast_cases_per_day(dt_rivm_file,
+                                                                   get_lagged_values_func,
+                                                                   get_cases_per_day_from_data_frame,
+                                                                   rivm_repository, beta=0.0)
     nowcast_chainladder_value = pd.Series(corrected_cases_per_day).rolling(window=7).mean().dropna().iloc[-1]
     new_row["nowcast_nl_chain"] = nowcast_chainladder_value
 

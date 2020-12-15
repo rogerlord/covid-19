@@ -5,7 +5,7 @@ import datetime
 
 from covid_19.nl.dataretrieval import get_lagged_values, get_cases_per_day_historical, get_cases_per_day_from_file
 from covid_19.nl.forecasting import get_scaling_coefficient, forecast_daily_cases_from_data_frames
-from covid_19.nl.manipulation import recreate_lagged_values
+from manipulation import recreate_lagged_values
 
 
 @pytest.fixture

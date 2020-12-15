@@ -12,7 +12,7 @@ import pandas as pd
 import matplotlib.pyplot as plt
 from matplotlib.colors import LinearSegmentedColormap
 import seaborn as sns
-import covid_19.nl.chainladder as chainladder
+import chainladder as chainladder
 
 
 def generate_plot_national_cases_per_day_chainladder(folder, show_only_last):
