@@ -105,7 +105,10 @@ def update_measures(df_measures, folder, date_to_run=None):
     nowcast_chainladder_value = pd.Series(corrected_cases_per_day).rolling(window=7).mean().dropna().iloc[-1]
     new_row["nowcast_nl_chain"] = nowcast_chainladder_value
 
-    corrected_cases_per_day, _ = chainladder.nowcast_cases_per_day(dt_rivm_file, folder, rivm_repository, beta=0.2)
+    corrected_cases_per_day, _ = chainladder.nowcast_cases_per_day(dt_rivm_file,
+                                                                   get_lagged_values_func,
+                                                                   get_cases_per_day_from_data_frame,
+                                                                   rivm_repository, beta=0.2)
     nowcast_chainladder_value_beta_0_2 = pd.Series(corrected_cases_per_day).rolling(window=7).mean().dropna().iloc[-1]
     new_row["nowcast_nl_chain_0_2"] = nowcast_chainladder_value_beta_0_2
 
