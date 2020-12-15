@@ -1,4 +1,4 @@
-from chainladder import calculate_probabilities, calculate_log_likelihood, correct_daily_increments
+from covid_19.chainladder import calculate_probabilities, calculate_log_likelihood, correct_daily_increments
 import pytest
 import numpy as np
 
