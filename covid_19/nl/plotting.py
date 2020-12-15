@@ -13,13 +13,18 @@ import matplotlib.pyplot as plt
 from matplotlib.colors import LinearSegmentedColormap
 import seaborn as sns
 import covid_19.chainladder as chainladder
+from covid_19.nl.dataretrieval import get_lagged_values, get_cases_per_day_from_data_frame
 
 
 def generate_plot_national_cases_per_day_chainladder(folder, show_only_last):
     df_daily = get_cases_per_day_from_file(folder)
     dt = df_daily.index.unique().max()
 
-    corrected_cases_per_day = chainladder.nowcast_cases_per_day(dt, folder, RivmRepository(dt), beta=0.2)[0]
+    get_lagged_values_func = lambda x: get_lagged_values(folder, x)
+
+    corrected_cases_per_day = chainladder.nowcast_cases_per_day(dt, get_lagged_values_func,
+                                                                get_cases_per_day_from_data_frame,
+                                                                RivmRepository(dt), beta=0.2)[0]
     df_updated = pd.Series(data=corrected_cases_per_day, index=df_daily.index[-len(corrected_cases_per_day):])
 
     data_actual = df_daily.dropna()[-show_only_last:]
@@ -52,7 +57,11 @@ def generate_plots_chainladder(folder, start_date, skip_last):
     df_daily = get_cases_per_day_from_file(folder)
     dt = df_daily.index.unique().max()
 
-    nowcast_cases_per_day = chainladder.nowcast_cases_per_day(dt, folder, RivmRepository(dt), beta=0.2)[0]
+    get_lagged_values_func = lambda x: get_lagged_values(folder, x)
+
+    nowcast_cases_per_day = chainladder.nowcast_cases_per_day(dt, get_lagged_values_func,
+                                                              get_cases_per_day_from_data_frame,
+                                                              RivmRepository(dt), beta=0.2)[0]
     df_updated = pd.Series(data=nowcast_cases_per_day, index=df_daily.index[-len(nowcast_cases_per_day):])
     df_measures = get_measures(folder)
     nowcast_same_day_chain_0_2 = df_measures["nowcast_nl_chain_0_2"]
