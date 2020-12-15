@@ -1,7 +1,7 @@
 from covid_19.nl.dataretrieval import get_cases_per_day_historical, get_cases_per_day_from_data_frame, \
     get_rivm_file_historical, get_lagged_values, get_daily_reported_values
 from covid_19.nl.manipulation import create_lagged_values_data_frame, create_lagged_values_array
-from manipulation import create_lagged_values_differences, recreate_lagged_values
+from covid_19.manipulation import create_lagged_values_differences, recreate_lagged_values
 import pandas as pd
 import datetime
 import pytest
