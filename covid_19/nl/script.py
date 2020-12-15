@@ -1,6 +1,6 @@
 import sys
 from covid_19.nl.dataretrieval import get_measures
-from covid_19.nl.plotting import generate_plot_national_cases_per_day, generate_plot_daily_cases_per_ggd_region, \
+from covid_19.nl.plotting import generate_plot_daily_cases_per_ggd_region, \
     generate_plot_heatmap, generate_plot_national_cases_per_day_chainladder, generate_plots_chainladder
 from covid_19.nl.updating import update_files, update_measures
 import datetime

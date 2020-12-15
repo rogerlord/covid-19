@@ -1,6 +1,6 @@
 import pandas as pd
 from covid_19.pandasutils import filter_data_frame
-from covid_19.nl.manipulation import create_lagged_values_differences
+from covid_19.manipulation import create_lagged_values_differences
 import datetime
 import numpy as np
 
