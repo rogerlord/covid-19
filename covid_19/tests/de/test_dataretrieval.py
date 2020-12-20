@@ -12,8 +12,7 @@ from covid_19.de.dataretrieval import get_latest_rki_file, get_rki_file_historic
 def df_rki_2020_07_24():
     dir_path = os.path.dirname(os.path.realpath(__file__))
     file_name = os.path.join(dir_path, 'fixtures/RKI_COVID19_2020-07-24.csv')
-    date_column_formats = {"Meldedatum": "%Y/%m/%d", "Refdatum": "%Y/%m/%d", "Datenstand": "rki"}
-    return get_rki_data_frame(file_name, date_column_formats)
+    return get_rki_data_frame(file_name)
 
 
 #
