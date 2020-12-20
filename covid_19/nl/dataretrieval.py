@@ -21,7 +21,7 @@ class RivmRepository:
         return df_rivm
 
 
-class GithubRepository:
+class GitHubRepository:
     @staticmethod
     def get_dataset(dt: datetime.date):
         return get_rivm_file_historical(dt)

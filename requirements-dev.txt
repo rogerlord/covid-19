@@ -5,3 +5,4 @@ cbsodata
 seaborn
 xlrd
 scipy
+requests
