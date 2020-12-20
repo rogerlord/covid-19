@@ -48,7 +48,7 @@ def generate_plot_national_cases_per_day_chainladder(folder, show_only_last):
     p.line('Date', 'Value', source=source_rolling, line_width=4, legend_label="Nowcast (7-day rolling average)", line_color=Spectral10[0])
     p.xaxis.formatter = DatetimeTickFormatter(days="%d/%b", months="%d/%b", hours="%d/%b", minutes="%d/%b")
     p.yaxis.axis_label = "Positive tests"
-    p.legend.location = "bottom_left"
+    p.legend.location = "top_left"
 
     export_png(p, filename=folder + r"plots\nl\COVID-19_daily_cases_plot.png")
 
@@ -118,7 +118,7 @@ def generate_plots_chainladder(folder, start_date, skip_last):
 
     p.xaxis.formatter = DatetimeTickFormatter(days="%d/%b", months="%d/%b", hours="%d/%b", minutes="%d/%b")
     p.yaxis.axis_label = "Error in positive tests"
-    p.legend.location = "bottom_left"
+    p.legend.location = "top_left"
 
     export_png(p, filename=folder + r"plots\nl\COVID-19_daily_cases_nowcast_error.png")
 
