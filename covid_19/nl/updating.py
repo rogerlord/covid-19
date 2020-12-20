@@ -1,12 +1,12 @@
 import pandas as pd
 import datetime
-from covid_19.pandasutils import filter_series
 from covid_19.nl.demography import get_ggd_regions
 from covid_19.nl.dataretrieval import get_cases_per_day_from_file, get_latest_rivm_file, get_lagged_values, \
-    get_cases_per_day_from_data_frame, get_rivm_file_historical, RivmRepository, GithubRepository
+    get_cases_per_day_from_data_frame, get_rivm_file_historical, RivmRepository, GitHubRepository
 from covid_19.nl.measures import net_increases, gross_increases
 from covid_19.nl.forecasting import forecast_daily_cases
 from covid_19 import chainladder
+from covid_19.updating import update_lagged_values
 
 
 def update_files(folder, date_to_run=None):
@@ -32,32 +32,6 @@ def update_files(folder, date_to_run=None):
     df_lagged.to_csv(folder + r"data\nl\COVID-19_lagged.csv", header=True)
 
 
-def update_lagged_values(df_lagged, ds_daily_cases, dt):
-    df = df_lagged.copy()
-
-    last_contribution = filter_series(ds_daily_cases, dt, dt)
-    if len(last_contribution) == 0:
-        print("Zero patients reported on {dt}".format(dt=dt))
-        last_contribution = 0
-    elif len(last_contribution) > 1:
-        raise Exception("More than one contribution on {dt}".format(dt=dt))
-    else:
-        last_contribution = last_contribution.iloc[0]
-
-    new_last_row = pd.Series(data=[last_contribution],
-                             index=['0'],
-                             name=datetime.datetime.combine(dt, datetime.datetime.min.time()))
-
-    df = df.append(new_last_row)
-    for i in range(1, len(df_lagged.columns)):
-        infection_date = dt - datetime.timedelta(days=i)
-        value_to_add = ds_daily_cases[infection_date]
-        infection_date_datetime = datetime.datetime.combine(infection_date, datetime.datetime.min.time())
-        df.at[infection_date_datetime, str(i)] = value_to_add
-
-    return df
-
-
 def update_measures(df_measures, folder, date_to_run=None):
     dt_last_measure_present = df_measures.index[-1].date()
 
@@ -71,7 +45,7 @@ def update_measures(df_measures, folder, date_to_run=None):
     if date_to_run is None:
         rivm_repository = RivmRepository(dt_rivm_file)
     else:
-        rivm_repository = GithubRepository()
+        rivm_repository = GitHubRepository()
 
     if dt_last_measure_present == dt_rivm_file:
         return df_measures

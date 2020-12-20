@@ -1,5 +1,5 @@
 from covid_19.chainladder import nowcast_cases_per_day
-from covid_19.nl.dataretrieval import GithubRepository, get_lagged_values, get_cases_per_day_from_data_frame
+from covid_19.nl.dataretrieval import GitHubRepository, get_lagged_values, get_cases_per_day_from_data_frame
 import pytest
 import pandas as pd
 import os
@@ -19,13 +19,13 @@ def test_reperform_chainladder_nowcasts():
 
     corrected_cases_per_day, probabilities = nowcast_cases_per_day(end_date, get_lagged_values_func,
                                                                    get_cases_per_day_from_data_frame,
-                                                                   GithubRepository(), beta=beta)
+                                                                   GitHubRepository(), beta=beta)
     avg = pd.Series(corrected_cases_per_day).rolling(window=7).mean().dropna()
     avg.to_csv(r"c:\temp\chainladder.csv")
 
     for i in range(0, (end_date - start_date).days + 1):
         dt = start_date + datetime.timedelta(days=i)
-        corrected_cases_per_day, probabilities = nowcast_cases_per_day(dt, get_lagged_values_func, get_cases_per_day_from_data_frame, GithubRepository(), beta=beta)
+        corrected_cases_per_day, probabilities = nowcast_cases_per_day(dt, get_lagged_values_func, get_cases_per_day_from_data_frame, GitHubRepository(), beta=beta)
         avg = pd.Series(corrected_cases_per_day).rolling(window=7).mean().dropna()
         print(avg.iloc[-1])
         # print(avg.iloc[-1] - corrected_cases_per_day[-1]/7 + corrected_cases_per_day[-2]/7)

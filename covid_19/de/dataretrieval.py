@@ -13,6 +13,7 @@ import gzip
 
 
 USED_COLS = ["AnzahlFall", "Meldedatum", "Datenstand", "NeuerFall", "Refdatum"]
+REPORTING_LAG = 1
 
 
 class RkiRepository:
@@ -31,7 +32,7 @@ class RkiRepository:
         return df_rivm
 
 
-class GithubRepository:
+class GitHubRepository:
     @staticmethod
     def get_dataset(dt: datetime.date):
         return get_rki_file_historical_from_github(dt)
@@ -63,8 +64,6 @@ def get_rki_file_historical_from_micb25(dt: datetime.date):
     url = "https://github.com/micb25/RKI_COVID19_DATA/raw/master/"
     url += "RKI_COVID19_" + dt.strftime("%Y-%m-%d") + ".csv.gz"
 
-    date_column_formats = {"Meldedatum": "%Y/%m/%d", "Refdatum": "%Y/%m/%d", "Datenstand": "rki"}
-
     temp_file = tempfile.NamedTemporaryFile(delete=False)
     temp_file_unpacked = tempfile.NamedTemporaryFile(delete=False)
 
@@ -82,7 +81,7 @@ def get_rki_file_historical_from_micb25(dt: datetime.date):
             input_file.close()
             temp_file_unpacked.close()
 
-        df_zip_file = get_rki_data_frame(temp_file_unpacked.name, date_column_formats)
+        df_zip_file = get_rki_data_frame(temp_file_unpacked.name)
     finally:
         temp_file.close()
         os.remove(temp_file.name)
@@ -95,8 +94,7 @@ def get_rki_file_historical_from_ihucos(dt: datetime.date):
     url = "https://github.com/ihucos/rki-covid19-data/releases/download/"
     dt_plus_one = dt + datetime.timedelta(days=1)
     url += "/" + dt_plus_one.strftime("%Y-%m-%d") + "/data.csv"
-    date_column_formats = {"Meldedatum": "utc", "Refdatum": "utc", "Datenstand": "rki"}
-    return get_rki_data_frame(url, date_column_formats)
+    return get_rki_data_frame(url)
 
 
 def get_rki_file_historical_from_CharlesStr(dt: datetime.date):
@@ -117,9 +115,8 @@ def get_rki_file_historical_from_CharlesStr(dt: datetime.date):
     rki_file_name = "RKI_COVID19_{date_string}".format(date_string=dt.strftime("%Y-%m-%d"))
     url += month_subfolder_lookup[dt.month] + "/" + rki_file_name
 
-    date_column_formats = {"Meldedatum": "%Y/%m/%d", "Refdatum": "%Y/%m/%d", "Datenstand": "rki"}
     if dt < datetime.date(2020, 9, 17):
-        return get_rki_data_frame(url + ".csv", date_column_formats)
+        return get_rki_data_frame(url + ".csv")
 
     url += ".zip"
     zip_request = requests.get(url)
@@ -136,7 +133,7 @@ def get_rki_file_historical_from_CharlesStr(dt: datetime.date):
         with ZipFile(temp_file, 'r') as zip_file_reference:
             temp_zip_file = zip_file_reference.extract(rki_file_name + ".csv", path=temp_dir.name)
 
-        df_zip_file = get_rki_data_frame(temp_zip_file, date_column_formats)
+        df_zip_file = get_rki_data_frame(temp_zip_file)
     finally:
         temp_file.close()
         temp_dir.cleanup()
@@ -144,18 +141,23 @@ def get_rki_file_historical_from_CharlesStr(dt: datetime.date):
     return df_zip_file
 
 
-def __convert_date_column(ds, date_format):
-    if date_format == "utc":
+def __is_int(s: str):
+    try:
+        int(s)
+        return True
+    except ValueError:
+        return False
+
+
+def __convert_date_column(ds):
+    if __is_int(ds.iloc[0]):
         return ds.apply(lambda x: datetime.datetime.utcfromtimestamp(x / 1000))
-    if date_format == "rki":
-        if "Uhr" in ds.iloc[0]:
-            return pd.to_datetime(ds, format="%d.%m.%Y, %H:%M Uhr", errors="ignore")
-        return pd.to_datetime(ds, format="%Y/%m/%d")
-
-    return pd.to_datetime(ds, format=date_format)
+    if "Uhr" in ds.iloc[0]:
+        return pd.to_datetime(ds, format="%d.%m.%Y, %H:%M Uhr", errors="ignore")
+    return pd.to_datetime(ds, format="%Y/%m/%d")
 
 
-def get_rki_data_frame(url, date_column_formats: dict):
+def get_rki_data_frame(url):
     # An explanation of variables available in this dataset can be found at:
     # https://npgeo-corona-npgeo-de.hub.arcgis.com/datasets/dd4580c810204019a7b8eb3e0b329dd6_0
     # The dataset is available daily
@@ -164,9 +166,9 @@ def get_rki_data_frame(url, date_column_formats: dict):
     except (HTTPError, FileNotFoundError):
         return None
 
-    df_rki["Meldedatum"] = __convert_date_column(df_rki["Meldedatum"], date_column_formats["Meldedatum"])
-    df_rki["Refdatum"] = __convert_date_column(df_rki["Refdatum"], date_column_formats["Refdatum"])
-    df_rki["Datenstand"] = __convert_date_column(df_rki["Datenstand"], date_column_formats["Datenstand"])
+    df_rki["Meldedatum"] = __convert_date_column(df_rki["Meldedatum"])
+    df_rki["Refdatum"] = __convert_date_column(df_rki["Refdatum"])
+    df_rki["Datenstand"] = __convert_date_column(df_rki["Datenstand"])
     df_rki.set_index("Datenstand", inplace=True)
     return df_rki
 
@@ -176,7 +178,7 @@ def get_latest_rki_file():
     # https://npgeo-corona-npgeo-de.hub.arcgis.com/datasets/dd4580c810204019a7b8eb3e0b329dd6_0
     # The dataset is available daily
     url = "https://opendata.arcgis.com/datasets/dd4580c810204019a7b8eb3e0b329dd6_0.csv"
-    return get_rki_data_frame(url, {"Meldedatum": "%Y/%m/%d", "Refdatum": "%Y/%m/%d", "Datenstand": "rki"})
+    return get_rki_data_frame(url)
 
 
 def get_cases_per_day_from_data_frame(df_rki: pd.DataFrame, date_file=None) -> pd.Series:
@@ -189,10 +191,11 @@ def get_cases_per_day_from_data_frame(df_rki: pd.DataFrame, date_file=None) -> p
     df_filtered = filter_data_frame(df_rki, date_file)
     return df_filtered.groupby("Refdatum")["AnzahlFall"].agg("sum").sort_index()
 
-# def get_cases_per_day_from_file(folder):
-#     return pd.read_csv(folder + r"data\nl\COVID-19_daily_cases.csv", squeeze=True, index_col=0, header=None, parse_dates=True)
-#
-#
+
+def get_cases_per_day_from_file(folder):
+    return pd.read_csv(folder + r"data\de\COVID-19_daily_cases.csv", squeeze=True, index_col=0, header=None, parse_dates=True)
+
+
 # def get_cases_per_day_historical(from_date, to_date):
 #     cases_per_day_list = []
 #
@@ -204,11 +207,12 @@ def get_cases_per_day_from_data_frame(df_rki: pd.DataFrame, date_file=None) -> p
 #     return cases_per_day_list
 #
 #
-# def get_lagged_values(folder, maximum_lag=np.inf):
-#     df = pd.read_csv(folder + r"data\nl\COVID-19_lagged.csv", index_col=0, header=0, parse_dates=True)
-#     if maximum_lag is np.inf:
-#         return df
-#     return df[df.columns[0:maximum_lag]]
+
+def get_lagged_values(folder, maximum_lag=np.inf):
+    df = pd.read_csv(folder + r"data\de\COVID-19_lagged.csv", index_col=0, header=0, parse_dates=True)
+    if maximum_lag is np.inf:
+        return df
+    return df[df.columns[0:maximum_lag]]
 #
 #
 # def get_daily_reported_values(folder):
