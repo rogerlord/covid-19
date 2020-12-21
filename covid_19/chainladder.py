@@ -10,11 +10,6 @@ from scipy.optimize import minimize
 
 
 def calculate_probabilities(delta_parameters):
-    def safe_exp(x):
-        if x > 13.81551056:
-            return 1e06
-        return math.exp(x)
-
     alphas = list(map(lambda x: safe_exp(x), delta_parameters))
     sum_alphas = list(accumulate(alphas))
     intermediate = list(map(lambda x: 1.0 - safe_exp(-x), sum_alphas))
@@ -122,13 +117,19 @@ def calculate_log_likelihood_jacobian_probabilities_without_last(total_reported_
     return jacobian_remapped
 
 
+def safe_exp(x):
+    if x > 13.81551056:
+        return 1e06
+    return math.exp(x)
+
+
 def calculate_log_likelihood_jacobian(total_reported_numbers, daily_increments, delta_parameters, beta=0.0):
     probabilities = calculate_probabilities(delta_parameters)
     jacobian_probabilities = calculate_log_likelihood_jacobian_probabilities_without_last(total_reported_numbers, daily_increments, probabilities, beta)
 
-    alpha_parameters = list(map(lambda x: math.exp(x), delta_parameters))
+    alpha_parameters = list(map(lambda x: safe_exp(x), delta_parameters))
     cumulative_alphas = list(accumulate(alpha_parameters))
-    sum_exp_minus_cum_alphas = list(map(lambda x: math.exp(-x), cumulative_alphas))
+    sum_exp_minus_cum_alphas = list(map(lambda x: safe_exp(-x), cumulative_alphas))
 
     jacobian_alpha = [0.0] * len(delta_parameters)
     for i in range(len(delta_parameters)):
