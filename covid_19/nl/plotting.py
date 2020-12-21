@@ -14,9 +14,10 @@ from matplotlib.colors import LinearSegmentedColormap
 import seaborn as sns
 import covid_19.chainladder as chainladder
 from covid_19.nl.dataretrieval import get_lagged_values, get_cases_per_day_from_data_frame
+import datetime
 
 
-def generate_plot_national_cases_per_day_chainladder(folder, show_only_last):
+def generate_plot_national_cases_per_day_chainladder(folder, repository, show_only_last):
     df_daily = get_cases_per_day_from_file(folder)
     dt = df_daily.index.unique().max()
 
@@ -24,7 +25,7 @@ def generate_plot_national_cases_per_day_chainladder(folder, show_only_last):
 
     corrected_cases_per_day = chainladder.nowcast_cases_per_day(dt, get_lagged_values_func,
                                                                 get_cases_per_day_from_data_frame,
-                                                                RivmRepository(dt), beta=0.2)[0]
+                                                                repository, beta=0.2)[0]
     df_updated = pd.Series(data=corrected_cases_per_day, index=df_daily.index[-len(corrected_cases_per_day):])
 
     data_actual = df_daily.dropna()[-show_only_last:]
@@ -53,7 +54,7 @@ def generate_plot_national_cases_per_day_chainladder(folder, show_only_last):
     export_png(p, filename=folder + r"plots\nl\COVID-19_daily_cases_plot.png")
 
 
-def generate_plots_chainladder(folder, start_date, skip_last):
+def generate_plots_chainladder(folder, repository, start_date, skip_last):
     df_daily = get_cases_per_day_from_file(folder)
     dt = df_daily.index.unique().max()
 
@@ -61,7 +62,7 @@ def generate_plots_chainladder(folder, start_date, skip_last):
 
     nowcast_cases_per_day = chainladder.nowcast_cases_per_day(dt, get_lagged_values_func,
                                                               get_cases_per_day_from_data_frame,
-                                                              RivmRepository(dt), beta=0.2)[0]
+                                                              repository, beta=0.2)[0]
     df_updated = pd.Series(data=nowcast_cases_per_day, index=df_daily.index[-len(nowcast_cases_per_day):])
     df_measures = get_measures(folder)
     nowcast_same_day_chain_0_2 = df_measures["nowcast_nl_chain_0_2"]
@@ -198,8 +199,8 @@ def generate_plot_daily_cases_per_ggd_region(folder, measure):
     plt.close()
 
 
-def generate_data_frame_for_plot_heatmap():
-    df_rivm = get_latest_rivm_file()
+def generate_data_frame_for_plot_heatmap(repository):
+    df_rivm = repository.get_dataset(datetime.datetime.today())
     df_filtered = df_rivm[(df_rivm["Agegroup"] != "Unknown") & (df_rivm["Agegroup"] != "<50")]
     df_filtered = df_filtered[["Agegroup", "Date_statistics"]]
     df_filtered = df_filtered.reset_index().drop(columns="Date_file")
@@ -219,8 +220,8 @@ def generate_data_frame_for_plot_heatmap():
     return df_filtered
 
 
-def generate_plot_heatmap(folder):
-    df_data = generate_data_frame_for_plot_heatmap()
+def generate_plot_heatmap(folder, repository):
+    df_data = generate_data_frame_for_plot_heatmap(repository)
     ax = sns.heatmap(df_data, cmap="YlOrRd", xticklabels=14, vmax=0.35)
     _ = ax.set_ylabel("Age group")
     _ = ax.text(

@@ -2,7 +2,7 @@ import pandas as pd
 import datetime
 from covid_19.nl.demography import get_ggd_regions
 from covid_19.nl.dataretrieval import get_rivm_files_historical, \
-    get_cases_per_day_from_data_frame, get_rivm_file
+    get_cases_per_day_from_data_frame, get_rivm_file, RivmAndGitHubRepositoryWithCaching
 from covid_19.nl.measures import calculate_measure_historically, net_increases, gross_increases
 from covid_19.nl.updating import update_measures
 from covid_19.updating import update_lagged_values
@@ -36,6 +36,8 @@ def test_create_data_frame_with_measures():
 def test_update_measures():
     current_path = os.path.dirname(os.path.realpath(__file__))
     folder = os.path.join(current_path, r"../../../")
+
+    repository = RivmAndGitHubRepositoryWithCaching(datetime.datetime.today())
 
     df_measures = pd.read_csv(r"C:\Projects\covid-19\covid_19\tests\nl\fixtures\COVID-19_measures.csv"
                               , index_col=0, header=0, parse_dates=True)

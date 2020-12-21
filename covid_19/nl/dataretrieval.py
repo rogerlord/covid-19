@@ -5,6 +5,27 @@ import datetime
 import numpy as np
 
 
+class RivmAndGitHubRepositoryWithCaching:
+    def __init__(self, dt: datetime.date):
+        self.dt = dt
+        self.rivm_repository = RivmRepository(dt)
+        self.github_repository = GitHubRepository()
+        self.cache = dict()
+
+    def get_dataset(self, dt: datetime.date):
+        if dt in self.cache:
+            return self.cache[dt]
+
+        if dt == self.dt:
+            dataset = self.rivm_repository.get_dataset(dt)
+            self.cache[dt] = dataset
+            return dataset
+
+        dataset = self.github_repository.get_dataset(dt)
+        self.cache[dt] = dataset
+        return dataset
+
+
 class RivmRepository:
     def __init__(self, dt: datetime.date):
         self.dt = dt

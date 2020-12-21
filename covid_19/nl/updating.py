@@ -9,13 +9,13 @@ from covid_19 import chainladder
 from covid_19.updating import update_lagged_values
 
 
-def update_files(folder, date_to_run=None):
+def update_files(folder, repository, date_to_run=None):
     ds_daily_cases = get_cases_per_day_from_file(folder)
 
     if date_to_run is None:
-        df_rivm = get_latest_rivm_file()
+        df_rivm = repository.get_dataset(datetime.datetime.today().date())
     else:
-        df_rivm = get_rivm_file_historical(date_to_run)
+        df_rivm = repository.get_dataset(date_to_run)
 
     last_available_date = max(ds_daily_cases.index).date()
     last_available_date_rivm = max(df_rivm.index).date()
@@ -32,20 +32,15 @@ def update_files(folder, date_to_run=None):
     df_lagged.to_csv(folder + r"data\nl\COVID-19_lagged.csv", header=True)
 
 
-def update_measures(df_measures, folder, date_to_run=None):
+def update_measures(df_measures, folder, repository, date_to_run=None):
     dt_last_measure_present = df_measures.index[-1].date()
 
     if date_to_run is None:
-        df_rivm_latest = get_latest_rivm_file()
+        df_rivm_latest = repository.get_dataset(datetime.datetime.today())
     else:
-        df_rivm_latest = get_rivm_file_historical(date_to_run)
+        df_rivm_latest = repository.get_dataset(date_to_run)
 
     dt_rivm_file = max(df_rivm_latest.index).date()
-
-    if date_to_run is None:
-        rivm_repository = RivmRepository(dt_rivm_file)
-    else:
-        rivm_repository = GitHubRepository()
 
     if dt_last_measure_present == dt_rivm_file:
         return df_measures
@@ -76,14 +71,14 @@ def update_measures(df_measures, folder, date_to_run=None):
     corrected_cases_per_day, _ = chainladder.nowcast_cases_per_day(dt_rivm_file,
                                                                    get_lagged_values_func,
                                                                    get_cases_per_day_from_data_frame,
-                                                                   rivm_repository, beta=0.0, method=method)
+                                                                   repository, beta=0.0, method=method)
     nowcast_chainladder_value = pd.Series(corrected_cases_per_day).rolling(window=7).mean().dropna().iloc[-1]
     new_row["nowcast_nl_chain"] = nowcast_chainladder_value
 
     corrected_cases_per_day, _ = chainladder.nowcast_cases_per_day(dt_rivm_file,
                                                                    get_lagged_values_func,
                                                                    get_cases_per_day_from_data_frame,
-                                                                   rivm_repository, beta=0.2, method=method)
+                                                                   repository, beta=0.2, method=method)
     nowcast_chainladder_value_beta_0_2 = pd.Series(corrected_cases_per_day).rolling(window=7).mean().dropna().iloc[-1]
     new_row["nowcast_nl_chain_0_2"] = nowcast_chainladder_value_beta_0_2
 
