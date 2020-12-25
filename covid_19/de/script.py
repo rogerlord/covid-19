@@ -12,5 +12,5 @@ if __name__ == "__main__":
 
     repository = RkiAndGitHubRepositoryWithCaching(datetime.datetime.today())
 
-    update_files(folder, date_to_run)
+    update_files(folder, repository, date_to_run)
     update_measures(get_measures(folder), folder, repository, date_to_run).to_csv(folder + r"data\de\COVID-19_measures.csv")
