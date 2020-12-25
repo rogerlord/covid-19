@@ -58,15 +58,6 @@ class GitHubRepository:
         return get_rki_file_historical_from_github(dt)
 
 
-# def get_rivm_files_historical(from_date, to_date):
-#     df_list = []
-#     for i in range((to_date - from_date).days + 1):
-#         dt = from_date + datetime.timedelta(days=i)
-#         df_list.append(get_rivm_file_historical(dt))
-#
-#     return pd.concat(df_list, axis=0, sort=True)
-
-
 def get_rki_file_historical_from_github(dt: datetime.date):
     df_rki = get_rki_file_historical_from_micb25(dt)
     if df_rki is not None:
@@ -212,34 +203,34 @@ def get_cases_per_day_from_data_frame(df_rki: pd.DataFrame, date_file=None) -> p
     return df_filtered.groupby("Refdatum")["AnzahlFall"].agg("sum").sort_index()
 
 
+class StatisticsRepository:
+    def __init__(self, folder):
+        self.folder = folder
+        self.country_code = "de"
+
+    def get_cases_per_day_from_file(self):
+        return get_cases_per_day_from_file(self.folder)
+
+    def get_lagged_values(self, maximum_lag=np.inf):
+        return get_lagged_values(self.folder, maximum_lag)
+
+    def get_measures(self):
+        return get_measures(self.folder)
+
+    @staticmethod
+    def get_cases_per_day_from_data_frame(df_rivm: pd.DataFrame, date_file=None):
+        return get_cases_per_day_from_data_frame(df_rivm, date_file)
+
+
 def get_cases_per_day_from_file(folder):
     return pd.read_csv(folder + r"data\de\COVID-19_daily_cases.csv", squeeze=True, index_col=0, header=None, parse_dates=True)
 
-
-# def get_cases_per_day_historical(from_date, to_date):
-#     cases_per_day_list = []
-#
-#     for i in range((to_date - from_date).days + 1):
-#         dt = from_date + datetime.timedelta(days=i)
-#         df = get_cases_per_day_from_data_frame(get_rivm_file_historical(dt))
-#         cases_per_day_list.append((dt, df))
-#
-#     return cases_per_day_list
-#
-#
 
 def get_lagged_values(folder, maximum_lag=np.inf):
     df = pd.read_csv(folder + r"data\de\COVID-19_lagged.csv", index_col=0, header=0, parse_dates=True)
     if maximum_lag is np.inf:
         return df
     return df[df.columns[0:maximum_lag]]
-#
-#
-# def get_daily_reported_values(folder):
-#     df_lagged = get_lagged_values(folder)
-#     return create_lagged_values_differences(df_lagged.to_numpy())
-#
-#
 
 
 def get_measures(folder):

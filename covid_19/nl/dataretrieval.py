@@ -98,6 +98,25 @@ def get_cases_per_day_from_data_frame(df_rivm: pd.DataFrame, date_file=None, ggd
     return df_filtered["Date_statistics"].value_counts().sort_index()
 
 
+class StatisticsRepository:
+    def __init__(self, folder):
+        self.folder = folder
+        self.country_code = "nl"
+
+    def get_cases_per_day_from_file(self):
+        return get_cases_per_day_from_file(self.folder)
+
+    def get_lagged_values(self, maximum_lag=np.inf):
+        return get_lagged_values(self.folder, maximum_lag)
+
+    def get_measures(self):
+        return get_measures(self.folder)
+
+    @staticmethod
+    def get_cases_per_day_from_data_frame(df_rivm: pd.DataFrame, date_file=None, ggd_region=None):
+        return get_cases_per_day_from_data_frame(df_rivm, date_file, ggd_region)
+
+
 def get_cases_per_day_from_file(folder):
     return pd.read_csv(folder + r"data\nl\COVID-19_daily_cases.csv", squeeze=True, index_col=0, header=None, parse_dates=True)
 
