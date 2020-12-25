@@ -3,7 +3,8 @@ import datetime
 from covid_19.nl.demography import get_ggd_regions
 from covid_19.nl.dataretrieval import get_rivm_files_historical, \
     get_cases_per_day_from_data_frame, get_rivm_file, RivmAndGitHubRepositoryWithCaching
-from covid_19.nl.measures import calculate_measure_historically, net_increases, gross_increases
+from covid_19.nl.measures import calculate_measure_historically
+from measures import net_increases, gross_increases
 from covid_19.nl.updating import update_measures
 from covid_19.updating import update_lagged_values
 from covid_19.tests.test_pandasutils import assert_frame_equal

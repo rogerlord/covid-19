@@ -2,7 +2,6 @@ from urllib.error import HTTPError
 
 import pandas as pd
 from covid_19.pandasutils import filter_data_frame
-from covid_19.manipulation import create_lagged_values_differences
 import datetime
 import numpy as np
 import requests
@@ -14,6 +13,27 @@ import gzip
 
 USED_COLS = ["AnzahlFall", "Meldedatum", "Datenstand", "NeuerFall", "Refdatum"]
 REPORTING_LAG = 1
+
+
+class RkiAndGitHubRepositoryWithCaching:
+    def __init__(self, dt: datetime.date):
+        self.dt = dt
+        self.rki_repository = RkiRepository(dt)
+        self.github_repository = GitHubRepository()
+        self.cache = dict()
+
+    def get_dataset(self, dt: datetime.date):
+        if dt in self.cache:
+            return self.cache[dt]
+
+        if dt == self.dt:
+            dataset = self.rki_repository.get_dataset(dt)
+            self.cache[dt] = dataset
+            return dataset
+
+        dataset = self.github_repository.get_dataset(dt)
+        self.cache[dt] = dataset
+        return dataset
 
 
 class RkiRepository:
@@ -220,5 +240,7 @@ def get_lagged_values(folder, maximum_lag=np.inf):
 #     return create_lagged_values_differences(df_lagged.to_numpy())
 #
 #
-# def get_measures(folder):
-#     return pd.read_csv(folder + r"data\nl\COVID-19_measures.csv", index_col=0, header=0, parse_dates=True)
+
+
+def get_measures(folder):
+    return pd.read_csv(folder + r"data\de\COVID-19_measures.csv", index_col=0, header=0, parse_dates=True)

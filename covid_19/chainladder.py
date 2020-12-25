@@ -2,6 +2,7 @@ import math
 import sys
 from itertools import accumulate
 import numpy as np
+import datetime
 
 from covid_19.manipulation import create_lagged_values_differences, recreate_lagged_values
 from covid_19.pandasutils import filter_series
@@ -149,9 +150,9 @@ def calculate_log_likelihood_jacobian(total_reported_numbers, daily_increments, 
     return jacobian_delta
 
 
-def nowcast_cases_per_day(dt, get_lagged_values, get_cases_per_day_from_data_frame, data_repository, maximum_lag=np.inf, beta=0.0, method="L-BFGS-B"):
+def nowcast_cases_per_day(dt, get_lagged_values, get_cases_per_day_from_data_frame, data_repository, maximum_lag=np.inf, beta=0.0, method="L-BFGS-B", reporting_lag=0):
     df_lagged = get_lagged_values(maximum_lag)
-    df_lagged = recreate_lagged_values(df_lagged, dt)
+    df_lagged = recreate_lagged_values(df_lagged, dt - datetime.timedelta(days=reporting_lag))
     first_date = df_lagged.index.unique().min()
     last_date = df_lagged.index.unique().max()
 

@@ -1,5 +1,6 @@
-from covid_19.de.updating import update_files
-from covid_19.de.dataretrieval import get_lagged_values, GitHubRepository, get_cases_per_day_from_data_frame
+from covid_19.de.updating import update_files, update_measures
+from covid_19.de.dataretrieval import get_lagged_values, GitHubRepository, RkiAndGitHubRepositoryWithCaching,\
+    get_cases_per_day_from_data_frame, get_measures
 from covid_19 import chainladder
 import os
 import datetime
@@ -34,3 +35,21 @@ def test_update_nowcasts():
                                                                    rki_repository, beta=0.2)
 
     probs = probs
+
+
+@pytest.mark.skip("Only run manually")
+def test_updating():
+    current_path = os.path.dirname(os.path.realpath(__file__))
+    folder = os.path.join(current_path, r"../../../")
+
+    dt_today = datetime.date(2020, 12, 25)
+    dt = datetime.date(2020, 8, 1)
+
+    repo = RkiAndGitHubRepositoryWithCaching(dt_today)
+
+    start_date = datetime.date(2020, 8, 1)
+    end_date = datetime.date(2020, 12, 23)
+
+    for i in range(0, (end_date - start_date).days + 1):
+        dt = start_date + datetime.timedelta(days=i)
+        update_measures(get_measures(folder), folder, repo, dt).to_csv(folder + r"data\de\COVID-19_measures.csv")
