@@ -1,5 +1,5 @@
 from covid_19.chainladder import nowcast_cases_per_day
-from covid_19.de.dataretrieval import GitHubRepository, get_lagged_values, get_cases_per_day_from_data_frame, \
+from covid_19.de.dataretrieval import get_lagged_values, get_cases_per_day_from_data_frame, \
     RkiAndGitHubRepositoryWithCaching
 import pytest
 import pandas as pd
@@ -7,7 +7,7 @@ import os
 import datetime
 
 
-#@pytest.mark.skip("Only run locally")
+@pytest.mark.skip("Only run locally")
 def test_reperform_chainladder_nowcasts():
     current_path = os.path.dirname(os.path.realpath(__file__))
     folder = os.path.join(current_path, r"../../../")
