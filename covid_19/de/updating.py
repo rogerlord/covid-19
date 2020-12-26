@@ -16,13 +16,11 @@ def update_files(folder, repository, date_to_run=None, start_from_scratch=False)
         ds_daily_cases = get_cases_per_day_from_file(folder)
         last_available_date = max(ds_daily_cases.index).date()
 
-    last_available_date += datetime.timedelta(days=REPORTING_LAG)
-
     if date_to_run is None:
-        df_rki = repository.get_dataset(datetime.datetime.today().date())
-    else:
-        df_rki = repository.get_dataset(date_to_run)
+        date_to_run = datetime.datetime.today().date()
+    df_rki = repository.get_dataset(date_to_run)
 
+    last_available_date += datetime.timedelta(days=REPORTING_LAG)
     last_available_date_rki = max(df_rki.index).date()
     if not last_available_date_rki > last_available_date:
         return

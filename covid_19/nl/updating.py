@@ -8,13 +8,13 @@ from covid_19 import chainladder
 from covid_19.updating import update_lagged_values
 from covid_19.measures import net_increases, gross_increases
 
+
 def update_files(folder, repository, date_to_run=None):
     ds_daily_cases = get_cases_per_day_from_file(folder)
 
     if date_to_run is None:
-        df_rivm = repository.get_dataset(datetime.datetime.today().date())
-    else:
-        df_rivm = repository.get_dataset(date_to_run)
+        date_to_run = datetime.datetime.today().date()
+    df_rivm = repository.get_dataset(date_to_run)
 
     last_available_date = max(ds_daily_cases.index).date()
     last_available_date_rivm = max(df_rivm.index).date()

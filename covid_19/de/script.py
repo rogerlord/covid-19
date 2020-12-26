@@ -11,7 +11,14 @@ if __name__ == "__main__":
     if len(sys.argv) == 3:
         date_to_run = sys.argv[2]
 
-    repository = RkiAndGitHubRepositoryWithCaching(datetime.datetime.today())
+    dt_today = datetime.datetime.today().date()
+    repository = RkiAndGitHubRepositoryWithCaching(dt_today)
+    if date_to_run is None:
+        try:
+            _ = repository.get_dataset(dt_today)
+        except:
+            sys.exit(0)
+
     statistics_repository = StatisticsRepository(folder)
 
     update_files(folder, repository, date_to_run)
