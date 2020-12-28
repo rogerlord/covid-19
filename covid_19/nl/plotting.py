@@ -72,7 +72,7 @@ def generate_plot_daily_cases_per_ggd_region(folder, measure):
 
     plt.rcParams["text.color"] = 'white'
     fig = df_data.plot(column="Infections_per_100K", figsize=(10, 8), cmap=get_custom_colourmap(), legend=True,
-                       vmin=0.0, vmax=150.0, edgecolor="gray", linewidth=0.25)
+                       vmin=0.0, vmax=250.0, edgecolor="gray", linewidth=0.25)
     [l.set_family("Arial") for l in fig.figure.axes[1].yaxis.get_ticklabels()]
     df_data["coords"] = df_data["geometry"].apply(lambda x: x.representative_point().coords[:])
     df_data["coords"] = [coords[0] for coords in df_data["coords"]]
