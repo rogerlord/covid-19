@@ -1,6 +1,6 @@
 import sys
 from covid_19.de.updating import update_files, update_measures
-from covid_19.de.dataretrieval import get_measures, RkiAndGitHubRepositoryWithCaching, StatisticsRepository
+from covid_19.de.dataretrieval import get_measures, RkiAndGitHubRepositoryWithCaching, StatisticsRepository, REPORTING_LAG
 from covid_19.plotting import generate_plot_national_cases_per_day_chainladder, generate_plots_chainladder
 import datetime
 
@@ -23,5 +23,5 @@ if __name__ == "__main__":
 
     update_files(folder, repository, date_to_run)
     update_measures(get_measures(folder), folder, repository, date_to_run).to_csv(folder + r"data\de\COVID-19_measures.csv")
-    generate_plot_national_cases_per_day_chainladder(repository, statistics_repository, 30)
-    generate_plots_chainladder(repository, statistics_repository, datetime.date(2020, 8, 1), 21)
+    generate_plot_national_cases_per_day_chainladder(repository, statistics_repository, 30, REPORTING_LAG)
+    generate_plots_chainladder(repository, statistics_repository, datetime.date(2020, 8, 1), 21, REPORTING_LAG)

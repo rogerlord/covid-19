@@ -7,13 +7,13 @@ from bokeh.plotting import figure
 import covid_19.chainladder as chainladder
 
 
-def generate_plot_national_cases_per_day_chainladder(repository, statistics_repository, show_only_last):
+def generate_plot_national_cases_per_day_chainladder(repository, statistics_repository, show_only_last, reporting_lag):
     df_daily = statistics_repository.get_cases_per_day_from_file()
     dt = df_daily.index.unique().max()
 
     corrected_cases_per_day = chainladder.nowcast_cases_per_day(dt, statistics_repository.get_lagged_values,
                                                                 statistics_repository.get_cases_per_day_from_data_frame,
-                                                                repository, beta=0.2)[0]
+                                                                repository, beta=0.2, reporting_lag=reporting_lag)[0]
     df_updated = pd.Series(data=corrected_cases_per_day, index=df_daily.index[-len(corrected_cases_per_day):])
 
     data_actual = df_daily.dropna()[-show_only_last:]
@@ -42,13 +42,13 @@ def generate_plot_national_cases_per_day_chainladder(repository, statistics_repo
     export_png(p, filename=statistics_repository.folder + r"plots\{country}\COVID-19_daily_cases_plot.png".format(country=statistics_repository.country_code))
 
 
-def generate_plots_chainladder(repository, statistics_repository, start_date, skip_last):
+def generate_plots_chainladder(repository, statistics_repository, start_date, skip_last, reporting_lag):
     df_daily = statistics_repository.get_cases_per_day_from_file()
     dt = df_daily.index.unique().max()
 
     nowcast_cases_per_day = chainladder.nowcast_cases_per_day(dt, statistics_repository.get_lagged_values,
                                                               statistics_repository.get_cases_per_day_from_data_frame,
-                                                              repository, beta=0.2)[0]
+                                                              repository, beta=0.2, reporting_lag=reporting_lag)[0]
     df_updated = pd.Series(data=nowcast_cases_per_day, index=df_daily.index[-len(nowcast_cases_per_day):])
     df_measures = statistics_repository.get_measures()
     nowcast_same_day_chain_0_2 = df_measures["nowcast_nl_chain_0_2"]
