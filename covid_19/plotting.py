@@ -39,7 +39,7 @@ def generate_plot_national_cases_per_day_chainladder(repository, statistics_repo
     p.yaxis.axis_label = "Positive tests"
     p.legend.location = "top_left"
 
-    export_png(p, filename=statistics_repository.folder + r"plots\{country}\COVID_19_daily_cases_plot.png".format(country=statistics_repository.country_code))
+    export_png(p, filename=statistics_repository.folder + r"plots\{country}\COVID-19_daily_cases_plot.png".format(country=statistics_repository.country_code))
 
 
 def generate_plots_chainladder(repository, statistics_repository, start_date, skip_last):
