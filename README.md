@@ -7,5 +7,5 @@ The repository contains functionality to analyse the total amount of COVID-19 ca
 
 At the moment the repository is actively maintained for the following countries:
 
-* [The Netherlands](NL.md)
-* [Germany](DE.md)
+* [The Netherlands](/docs/NL.md)
+* [Germany](/docs/DE.md)
