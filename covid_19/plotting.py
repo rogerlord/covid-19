@@ -1,4 +1,5 @@
 import pandas as pd
+import datetime
 from bokeh.io import export_png
 from bokeh.models import ColumnDataSource, DatetimeTickFormatter
 from bokeh.palettes import Spectral10
@@ -8,7 +9,7 @@ import covid_19.chainladder as chainladder
 
 def generate_plot_national_cases_per_day_chainladder(repository, statistics_repository, show_only_last, reporting_lag=0):
     df_daily = statistics_repository.get_cases_per_day_from_file()
-    dt = df_daily.index.unique().max()
+    dt = df_daily.index.unique().max() + datetime.timedelta(days=reporting_lag)
 
     corrected_cases_per_day = chainladder.nowcast_cases_per_day(dt, statistics_repository.get_lagged_values,
                                                                 statistics_repository.get_cases_per_day_from_data_frame,
@@ -43,7 +44,7 @@ def generate_plot_national_cases_per_day_chainladder(repository, statistics_repo
 
 def generate_plots_chainladder(repository, statistics_repository, start_date, skip_last, reporting_lag=0):
     df_daily = statistics_repository.get_cases_per_day_from_file()
-    dt = df_daily.index.unique().max()
+    dt = df_daily.index.unique().max() + datetime.timedelta(days=reporting_lag)
 
     nowcast_cases_per_day = chainladder.nowcast_cases_per_day(dt, statistics_repository.get_lagged_values,
                                                               statistics_repository.get_cases_per_day_from_data_frame,
