@@ -27,8 +27,8 @@ def test_create_data_frame_with_measures():
                                                                        ggd_region=ggd_region)
         print("Calculated all data for {ggd_region}".format(ggd_region=ggd_region))
 
-    df_big["net_nl"] = calculate_measure_historically(df_rivm_historical, net_increases)
-    df_big["gross_nl"] = calculate_measure_historically(df_rivm_historical, gross_increases)
+    df_big["net"] = calculate_measure_historically(df_rivm_historical, net_increases)
+    df_big["gross"] = calculate_measure_historically(df_rivm_historical, gross_increases)
 
     df_big.to_csv(r"c:\temp\df_big_measures.csv")
 
@@ -43,7 +43,7 @@ def test_update_measures():
     df_measures = pd.read_csv(r"C:\Projects\covid-19\covid_19\tests\nl\fixtures\COVID-19_measures.csv"
                               , index_col=0, header=0, parse_dates=True)
     df_measures.index = pd.to_datetime(df_measures.index, format='%Y-%m-%d')
-    df_measures_updated = update_measures(df_measures, folder)
+    df_measures_updated = update_measures(df_measures, folder, repository)
     df_measures_updated.to_csv(r"c:\temp\df_measures.csv", date_format="%Y-%m-%d")
 
 

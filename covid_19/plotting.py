@@ -51,9 +51,9 @@ def generate_plots_chainladder(repository, statistics_repository, start_date, sk
                                                               repository, beta=0.2, reporting_lag=reporting_lag)[0]
     df_updated = pd.Series(data=nowcast_cases_per_day, index=df_daily.index[-len(nowcast_cases_per_day):])
     df_measures = statistics_repository.get_measures()
-    nowcast_same_day_chain_0_2 = df_measures["nowcast_nl_chain_0_2"]
-    nowcast_same_day_chain = df_measures["nowcast_nl_chain"]
-    gross = df_measures["gross_nl"]
+    nowcast_same_day_chain_0_2 = df_measures["nowcast_chain_0_2"]
+    nowcast_same_day_chain = df_measures["nowcast_chain"]
+    gross = df_measures["gross"]
 
     data_actual = df_daily.dropna().rolling(window=7).mean().dropna()[start_date:]
     data_nowcast_chain_0_2 = df_updated.rolling(window=7).mean().dropna()[start_date:]

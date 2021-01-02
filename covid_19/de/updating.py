@@ -1,8 +1,7 @@
 import datetime
 
 from covid_19.de.dataretrieval import get_cases_per_day_from_file, \
-    get_latest_rki_file, get_rki_file_historical_from_github, get_cases_per_day_from_data_frame, \
-    get_lagged_values, REPORTING_LAG
+    get_cases_per_day_from_data_frame, get_lagged_values, REPORTING_LAG
 from covid_19.updating import update_lagged_values
 import covid_19.chainladder as chainladder
 from covid_19.measures import net_increases, gross_increases
@@ -55,8 +54,8 @@ def update_measures(df_measures, folder, repository, date_to_run=None):
 
     df_measures_updated = df_measures.copy()
     new_row = pd.Series(dtype="float64")
-    new_row["net_nl"] = __calculate_measure(df_rki_latest, df_rivm_previous_day, net_increases)
-    new_row["gross_nl"] = __calculate_measure(df_rki_latest, df_rivm_previous_day, gross_increases)
+    new_row["net"] = __calculate_measure(df_rki_latest, df_rivm_previous_day, net_increases)
+    new_row["gross"] = __calculate_measure(df_rki_latest, df_rivm_previous_day, gross_increases)
 
     get_lagged_values_func = lambda x: get_lagged_values(folder, x)
     method = "L-BFGS-B"
@@ -67,7 +66,7 @@ def update_measures(df_measures, folder, repository, date_to_run=None):
                                                                    repository, beta=0.0, method=method,
                                                                    reporting_lag=REPORTING_LAG)
     nowcast_chainladder_value = pd.Series(corrected_cases_per_day).rolling(window=7).mean().dropna().iloc[-1]
-    new_row["nowcast_nl_chain"] = nowcast_chainladder_value
+    new_row["nowcast_chain"] = nowcast_chainladder_value
 
     corrected_cases_per_day, _ = chainladder.nowcast_cases_per_day(dt_rki_file,
                                                                    get_lagged_values_func,
@@ -75,7 +74,7 @@ def update_measures(df_measures, folder, repository, date_to_run=None):
                                                                    repository, beta=0.2, method=method,
                                                                    reporting_lag=REPORTING_LAG)
     nowcast_chainladder_value_beta_0_2 = pd.Series(corrected_cases_per_day).rolling(window=7).mean().dropna().iloc[-1]
-    new_row["nowcast_nl_chain_0_2"] = nowcast_chainladder_value_beta_0_2
+    new_row["nowcast_chain_0_2"] = nowcast_chainladder_value_beta_0_2
 
     new_row.name = (dt_rki_file - datetime.timedelta(days=REPORTING_LAG)).strftime("%Y-%m-%d")
     df_measures_updated = df_measures_updated.append(new_row)
