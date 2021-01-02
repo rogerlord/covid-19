@@ -42,7 +42,7 @@ def update_measures(df_measures, folder, repository, date_to_run=None):
         dt_last_measure_present = df_measures.index[-1].date()
 
     if date_to_run is None:
-        df_rki_latest = repository.get_dataset(datetime.datetime.today())
+        df_rki_latest = repository.get_dataset(datetime.datetime.today().date())
     else:
         df_rki_latest = repository.get_dataset(date_to_run + datetime.timedelta(days=REPORTING_LAG))
 
