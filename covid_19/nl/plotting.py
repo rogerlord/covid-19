@@ -54,7 +54,7 @@ def generate_data_frame_for_plot_daily_cases_per_ggd_region(folder, measure):
     df_data["Inhabitants"] = df_data["statcode"].map(lambda x: population_per_ggd_region[x])
     df_data["Infections_per_100K"] = df_data[measure] / df_data["Inhabitants"] * 100_000.0
 
-    measure_for_country = df_measures[measure+"_nl"].rolling(window=7).sum().iloc[-1]
+    measure_for_country = df_measures[measure].rolling(window=7).sum().iloc[-1]
     inhabitants = sum(population_per_ggd_region.values())
     measure_for_country *= 100_000.0 / inhabitants
 
