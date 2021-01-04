@@ -125,7 +125,7 @@ def get_rki_file_historical_from_CharlesStr(dt: datetime.date):
         12: "Dezember"}
     rki_file_name = "RKI_COVID19_{date_string}".format(date_string=dt.strftime("%Y-%m-%d"))
     if dt.year > 2020:
-        url += month_subfolder_lookup[dt.month].lower() + str(dt.year)
+        url += month_subfolder_lookup[dt.month] + str(dt.year)
     else:
         url += month_subfolder_lookup[dt.month]
     url += "/" + rki_file_name
