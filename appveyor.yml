@@ -35,4 +35,4 @@ on_success:
 - "pip install -r requirements.txt" 
 - "SET PYTHONPATH=%PYTHONPATH%;%CD%"
 - runscripts.bat
-- powershell .\git-commit.ps1
+- powershell .\gitcommit.ps1
