@@ -16,7 +16,7 @@ def test_initialise_files():
 
     update_files(folder, datetime.date(2020, 7, 1), True)
     for dt in pd.date_range(start="2020-07-02", end="2020-12-19"):
-        update_files(folder, dt)
+        update_files(folder, date_to_run=dt)
 
 
 @pytest.mark.skip("Only run manually")

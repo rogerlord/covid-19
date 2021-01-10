@@ -34,7 +34,4 @@ on_success:
 - "conda install selenium geckodriver firefox geopandas descartes -c conda-forge"
 - "pip install -r requirements.txt" 
 - "SET PYTHONPATH=%PYTHONPATH%;%CD%"
-- "python covid_19\\nl\\script.py .\\"
-- "python covid_19\\de\\script.py .\\"
-- "python covid_19\\uk\\script.py .\\"
-- powershell .\gitcommit.ps1
+- powershell .\run_scripts.ps1
