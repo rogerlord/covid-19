@@ -1,6 +1,6 @@
 import time
 import datetime
-from covid_19.uk.dataretrieval import UkGovRepository
+from covid_19.uk.dataretrieval import UkGovHistoricalRepository
 import pytest
 import os
 
@@ -10,7 +10,7 @@ def test_get_uk_files():
     # Data obtained from https://coronavirus.data.gov.uk/details/download
     start_date = datetime.date(2020, 8, 12)
     end_date = datetime.date(2020, 8, 13)
-    repo = UkGovRepository(False)
+    repo = UkGovHistoricalRepository(False)
 
     current_folder = os.path.dirname(os.path.realpath(__file__))
     target_folder = os.path.join(current_folder, '../../../data/uk/historical/')

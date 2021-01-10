@@ -1,5 +1,4 @@
 from urllib.error import HTTPError
-
 import pandas as pd
 from covid_19.pandasutils import filter_data_frame
 import datetime
@@ -9,7 +8,6 @@ from zipfile import ZipFile
 import tempfile
 import os
 import gzip
-
 
 USED_COLS = ["AnzahlFall", "Meldedatum", "Datenstand", "NeuerFall", "Refdatum"]
 REPORTING_LAG = 1
