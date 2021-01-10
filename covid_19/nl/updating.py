@@ -1,8 +1,8 @@
 import pandas as pd
 import datetime
 from covid_19.nl.demography import get_ggd_regions
-from covid_19.nl.dataretrieval import get_cases_per_day_from_file, get_latest_rivm_file, get_lagged_values, \
-    get_cases_per_day_from_data_frame, get_rivm_file_historical, RivmRepository, GitHubRepository
+from covid_19.nl.dataretrieval import get_cases_per_day_from_file, get_lagged_values, \
+    get_cases_per_day_from_data_frame, get_rivm_file_historical
 from covid_19.nl.forecasting import forecast_daily_cases
 from covid_19 import chainladder
 from covid_19.updating import update_lagged_values

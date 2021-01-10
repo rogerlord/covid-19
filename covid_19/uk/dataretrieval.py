@@ -39,7 +39,3 @@ def get_uk_gov_dataframe_from_url(url: str, dt: datetime.date, set_index: bool =
 
 def is_uk_gov_historical_file_present(folder, dt: datetime.date):
     return os.path.exists(folder + r"\data\uk\historical\overview_{dt}.csv".format(dt=dt.strftime("%Y-%m-%d")))
-
-
-def get_cases_per_day_from_file(folder):
-    return pd.read_csv(folder + r"data\de\COVID-19_daily_cases.csv", squeeze=True, index_col=0, header=None, parse_dates=True)
