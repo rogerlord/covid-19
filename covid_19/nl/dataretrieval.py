@@ -3,6 +3,10 @@ from covid_19.pandasutils import filter_data_frame
 from covid_19.manipulation import create_lagged_values_differences
 import datetime
 import numpy as np
+import requests
+import tempfile
+import gzip
+import os
 
 
 class RivmAndGitHubRepositoryWithCaching:
@@ -52,7 +56,7 @@ def get_rivm_file_historical(date_file):
     # Marino van Zelst (mzelst) kindly stores the history of the RIVM files in his GitHub repository
     uri = "https://raw.githubusercontent.com/mzelst/covid-19/master/data-rivm/casus-datasets/"
     file_name_start = "COVID-19_casus_landelijk_"
-    return get_rivm_file(uri + file_name_start + date_file.strftime("%Y-%m-%d") + ".csv")
+    return get_rivm_file(uri + file_name_start + date_file.strftime("%Y-%m-%d") + ".csv.gz")
 
 
 def get_rivm_files_historical(from_date, to_date):
@@ -65,11 +69,41 @@ def get_rivm_files_historical(from_date, to_date):
 
 
 def get_rivm_file(file_name):
+    if file_name.endswith(".gz"):
+        return get_rivm_file_zipped(file_name)
+
     df_rivm = pd.read_csv(file_name, usecols=["Date_file", "Date_statistics", "Agegroup", "Municipal_health_service"])
     df_rivm["Date_file"] = pd.to_datetime(df_rivm["Date_file"], format='%Y-%m-%d')
     df_rivm["Date_statistics"] = pd.to_datetime(df_rivm["Date_statistics"], format='%Y-%m-%d')
     df_rivm.set_index("Date_file", inplace=True)
     return df_rivm
+
+
+def get_rivm_file_zipped(file_name):
+    temp_file = tempfile.NamedTemporaryFile(delete=False)
+    temp_file_unpacked = tempfile.NamedTemporaryFile(delete=False)
+
+    zip_request = requests.get(file_name)
+    if zip_request.status_code != 200:
+        return None
+
+    try:
+        temp_file.write(zip_request.content)
+        temp_file.close()
+        input_file = gzip.GzipFile(temp_file.name, "rb")
+        try:
+            temp_file_unpacked.write(input_file.read())
+        finally:
+            input_file.close()
+            temp_file_unpacked.close()
+
+        df_zip_file = get_rivm_file(temp_file_unpacked.name)
+    finally:
+        temp_file.close()
+        os.remove(temp_file.name)
+        os.remove(temp_file_unpacked.name)
+
+    return df_zip_file
 
 
 def get_latest_rivm_file():
