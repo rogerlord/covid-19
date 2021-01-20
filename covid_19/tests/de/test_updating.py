@@ -37,18 +37,18 @@ def test_update_nowcasts():
     probs = probs
 
 
-@pytest.mark.skip("Only run manually")
+#@pytest.mark.skip("Only run manually")
 def test_updating():
     current_path = os.path.dirname(os.path.realpath(__file__))
     folder = os.path.join(current_path, r"../../../")
 
-    dt_today = datetime.date(2020, 12, 25)
+    dt_today = datetime.date(2021, 1, 20)
     dt = datetime.date(2020, 8, 1)
 
     repo = RkiAndGitHubRepositoryWithCaching(dt_today)
 
-    start_date = datetime.date(2020, 8, 1)
-    end_date = datetime.date(2020, 12, 23)
+    start_date = datetime.date(2021, 1, 16)
+    end_date = datetime.date(2021, 1, 19)
 
     for i in range(0, (end_date - start_date).days + 1):
         dt = start_date + datetime.timedelta(days=i)

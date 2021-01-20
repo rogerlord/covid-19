@@ -9,5 +9,4 @@ def filter_data_frame(data_frame: pd.DataFrame, first_date: datetime.date, last_
 
 
 def filter_series(ds: pd.Series, first_date: datetime.date, last_date: datetime.date) -> pd.DataFrame:
-    return ds[filter(lambda x: last_date + datetime.timedelta(days=1) > x > first_date - datetime.timedelta(days=1),
-                     ds.index)]
+    return ds[list(filter(lambda x: last_date + datetime.timedelta(days=1) > x > first_date - datetime.timedelta(days=1), ds.index))]
