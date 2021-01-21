@@ -57,9 +57,6 @@ class GitHubRepository:
 
 
 def get_rki_file_historical_from_github(dt: datetime.date):
-    if dt == datetime.date(2021, 1, 17):
-        df_rki = get_rki_file_historical_from_CharlesStr(dt)
-        return df_rki
     df_rki = get_rki_file_historical_from_micb25(dt)
     if df_rki is not None:
         return df_rki

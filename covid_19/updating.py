@@ -23,8 +23,8 @@ def update_lagged_values(df_lagged, ds_daily_cases, dt, reporting_lag=0):
     df = df.append(new_last_row)
     for i in range(1, len(df_lagged.columns)):
         infection_date = dt_corrected_for_reporting_lag - datetime.timedelta(days=i)
-        value_to_add = ds_daily_cases[infection_date]
+        value_to_add = ds_daily_cases[infection_date.strftime("%Y-%m-%d")]
         infection_date_datetime = datetime.datetime.combine(infection_date, datetime.datetime.min.time())
-        df.at[infection_date_datetime, str(i)] = value_to_add
+        df.at[infection_date_datetime.strftime("%Y-%m-%d"), str(i)] = value_to_add
 
     return df

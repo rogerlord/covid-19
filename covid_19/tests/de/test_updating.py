@@ -14,9 +14,10 @@ def test_initialise_files():
     current_path = os.path.dirname(os.path.realpath(__file__))
     folder = os.path.join(current_path, r"../../../")
 
-    update_files(folder, datetime.date(2020, 7, 1), True)
-    for dt in pd.date_range(start="2020-07-02", end="2020-12-19"):
-        update_files(folder, date_to_run=dt)
+    repo = GitHubRepository()
+    update_files(folder, repo, datetime.date(2020, 7, 1), True)
+    for dt in pd.date_range(start="2020-07-02", end="2021-01-21"):
+        update_files(folder, repo, date_to_run=dt)
 
 
 @pytest.mark.skip("Only run manually")
@@ -42,13 +43,13 @@ def test_updating():
     current_path = os.path.dirname(os.path.realpath(__file__))
     folder = os.path.join(current_path, r"../../../")
 
-    dt_today = datetime.date(2021, 1, 20)
+    dt_today = datetime.date(2021, 1, 21)
     dt = datetime.date(2020, 8, 1)
 
     repo = RkiAndGitHubRepositoryWithCaching(dt_today)
 
-    start_date = datetime.date(2021, 1, 16)
-    end_date = datetime.date(2021, 1, 16)
+    start_date = datetime.date(2021, 1, 19)
+    end_date = datetime.date(2021, 1, 20)
 
     for i in range(0, (end_date - start_date).days + 1):
         dt = start_date + datetime.timedelta(days=i)
