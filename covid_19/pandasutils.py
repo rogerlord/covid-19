@@ -9,6 +9,13 @@ def filter_data_frame(data_frame: pd.DataFrame, first_date: datetime.date, last_
 
 
 def filter_series(ds: pd.Series, first_date: datetime.date, last_date: datetime.date) -> pd.DataFrame:
-    first_date_utc = first_date.replace(tzinfo=datetime.timezone.utc)
-    last_date_utc = last_date.replace(tzinfo=datetime.timezone.utc)
-    return ds[list(filter(lambda x: last_date_utc + datetime.timedelta(days=1) > x > first_date_utc - datetime.timedelta(days=1), ds.index))]
+    if isinstance(first_date, datetime.datetime):
+        if first_date.tzinfo != datetime.timezone.utc:
+            first_date_utc = first_date.replace(tzinfo=datetime.timezone.utc)
+            return filter_series(ds, first_date_utc, last_date)
+    if isinstance(last_date, datetime.datetime):
+        if last_date.tzinfo != datetime.timezone.utc:
+            last_date_utc = last_date.replace(tzinfo=datetime.timezone.utc)
+            return filter_series(ds, first_date, last_date_utc)
+    ds = ds.tz_localize(datetime.timezone.utc)
+    return ds[list(filter(lambda x: last_date + datetime.timedelta(days=1) > x > first_date - datetime.timedelta(days=1), ds.index))]
