@@ -26,12 +26,15 @@ def update_files(folder, repository, date_to_run=None, start_from_scratch=False)
 
     ds_daily_cases_updated = get_cases_per_day_from_data_frame(df_rki, last_available_date_rki)
     ds_daily_cases_updated.sort_index(inplace=True)
-    ds_daily_cases_updated.to_csv(folder + r"data\de\COVID-19_daily_cases.csv", header=False)
+    ds_index = ds_daily_cases_updated.reset_index()["Refdatum"].apply(
+        lambda x: datetime.datetime.combine(x.date(), datetime.datetime.min.time()))
+    ds_daily_cases_updated = pd.Series(ds_daily_cases_updated.values, index=ds_index)
+    ds_daily_cases_updated.to_csv(folder + r"data\de\COVID-19_daily_cases.csv", header=False, date_format="%Y-%m-%d")
 
     df_lagged = get_lagged_values(folder)
     df_lagged = update_lagged_values(df_lagged, ds_daily_cases_updated, last_available_date_rki, REPORTING_LAG)
 
-    df_lagged.to_csv(folder + r"data\de\COVID-19_lagged.csv", header=True)
+    df_lagged.to_csv(folder + r"data\de\COVID-19_lagged.csv", header=True, date_format="%Y-%m-%d")
 
 
 def update_measures(df_measures, folder, repository, date_to_run=None):

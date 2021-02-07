@@ -57,10 +57,10 @@ class GitHubRepository:
 
 
 def get_rki_file_historical_from_github(dt: datetime.date):
-    df_rki = get_rki_file_historical_from_micb25(dt)
+    df_rki = get_rki_file_historical_from_CharlesStr(dt)
     if df_rki is not None:
         return df_rki
-    df_rki = get_rki_file_historical_from_CharlesStr(dt)
+    df_rki = get_rki_file_historical_from_micb25(dt)
     if df_rki is not None:
         return df_rki
     df_rki = get_rki_file_historical_from_ihucos(dt)
@@ -166,8 +166,8 @@ def __convert_date_column(ds):
     if __is_int(ds.iloc[0]):
         return ds.apply(lambda x: datetime.datetime.utcfromtimestamp(x / 1000))
     if "Uhr" in ds.iloc[0]:
-        return pd.to_datetime(ds, format="%d.%m.%Y, %H:%M Uhr", errors="ignore")
-    return pd.to_datetime(ds, format="%Y/%m/%d")
+        return pd.to_datetime(  ds, format="%d.%m.%Y, %H:%M Uhr", errors="ignore", utc=True)
+    return pd.to_datetime(ds, format="%Y/%m/%d", utc=True)
 
 
 def get_rki_data_frame(url):
