@@ -17,5 +17,6 @@ def filter_series(ds: pd.Series, first_date: datetime.date, last_date: datetime.
         if last_date.tzinfo != datetime.timezone.utc:
             last_date_utc = last_date.replace(tzinfo=datetime.timezone.utc)
             return filter_series(ds, first_date, last_date_utc)
-    ds = ds.tz_localize(datetime.timezone.utc)
+    if ds.index.tz.zone != "UTC":
+        ds = ds.tz_localize(datetime.timezone.utc)
     return ds[list(filter(lambda x: last_date + datetime.timedelta(days=1) > x > first_date - datetime.timedelta(days=1), ds.index))]
