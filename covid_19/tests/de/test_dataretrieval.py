@@ -61,7 +61,7 @@ def test_get_from_CharlesStr():
 
 
 def test_get_from_CharlesStr_does_not_exist():
-    df_rki = get_rki_file_historical_from_CharlesStr(datetime.date(2020, 3, 26))
+    df_rki = get_rki_file_historical_from_CharlesStr(datetime.date(2019, 3, 26))
     assert df_rki is None
 
 
