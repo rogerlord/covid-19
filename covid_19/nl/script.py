@@ -7,12 +7,7 @@ from covid_19.nl.updating import update_files, update_measures
 import datetime
 
 
-if __name__ == "__main__":
-    folder = sys.argv[1]
-    date_to_run = None
-    if len(sys.argv) == 3:
-        date_to_run = sys.argv[2]
-
+def run_script(folder, date_to_run = None):
     dt_today = datetime.datetime.today().date()
     repository = RivmAndGitHubRepositoryWithCaching(dt_today)
     if date_to_run is None:
@@ -29,3 +24,12 @@ if __name__ == "__main__":
     generate_plots_chainladder(repository, statistics_repository, datetime.date(2020, 8, 1), 21)
     generate_plot_daily_cases_per_ggd_region(folder, "gross")
     generate_plot_heatmap(folder, repository)
+
+
+if __name__ == "__main__":
+    folder = sys.argv[1]
+    date_to_run = None
+    if len(sys.argv) == 3:
+        date_to_run = sys.argv[2]
+
+    run_script(folder, date_to_run)

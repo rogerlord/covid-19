@@ -53,3 +53,14 @@ def test_updating():
     for i in range(0, (end_date - start_date).days + 1):
         dt = start_date + datetime.timedelta(days=i)
         update_measures(get_measures(folder), folder, repo, dt).to_csv(folder + r"data\de\COVID-19_measures.csv")
+
+
+@pytest.mark.skip("Only run manually")
+def test_run_script():
+    from covid_19.de.script import run_script
+
+    date_to_run = datetime.date(2021, 3, 4)
+    while date_to_run < datetime.date(2021, 5, 13):
+        run_script(r"c:\\projects\\covid-19\\", date_to_run)
+        date_to_run = date_to_run + datetime.timedelta(days=1)
+        print(date_to_run)

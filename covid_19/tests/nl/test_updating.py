@@ -61,3 +61,14 @@ def test_update_lagged_values():
     df_lagged_updated_expected = pd.read_csv(file_name_lagged_updated_expected, index_col=0, header=0, parse_dates=True)
 
     assert_frame_equal(df_lagged_updated, df_lagged_updated_expected)
+
+
+@pytest.mark.skip("Only run manually")
+def test_run_script():
+    from covid_19.nl.script import run_script
+
+    date_to_run = datetime.date(2021, 4, 9)
+    while date_to_run < datetime.date(2021, 5, 13):
+        run_script(r"c:\\projects\\covid-19\\", date_to_run)
+        date_to_run = date_to_run + datetime.timedelta(days=1)
+        print(date_to_run)
