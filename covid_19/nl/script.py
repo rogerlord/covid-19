@@ -23,7 +23,7 @@ def run_script(folder, date_to_run = None):
     generate_plot_national_cases_per_day_chainladder(repository, statistics_repository, 30)
     generate_plots_chainladder(repository, statistics_repository, datetime.date(2020, 8, 1), 21)
     generate_plot_daily_cases_per_ggd_region(folder, "gross")
-    generate_plot_heatmap(folder, repository)
+    generate_plot_heatmap(folder, repository, date_to_run)
 
 
 if __name__ == "__main__":

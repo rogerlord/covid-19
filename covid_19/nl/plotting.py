@@ -89,8 +89,8 @@ def generate_plot_daily_cases_per_ggd_region(folder, measure):
     plt.close()
 
 
-def generate_data_frame_for_plot_heatmap(repository):
-    df_rivm = repository.get_dataset(datetime.datetime.today())
+def generate_data_frame_for_plot_heatmap(repository, date_to_run):
+    df_rivm = repository.get_dataset(date_to_run)
     df_filtered = df_rivm[(df_rivm["Agegroup"] != "Unknown") & (df_rivm["Agegroup"] != "<50")]
     df_filtered = df_filtered[["Agegroup", "Date_statistics"]]
     df_filtered = df_filtered.reset_index().drop(columns="Date_file")
@@ -110,8 +110,8 @@ def generate_data_frame_for_plot_heatmap(repository):
     return df_filtered
 
 
-def generate_plot_heatmap(folder, repository):
-    df_data = generate_data_frame_for_plot_heatmap(repository)
+def generate_plot_heatmap(folder, repository, date_to_run):
+    df_data = generate_data_frame_for_plot_heatmap(repository, date_to_run)
     ax = sns.heatmap(df_data, cmap="YlOrRd", xticklabels=14, vmax=0.35)
     _ = ax.set_ylabel("Age group")
     _ = ax.text(
