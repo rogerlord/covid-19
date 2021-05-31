@@ -1,6 +1,7 @@
 from covid_19.chainladder import calculate_probabilities, calculate_log_likelihood, correct_daily_increments, \
     nowcast_cases_per_day, calculate_log_likelihood_jacobian, calculate_log_likelihood_jacobian_probabilities, \
-    calculate_log_likelihood_with_probability_parameters, calculate_log_likelihood_jacobian_probabilities_without_last
+    calculate_log_likelihood_with_probability_parameters, calculate_log_likelihood_jacobian_probabilities_without_last, \
+    calculate_delta_parameters_from_probabilities, generate_equal_probabilities, generate_decaying_probabilities
 from covid_19.nl.dataretrieval import get_rivm_file, get_lagged_values, get_cases_per_day_from_data_frame
 import pytest
 from pytest import approx
@@ -14,6 +15,30 @@ def test_calculate_probabilities():
     assert probabilities[0] == pytest.approx(0.723079666)
     assert probabilities[1] == pytest.approx(0.22366976)
     assert probabilities[2] == pytest.approx(1.0 - 0.723079666 - 0.22366976)
+
+
+def test_calculate_deltas_from_probabilities():
+    probabilities = [0.2, 0.2, 0.2, 0.2, 0.2]
+    deltas = calculate_delta_parameters_from_probabilities(probabilities)
+    assert deltas[0] == pytest.approx(-1.49994, abs=1e-5)
+    assert deltas[1] == pytest.approx(-1.2459, abs=1e-5)
+    assert deltas[2] == pytest.approx(-0.90272, abs=1e-5)
+    assert deltas[3] == pytest.approx(-0.36651, abs=1e-5)
+
+
+def test_equal_probabilities():
+    probabilities = generate_equal_probabilities(5)
+    for p in probabilities:
+        assert p == pytest.approx(0.2, abs=1e-10)
+
+
+def test_decaying_probabilities():
+    probabilities = generate_decaying_probabilities(0.3, 5)
+    assert probabilities[0] == pytest.approx(0.701706, abs=1e-5)
+    assert probabilities[1] == pytest.approx(0.210512, abs=1e-5)
+    assert probabilities[2] == pytest.approx(0.063154, abs=1e-5)
+    assert probabilities[3] == pytest.approx(0.018946, abs=1e-5)
+    assert probabilities[4] == pytest.approx(0.005684, abs=1e-5)
 
 
 def test_calculate_log_likelihood():

@@ -24,6 +24,38 @@ def calculate_probabilities(delta_parameters):
     return probabilities
 
 
+def calculate_delta_parameters_from_probabilities(probabilities):
+    x = np.zeros(len(probabilities) - 1)
+    x[0] = probabilities[0]
+    for i in range(1, len(probabilities)-1):
+        x[i] = x[i-1] + probabilities[i]
+
+    x = list(map(lambda y: -math.log(1.0 - y), x))
+
+    deltas = np.zeros(len(probabilities) - 1)
+    deltas[0] = x[0]
+    for i in range(1, len(probabilities) - 1):
+        deltas[i] = x[i] - x[i-1]
+
+    deltas = list(map(lambda y: math.log(y), deltas))
+    return deltas
+
+
+def generate_equal_probabilities(num_probabilities: int):
+    return np.ones(num_probabilities) * 1.0 / num_probabilities
+
+
+def generate_decaying_probabilities(decay_factor: float, num_probabilities: int):
+    sum_probs = decay_factor * (1.0 - math.pow(decay_factor, num_probabilities)) / (1.0 - decay_factor)
+    scaling = 1.0 / sum_probs
+    probs = np.zeros(num_probabilities)
+    probs[0] = scaling * decay_factor
+    for i in range(1, num_probabilities):
+        probs[i] = decay_factor * probs[i-1]
+
+    return probs
+
+
 def correct_daily_increments(total_reported_numbers, daily_increments, maximum_lag):
     number_of_days = len(total_reported_numbers)
     skip_first = max(number_of_days - maximum_lag, 0)
@@ -34,12 +66,14 @@ def correct_daily_increments(total_reported_numbers, daily_increments, maximum_l
             corrected_daily_increments[i, j] = daily_increments[i, j]
 
         if i < skip_first:
-            corrected_daily_increments[i, maximum_lag] = total_reported_numbers[i] - sum(daily_increments[i, 0:maximum_lag])
+            corrected_daily_increments[i, maximum_lag] = total_reported_numbers[i] - sum(
+                daily_increments[i, 0:maximum_lag])
 
     return corrected_daily_increments
 
 
-def calculate_log_likelihood_with_probability_parameters(total_reported_numbers, daily_increments, probabilities, beta=0.0):
+def calculate_log_likelihood_with_probability_parameters(total_reported_numbers, daily_increments, probabilities,
+                                                         beta=0.0):
     cumulative_probabilities = list(accumulate(probabilities))
 
     number_of_days = len(total_reported_numbers)
@@ -70,7 +104,8 @@ def calculate_log_likelihood_with_probability_parameters(total_reported_numbers,
 
 def calculate_log_likelihood(total_reported_numbers, daily_increments, delta_parameters, beta=0.0):
     probabilities = calculate_probabilities(delta_parameters)
-    return calculate_log_likelihood_with_probability_parameters(total_reported_numbers, daily_increments, probabilities, beta)
+    return calculate_log_likelihood_with_probability_parameters(total_reported_numbers, daily_increments, probabilities,
+                                                                beta)
 
 
 def calculate_log_likelihood_jacobian_probabilities(total_reported_numbers, daily_increments, probabilities, beta=0.0):
@@ -108,8 +143,10 @@ def calculate_log_likelihood_jacobian_probabilities(total_reported_numbers, dail
     return jacobian_probabilities
 
 
-def calculate_log_likelihood_jacobian_probabilities_without_last(total_reported_numbers, daily_increments, probabilities, beta=0.0):
-    jacobian = calculate_log_likelihood_jacobian_probabilities(total_reported_numbers, daily_increments, probabilities, beta)
+def calculate_log_likelihood_jacobian_probabilities_without_last(total_reported_numbers, daily_increments,
+                                                                 probabilities, beta=0.0):
+    jacobian = calculate_log_likelihood_jacobian_probabilities(total_reported_numbers, daily_increments, probabilities,
+                                                               beta)
     jacobian_remapped = [0.0] * (len(jacobian) - 1)
 
     for i in range(len(jacobian) - 1):
@@ -126,7 +163,9 @@ def safe_exp(x):
 
 def calculate_log_likelihood_jacobian(total_reported_numbers, daily_increments, delta_parameters, beta=0.0):
     probabilities = calculate_probabilities(delta_parameters)
-    jacobian_probabilities = calculate_log_likelihood_jacobian_probabilities_without_last(total_reported_numbers, daily_increments, probabilities, beta)
+    jacobian_probabilities = calculate_log_likelihood_jacobian_probabilities_without_last(total_reported_numbers,
+                                                                                          daily_increments,
+                                                                                          probabilities, beta)
 
     alpha_parameters = list(map(lambda x: safe_exp(x), delta_parameters))
     cumulative_alphas = list(accumulate(alpha_parameters))
@@ -150,7 +189,8 @@ def calculate_log_likelihood_jacobian(total_reported_numbers, daily_increments, 
     return jacobian_delta
 
 
-def nowcast_cases_per_day(dt, get_lagged_values, get_cases_per_day_from_data_frame, data_repository, maximum_lag=np.inf, beta=0.0, method="L-BFGS-B", reporting_lag=0):
+def nowcast_cases_per_day(dt, get_lagged_values, get_cases_per_day_from_data_frame, data_repository, maximum_lag=np.inf,
+                          beta=0.0, method="L-BFGS-B", reporting_lag=0, initial_deltas=[]):
     df_lagged = get_lagged_values(maximum_lag)
     df_lagged = recreate_lagged_values(df_lagged, dt - datetime.timedelta(days=reporting_lag))
     first_date = df_lagged.index.unique().min()
@@ -165,7 +205,10 @@ def nowcast_cases_per_day(dt, get_lagged_values, get_cases_per_day_from_data_fra
     daily_increments = create_lagged_values_differences(df_lagged.to_numpy())
     daily_increments = correct_daily_increments(cases_per_day, daily_increments, maximum_lag)
 
-    initial_delta_parameters = np.zeros(maximum_lag)
+    if len(initial_deltas) == 0:
+        initial_deltas.append(calculate_delta_parameters_from_probabilities(generate_equal_probabilities(maximum_lag+1)))
+        initial_deltas.append(calculate_delta_parameters_from_probabilities(generate_decaying_probabilities(0.5, maximum_lag + 1)))
+        initial_deltas.append(calculate_delta_parameters_from_probabilities(generate_decaying_probabilities(0.9, maximum_lag + 1)))
 
     def log_likelihood_function(x):
         return -calculate_log_likelihood(cases_per_day, daily_increments, x, beta=beta)
@@ -173,20 +216,36 @@ def nowcast_cases_per_day(dt, get_lagged_values, get_cases_per_day_from_data_fra
     def log_likelihood_jacobian(x):
         return -1.0 * np.array(calculate_log_likelihood_jacobian(cases_per_day, daily_increments, x, beta=beta))
 
+    results = []
+
     if method == "Powell":
-        res = minimize(fun=log_likelihood_function, x0=initial_delta_parameters, method="Powell")
+        for initial_delta in initial_deltas:
+            res = minimize(fun=log_likelihood_function, x0=initial_delta, method="Powell")
+            results.append(res)
     elif method == "L-BFGS-B":
-        res = minimize(fun=log_likelihood_function, x0=initial_delta_parameters, jac=log_likelihood_jacobian, method="L-BFGS-B")
+        for initial_delta in initial_deltas:
+            res = minimize(fun=log_likelihood_function, x0=initial_delta, jac=log_likelihood_jacobian,
+                           method="L-BFGS-B")
+            results.append(res)
     else:
         raise Exception("Unknown minimisation method - {method}".format(method=method))
+
+    res = results[0]
+    best = 0
+    for i in range(1, len(results)):
+        if results[i].fun < res.fun:
+            res = results[i]
+            best = i
 
     if not res.success:
         if method != "Powell":
             # Use a more robust gradient-free minimisation method as a fallback
-            return nowcast_cases_per_day(dt, get_lagged_values, get_cases_per_day_from_data_frame, data_repository, maximum_lag, beta, "Powell")
+            return nowcast_cases_per_day(dt, get_lagged_values, get_cases_per_day_from_data_frame, data_repository,
+                                         maximum_lag, beta, "Powell")
         raise Exception("Minimisation has failed on date {dt}".format(dt=dt.isoformat()))
 
     probabilities = calculate_probabilities(res.x)
+
     cumulative_probabilities = list(accumulate(probabilities))
     corrected_cases_per_day = []
     for i in range(len(cases_per_day)):

@@ -12,9 +12,10 @@ def test_reperform_chainladder_nowcasts():
     folder = os.path.join(current_path, r"../../../")
 
     start_date = datetime.date(2020, 8, 1)
-    end_date = datetime.date(2020, 12, 20)
-    beta = 0.2
+    end_date = datetime.date(2021, 5, 30)
+    beta = 0.0
     method = "L-BFGS-B"
+    #method = "Powell"
 
     get_lagged_values_func = lambda x: get_lagged_values(folder, x)
 
@@ -22,6 +23,7 @@ def test_reperform_chainladder_nowcasts():
                                                                    get_cases_per_day_from_data_frame, GitHubRepository(), beta=beta, method=method)
     avg = pd.Series(corrected_cases_per_day).rolling(window=7).mean().dropna()
     avg.to_csv(r"c:\temp\chainladder.csv")
+    print(avg.iloc[-1])
 
     for i in range(0, (end_date - start_date).days + 1):
         dt = start_date + datetime.timedelta(days=i)
