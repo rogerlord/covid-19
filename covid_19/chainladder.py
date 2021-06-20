@@ -206,6 +206,7 @@ def nowcast_cases_per_day(dt, get_lagged_values, get_cases_per_day_from_data_fra
     daily_increments = correct_daily_increments(cases_per_day, daily_increments, maximum_lag)
 
     if len(initial_deltas) == 0:
+        initial_deltas.append(np.zeros(maximum_lag))
         initial_deltas.append(calculate_delta_parameters_from_probabilities(generate_equal_probabilities(maximum_lag+1)))
         initial_deltas.append(calculate_delta_parameters_from_probabilities(generate_decaying_probabilities(0.5, maximum_lag + 1)))
         initial_deltas.append(calculate_delta_parameters_from_probabilities(generate_decaying_probabilities(0.9, maximum_lag + 1)))
