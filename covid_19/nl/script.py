@@ -15,6 +15,7 @@ def run_script(folder, date_to_run = None):
             _ = repository.get_dataset(dt_today)
         except:
             sys.exit(0)
+        date_to_run = datetime.datetime.today().date()
 
     statistics_repository = StatisticsRepository(folder)
 
