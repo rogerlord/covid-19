@@ -1,7 +1,7 @@
 -r requirements-dev.txt
-bokeh
-matplotlib
-mapclassify
-selenium
-geopandas
-descartes
+bokeh==2.1.1
+matplotlib==3.3.4
+mapclassify==2.3.0
+selenium==3.14.0
+geopandas==0.8.1
+descartes==1.1.0
