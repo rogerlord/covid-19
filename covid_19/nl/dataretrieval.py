@@ -1,4 +1,5 @@
 import pandas as pd
+from covid_19.dateutils import to_date
 from covid_19.pandasutils import filter_data_frame
 from covid_19.manipulation import create_lagged_values_differences
 import datetime
@@ -17,6 +18,7 @@ class RivmAndGitHubRepositoryWithCaching:
         self.cache = dict()
 
     def get_dataset(self, dt: datetime.date):
+        dt = to_date(dt)
         if dt in self.cache:
             return self.cache[dt]
 

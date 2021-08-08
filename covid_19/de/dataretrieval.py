@@ -1,5 +1,6 @@
 from urllib.error import HTTPError
 import pandas as pd
+from covid_19.dateutils import to_date
 from covid_19.pandasutils import filter_data_frame
 import datetime
 import numpy as np
@@ -8,6 +9,7 @@ from zipfile import ZipFile
 import tempfile
 import os
 import gzip
+
 
 USED_COLS = ["AnzahlFall", "Meldedatum", "Datenstand", "NeuerFall", "Refdatum"]
 REPORTING_LAG = 1
@@ -21,6 +23,7 @@ class RkiAndGitHubRepositoryWithCaching:
         self.cache = dict()
 
     def get_dataset(self, dt: datetime.date):
+        dt = to_date(dt)
         if dt in self.cache:
             return self.cache[dt]
 
