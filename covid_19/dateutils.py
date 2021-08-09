@@ -1,5 +1,6 @@
 import datetime
-import timeit
+from functools import wraps
+from time import time
 
 
 def to_date(dt) -> datetime.date:
@@ -10,12 +11,14 @@ def to_date(dt) -> datetime.date:
     raise Exception(f"Wrong input - expected datetime or date, but was {type(dt)}.")
 
 
-# Due to Jonathan Kosgei: https://gist.github.com/jonathan-kosgei/a0e3fb78d81f9f3a09778ced6eca7161
-def timer(function):
-    def new_function():
-        start_time = timeit.default_timer()
-        function()
-        elapsed = timeit.default_timer() - start_time
-        print('Function "{name}" took {time} seconds to complete.'.format(name=function.__name__, time=elapsed))
-
-    return new_function()
+# Due to JBirdVegas: https://stackoverflow.com/questions/51503672/decorator-for-timeit-timeit-method/51503837#51503837
+def timer(func):
+    @wraps(func)
+    def _time_it(*args, **kwargs):
+        start = int(round(time() * 1000))
+        try:
+            return func(*args, **kwargs)
+        finally:
+            end_ = int(round(time() * 1000)) - start
+            print(f"Total execution time: {end_ if end_ > 0 else 0} ms")
+    return _time_it
