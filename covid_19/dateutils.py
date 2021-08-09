@@ -20,6 +20,6 @@ def timer(func):
             return func(*args, **kwargs)
         finally:
             end_ = int(round(time() * 1000)) - start
-            end_ = end_ if end_ > 0 else 0
-            print('Function "{name}" took {time} milliseconds to complete.'.format(name=func.__name__, time=end_))
+            end_ = (end_ if end_ > 0 else 0) / 1000.0
+            print('Function "{name}" took {time} seconds to complete.'.format(name=func.__name__, time=end_))
     return _time_it
