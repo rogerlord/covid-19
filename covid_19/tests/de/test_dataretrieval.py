@@ -1,11 +1,9 @@
 import os
 import datetime
 import pytest
-from pandas import Series
-
 from covid_19.de.dataretrieval import get_latest_rki_file, get_rki_file_historical_from_CharlesStr, \
     get_rki_file_historical_from_ihucos, get_rki_data_frame, get_rki_file_historical_from_github, \
-    get_rki_file_historical_from_micb25, get_cases_per_day_from_data_frame
+    get_rki_file_historical_from_micb25, get_cases_per_day_from_data_frame, LocalCacheRepository
 
 
 @pytest.fixture
@@ -35,7 +33,15 @@ def df_rki_2020_07_24():
 #
 #
 def test_get_latest_rki_file():
-    assertions_for_rki_df(get_latest_rki_file())
+    dataset = get_latest_rki_file()
+    assertions_for_rki_df(dataset)
+
+    # Populate local cache
+    dir_path = os.path.dirname(os.path.realpath(__file__))
+    folder = os.path.join(dir_path, '../../..')
+    dt = dataset.index.unique()[0].date()
+    repository = LocalCacheRepository(folder)
+    repository.write_dataset(dt, dataset)
 
 
 def assertions_for_rki_df(df, dt: datetime.date = None):

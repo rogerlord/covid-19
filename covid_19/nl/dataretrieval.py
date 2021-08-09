@@ -42,7 +42,7 @@ class RivmAndGitHubRepositoryWithCaching:
 
 class LocalCacheRepository:
     def __init__(self, folder: str):
-        self.folder = os.path.join(folder, ".localcache")
+        self.folder = os.path.join(folder, ".localcache/nl")
         if not os.path.exists(self.folder):
             os.mkdir(self.folder)
 
