@@ -5,11 +5,13 @@ from covid_19.nl.plotting import generate_plot_daily_cases_per_ggd_region, \
 from covid_19.plotting import generate_plot_national_cases_per_day_chainladder, generate_plots_chainladder
 from covid_19.nl.updating import update_files, update_measures
 import datetime
+from covid_19.dateutils import timer
 
 
+@timer
 def run_script(folder, date_to_run = None):
     dt_today = datetime.datetime.today().date()
-    repository = RivmAndGitHubRepositoryWithCaching(dt_today)
+    repository = RivmAndGitHubRepositoryWithCaching(dt_today, folder)
     if date_to_run is None:
         try:
             _ = repository.get_dataset(dt_today)
@@ -19,31 +21,12 @@ def run_script(folder, date_to_run = None):
 
     statistics_repository = StatisticsRepository(folder)
 
-    now = datetime.datetime.now()
     update_files(folder, repository, date_to_run)
-    duration = (datetime.datetime.now() - now).total_seconds()
-    print(duration)
-    now = datetime.datetime.now()
     update_measures(get_measures(folder), folder, repository, date_to_run).to_csv(folder + r"data\nl\COVID-19_measures.csv")
-    duration = (datetime.datetime.now() - now).total_seconds()
-    print(duration)
-    now = datetime.datetime.now()
     generate_plot_national_cases_per_day_chainladder(repository, statistics_repository, 30)
-    duration = (datetime.datetime.now() - now).total_seconds()
-    print(duration)
-    now = datetime.datetime.now()
     generate_plots_chainladder(repository, statistics_repository, datetime.date(2020, 8, 1), 21)
-    duration = (datetime.datetime.now() - now).total_seconds()
-    print(duration)
-    now = datetime.datetime.now()
     generate_plot_daily_cases_per_ggd_region(folder, "gross")
-    duration = (datetime.datetime.now() - now).total_seconds()
-    print(duration)
-    now = datetime.datetime.now()
     generate_plot_heatmap(folder, repository, date_to_run)
-    duration = (datetime.datetime.now() - now).total_seconds()
-    print(duration)
-    now = datetime.datetime.now()
 
 
 if __name__ == "__main__":

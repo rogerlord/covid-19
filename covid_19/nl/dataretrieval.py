@@ -11,10 +11,11 @@ import os
 
 
 class RivmAndGitHubRepositoryWithCaching:
-    def __init__(self, dt: datetime.date):
+    def __init__(self, dt: datetime.date, folder: str):
         self.dt = dt
         self.rivm_repository = RivmRepository(dt)
         self.github_repository = GitHubRepository()
+        self.localcache_repository = LocalCacheRepository(folder)
         self.cache = dict()
 
     def get_dataset(self, dt: datetime.date):
@@ -22,14 +23,46 @@ class RivmAndGitHubRepositoryWithCaching:
         if dt in self.cache:
             return self.cache[dt]
 
+        dataset = self.localcache_repository.get_dataset(dt)
+        if dataset is not None:
+            self.cache[dt] = dataset
+            return dataset
+
         if dt == self.dt:
             dataset = self.rivm_repository.get_dataset(dt)
+            self.localcache_repository.write_dataset(dt, dataset)
             self.cache[dt] = dataset
             return dataset
 
         dataset = self.github_repository.get_dataset(dt)
+        self.localcache_repository.write_dataset(dt, dataset)
         self.cache[dt] = dataset
         return dataset
+
+
+class LocalCacheRepository:
+    def __init__(self, folder: str):
+        self.folder = os.path.join(folder, ".localcache")
+        if not os.path.exists(self.folder):
+            os.mkdir(self.folder)
+
+    def get_full_filename(self, dt: datetime.date):
+        file_name_start = "COVID-19_casus_landelijk_"
+        file_name = file_name_start + dt.strftime("%Y-%m-%d") + ".csv"
+        return os.path.join(self.folder, file_name)
+
+    def get_dataset(self, dt: datetime.date):
+        full_file_name = self.get_full_filename(dt)
+        if not os.path.isfile(full_file_name):
+            return None
+
+        dataset = get_rivm_file(full_file_name)
+        return dataset
+
+    def write_dataset(self, dt: datetime.date, df: pd.DataFrame):
+        full_file_name = self.get_full_filename(dt)
+        if not os.path.isfile(full_file_name):
+            df.to_csv(full_file_name)
 
 
 class RivmRepository:

@@ -5,8 +5,10 @@ from bokeh.models import ColumnDataSource, DatetimeTickFormatter
 from bokeh.palettes import Spectral10
 from bokeh.plotting import figure
 import covid_19.chainladder as chainladder
+from covid_19.dateutils import timer
 
 
+@timer
 def generate_plot_national_cases_per_day_chainladder(repository, statistics_repository, show_only_last, reporting_lag=0):
     df_daily = statistics_repository.get_cases_per_day_from_file()
     dt = df_daily.index.unique().max() + datetime.timedelta(days=reporting_lag)
@@ -42,6 +44,7 @@ def generate_plot_national_cases_per_day_chainladder(repository, statistics_repo
     export_png(p, filename=statistics_repository.folder + r"plots\{country}\COVID-19_daily_cases_plot.png".format(country=statistics_repository.country_code))
 
 
+@timer
 def generate_plots_chainladder(repository, statistics_repository, start_date, skip_last, reporting_lag=0):
     df_daily = statistics_repository.get_cases_per_day_from_file()
     dt = df_daily.index.unique().max() + datetime.timedelta(days=reporting_lag)

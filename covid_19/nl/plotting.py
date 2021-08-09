@@ -11,9 +11,10 @@ import pandas as pd
 import matplotlib.pyplot as plt
 from matplotlib.colors import LinearSegmentedColormap
 import seaborn as sns
-import datetime
+from covid_19.dateutils import timer
 
 
+@timer
 def generate_plot_national_cases_per_day(statistics_repository, show_only_last):
     df_daily = statistics_repository.get_cases_per_day_from_file()
     df_updated = forecast_daily_cases(statistics_repository.folder, maximum_lag=14)
@@ -67,6 +68,7 @@ def get_custom_colourmap():
     return LinearSegmentedColormap.from_list("customcmap", list(zip(nodes, colours)))
 
 
+@timer
 def generate_plot_daily_cases_per_ggd_region(folder, measure):
     measure_for_country, df_data = generate_data_frame_for_plot_daily_cases_per_ggd_region(folder, measure)
 
@@ -110,6 +112,7 @@ def generate_data_frame_for_plot_heatmap(repository, date_to_run):
     return df_filtered
 
 
+@timer
 def generate_plot_heatmap(folder, repository, date_to_run):
     df_data = generate_data_frame_for_plot_heatmap(repository, date_to_run)
     ax = sns.heatmap(df_data, cmap="YlOrRd", xticklabels=14, vmax=0.35)

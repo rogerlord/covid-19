@@ -1,5 +1,6 @@
 from covid_19.nl.dataretrieval import get_latest_rivm_file, get_rivm_file, get_cases_per_day_from_data_frame, \
     get_rivm_file_historical, get_rivm_files_historical, get_cases_per_day_historical
+from covid_19.nl.dataretrieval import LocalCacheRepository
 import os
 import datetime
 import pytest
@@ -31,7 +32,15 @@ def test_get_rivm_files_historical():
 
 
 def test_get_latest_rivm_file():
-    assertions_for_rivm_df(get_latest_rivm_file())
+    dataset = get_latest_rivm_file()
+    assertions_for_rivm_df(dataset)
+
+    # Populate local cache
+    dir_path = os.path.dirname(os.path.realpath(__file__))
+    folder = os.path.join(dir_path, '../../..')
+    dt = dataset.index.unique()[0].date()
+    repository = LocalCacheRepository(folder)
+    repository.write_dataset(dt, dataset)
 
 
 def test_get_cases_per_day(df_rivm_2020_07_24):

@@ -16,14 +16,8 @@ def run_script(folder, date_to_run = None):
 
     statistics_repository = StatisticsRepository(folder)
 
-    now = datetime.datetime.now()
     update_files(folder, repository, date_to_run)
-    duration = (datetime.datetime.now() - now).total_seconds()
-    print(duration)
-    now = datetime.datetime.now()
     update_measures(get_measures(folder), folder, repository, date_to_run).to_csv(folder + r"data\de\COVID-19_measures.csv")
-    duration = (datetime.datetime.now() - now).total_seconds()
-    print(duration)
 
     #generate_plot_national_cases_per_day_chainladder(repository, statistics_repository, 30, REPORTING_LAG)
     #generate_plots_chainladder(repository, statistics_repository, datetime.date(2020, 8, 1), 21, REPORTING_LAG)

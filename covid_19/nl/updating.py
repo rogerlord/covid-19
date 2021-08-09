@@ -7,8 +7,10 @@ from covid_19.nl.forecasting import forecast_daily_cases
 from covid_19 import chainladder
 from covid_19.updating import update_lagged_values
 from covid_19.measures import net_increases, gross_increases
+from covid_19.dateutils import timer
 
 
+@timer
 def update_files(folder, repository, date_to_run=None):
     ds_daily_cases = get_cases_per_day_from_file(folder)
 
@@ -31,6 +33,7 @@ def update_files(folder, repository, date_to_run=None):
     df_lagged.to_csv(folder + r"data\nl\COVID-19_lagged.csv", header=True)
 
 
+@timer
 def update_measures(df_measures, folder, repository, date_to_run=None):
     dt_last_measure_present = df_measures.index[-1].date()
 

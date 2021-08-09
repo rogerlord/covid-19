@@ -6,8 +6,10 @@ from covid_19.updating import update_lagged_values
 import covid_19.chainladder as chainladder
 from covid_19.measures import net_increases, gross_increases
 import pandas as pd
+from covid_19.dateutils import timer
 
 
+@timer
 def update_files(folder, repository, date_to_run=None, start_from_scratch=False):
     if start_from_scratch:
         last_available_date = datetime.date.min
@@ -37,6 +39,7 @@ def update_files(folder, repository, date_to_run=None, start_from_scratch=False)
     df_lagged.to_csv(folder + r"data\de\COVID-19_lagged.csv", header=True, date_format="%Y-%m-%d")
 
 
+@timer
 def update_measures(df_measures, folder, repository, date_to_run=None):
     if df_measures is None or len(df_measures.index) == 0:
         dt_last_measure_present = datetime.datetime.min
