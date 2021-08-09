@@ -49,7 +49,7 @@ class LocalCacheRepository:
     def __init__(self, folder: str):
         self.folder = os.path.join(folder, ".localcache/de")
         if not os.path.exists(self.folder):
-            os.mkdir(self.folder)
+            os.makedirs(self.folder, exist_ok=True)
 
     def get_full_filename(self, dt: datetime.date):
         file_name_start = "RKI_COVID19_"

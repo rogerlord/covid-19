@@ -9,6 +9,7 @@ from covid_19.nl.demography import get_ggd_regions, get_ggd_regions_geographical
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
+import matplotlib.ticker as ticker
 from matplotlib.colors import LinearSegmentedColormap
 import seaborn as sns
 from covid_19.dateutils import timer
@@ -112,6 +113,12 @@ def generate_data_frame_for_plot_heatmap(repository, date_to_run):
     return df_filtered
 
 
+def adjust_xaxis_labels(ax):
+    number_xticks = len(ax.get_xticks())
+    scaling = round(number_xticks / 25)
+    ax.set_xticks(ax.get_xticks()[::scaling])
+
+
 @timer
 def generate_plot_heatmap(folder, repository, date_to_run):
     df_data = generate_data_frame_for_plot_heatmap(repository, date_to_run)
@@ -127,6 +134,7 @@ def generate_plot_heatmap(folder, repository, date_to_run):
         verticalalignment="top",
     )
     ax.figure.suptitle(f"Heatmap of COVID-19 cases in the Netherlands")
+    adjust_xaxis_labels(ax)
     cbar = ax.collections[0].colorbar
     cbar.set_ticks(cbar.get_ticks())
     cbar.set_ticklabels(list(map(lambda x: "{:.0%}".format(x), cbar.get_ticks())))
