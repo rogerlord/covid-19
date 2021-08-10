@@ -190,7 +190,7 @@ def calculate_log_likelihood_jacobian(total_reported_numbers, daily_increments, 
 
 
 def nowcast_cases_per_day(dt, get_lagged_values, get_cases_per_day_from_data_frame, data_repository, maximum_lag=np.inf,
-                          beta=0.0, method="L-BFGS-B", reporting_lag=0, initial_deltas=[]):
+                          beta=0.0, method="L-BFGS-B", reporting_lag=0, initial_deltas=None):
     df_lagged = get_lagged_values(maximum_lag)
     df_lagged = recreate_lagged_values(df_lagged, dt - datetime.timedelta(days=reporting_lag))
     first_date = df_lagged.index.unique().min()
@@ -205,11 +205,13 @@ def nowcast_cases_per_day(dt, get_lagged_values, get_cases_per_day_from_data_fra
     daily_increments = create_lagged_values_differences(df_lagged.to_numpy())
     daily_increments = correct_daily_increments(cases_per_day, daily_increments, maximum_lag)
 
-    if len(initial_deltas) == 0:
-        initial_deltas.append(np.zeros(maximum_lag))
-        initial_deltas.append(calculate_delta_parameters_from_probabilities(generate_equal_probabilities(maximum_lag+1)))
-        initial_deltas.append(calculate_delta_parameters_from_probabilities(generate_decaying_probabilities(0.5, maximum_lag + 1)))
-        initial_deltas.append(calculate_delta_parameters_from_probabilities(generate_decaying_probabilities(0.9, maximum_lag + 1)))
+    if initial_deltas is None:
+        initial_deltas = []
+
+    initial_deltas.append(np.zeros(maximum_lag))
+    initial_deltas.append(calculate_delta_parameters_from_probabilities(generate_equal_probabilities(maximum_lag+1)))
+    initial_deltas.append(calculate_delta_parameters_from_probabilities(generate_decaying_probabilities(0.5, maximum_lag + 1)))
+    initial_deltas.append(calculate_delta_parameters_from_probabilities(generate_decaying_probabilities(0.9, maximum_lag + 1)))
 
     def log_likelihood_function(x):
         return -calculate_log_likelihood(cases_per_day, daily_increments, x, beta=beta)

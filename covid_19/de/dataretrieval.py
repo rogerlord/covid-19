@@ -9,6 +9,7 @@ from zipfile import ZipFile
 import tempfile
 import os
 import gzip
+from cachetools import TTLCache
 
 
 USED_COLS = ["AnzahlFall", "Meldedatum", "Datenstand", "NeuerFall", "Refdatum"]
@@ -21,7 +22,7 @@ class RkiAndGitHubRepositoryWithCaching:
         self.rki_repository = RkiRepository(dt)
         self.github_repository = GitHubRepository()
         self.localcache_repository = LocalCacheRepository(folder)
-        self.cache = dict()
+        self.cache = TTLCache(maxsize=10, ttl=3600)
 
     def get_dataset(self, dt: datetime.date):
         dt = to_date(dt)
@@ -61,7 +62,7 @@ class LocalCacheRepository:
         if not os.path.isfile(full_file_name):
             return None
 
-        dataset = get_latest_rki_file()
+        dataset = get_rki_data_frame(full_file_name)
         return dataset
 
     def write_dataset(self, dt: datetime.date, df: pd.DataFrame):

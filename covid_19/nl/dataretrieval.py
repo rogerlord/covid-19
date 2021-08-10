@@ -8,6 +8,7 @@ import requests
 import tempfile
 import gzip
 import os
+from cachetools import TTLCache
 
 
 class RivmAndGitHubRepositoryWithCaching:
@@ -16,7 +17,7 @@ class RivmAndGitHubRepositoryWithCaching:
         self.rivm_repository = RivmRepository(dt)
         self.github_repository = GitHubRepository()
         self.localcache_repository = LocalCacheRepository(folder)
-        self.cache = dict()
+        self.cache = TTLCache(maxsize=10, ttl=3600)
 
     def get_dataset(self, dt: datetime.date):
         dt = to_date(dt)
