@@ -58,6 +58,7 @@ class LocalCacheRepository:
         return os.path.join(self.folder, file_name)
 
     def get_dataset(self, dt: datetime.date):
+        #return None
         full_file_name = self.get_full_filename(dt)
         if not os.path.isfile(full_file_name):
             return None
@@ -66,6 +67,7 @@ class LocalCacheRepository:
         return dataset
 
     def write_dataset(self, dt: datetime.date, df: pd.DataFrame):
+        #return
         full_file_name = self.get_full_filename(dt)
         if not os.path.isfile(full_file_name):
             df.to_csv(full_file_name)
@@ -152,7 +154,7 @@ def get_rki_file_historical_from_CharlesStr(dt: datetime.date):
         4: "April",
         5: "Mai",
         6: "Juni",
-        7: "July",
+        7: "Juli",
         8: "August",
         9: "September",
         10: "Oktober",
@@ -220,6 +222,12 @@ def get_rki_data_frame(url):
     df_rki["Refdatum"] = __convert_date_column(df_rki["Refdatum"])
     df_rki["Datenstand"] = __convert_date_column(df_rki["Datenstand"])
     df_rki.set_index("Datenstand", inplace=True)
+
+    dt_datenstand = df_rki.index.max().date()
+    dt_largest_refdatum = df_rki["Refdatum"].max().date()
+    if not dt_datenstand > dt_largest_refdatum:
+        return None
+
     return df_rki
 
 
@@ -262,11 +270,14 @@ class StatisticsRepository:
 
 
 def get_cases_per_day_from_file(folder):
-    return pd.read_csv(folder + r"data\de\COVID-19_daily_cases.csv", squeeze=True, index_col=0, header=None, parse_dates=True)
+    df = pd.read_csv(folder + r"data\de\COVID-19_daily_cases.csv", squeeze=True, index_col=0, header=None, parse_dates=True)
+    df.sort_index()
+    return df
 
 
 def get_lagged_values(folder, maximum_lag=np.inf):
     df = pd.read_csv(folder + r"data\de\COVID-19_lagged.csv", index_col=0, header=0, parse_dates=True)
+    df.sort_index()
     if maximum_lag is np.inf:
         return df
     return df[df.columns[0:maximum_lag]]

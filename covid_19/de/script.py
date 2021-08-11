@@ -5,9 +5,12 @@ from covid_19.plotting import generate_plot_national_cases_per_day_chainladder, 
 import datetime
 
 
-def run_script(folder, date_to_run = None):
+def run_script(folder, date_to_run=None, repository=None):
     dt_today = datetime.datetime.today().date()
-    repository = RkiAndGitHubRepositoryWithCaching(dt_today, folder)
+
+    if repository is None:
+        repository = RkiAndGitHubRepositoryWithCaching(dt_today, folder)
+
     if date_to_run is None:
         try:
             _ = repository.get_dataset(dt_today)
