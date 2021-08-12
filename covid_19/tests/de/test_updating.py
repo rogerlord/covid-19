@@ -59,8 +59,9 @@ def test_updating():
 def test_run_script():
     from covid_19.de.script import run_script
 
-    date_to_run = datetime.date(2021, 3, 4)
-    while date_to_run < datetime.date(2021, 5, 13):
-        run_script(r"c:\\projects\\covid-19\\", date_to_run)
+    date_to_run = datetime.date(2021, 8, 12)
+    repository = RkiAndGitHubRepositoryWithCaching(datetime.date(2021, 8, 12), r"c:\\projects\\covid-19\\")
+    while date_to_run < datetime.date(2021, 8, 13):
+        run_script(r"c:\\projects\\covid-19\\", date_to_run, repository)
         date_to_run = date_to_run + datetime.timedelta(days=1)
         print(date_to_run)
