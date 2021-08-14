@@ -4,7 +4,7 @@ import os
 import numpy as np
 from covid_19.pandasutils import filter_data_frame
 
-REPORTING_LAG = 1
+REPORTING_LAG = 0
 PUBLICATION_LAG = 1
 
 

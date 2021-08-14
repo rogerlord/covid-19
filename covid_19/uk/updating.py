@@ -23,7 +23,6 @@ def update_historical_files(folder, date_to_run=None):
 
 def update_files(folder, repository, date_to_run=None, start_from_scratch=False):
     update_historical_files(folder, date_to_run)
-    return
 
     if start_from_scratch:
         last_available_date = datetime.date.min
