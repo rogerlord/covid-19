@@ -190,9 +190,9 @@ def calculate_log_likelihood_jacobian(total_reported_numbers, daily_increments, 
 
 
 def nowcast_cases_per_day(dt, get_lagged_values, get_cases_per_day_from_data_frame, data_repository, maximum_lag=np.inf,
-                          beta=0.0, method="L-BFGS-B", reporting_lag=0, initial_deltas=None):
+                          beta=0.0, method="L-BFGS-B", reporting_lag=0, initial_deltas=None, publication_lag=0):
     df_lagged = get_lagged_values(maximum_lag)
-    df_lagged = recreate_lagged_values(df_lagged, dt - datetime.timedelta(days=reporting_lag))
+    df_lagged = recreate_lagged_values(df_lagged, dt - datetime.timedelta(days=reporting_lag) - datetime.timedelta(days=publication_lag))
     first_date = df_lagged.index.unique().min()
     last_date = df_lagged.index.unique().max()
 
