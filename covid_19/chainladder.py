@@ -234,9 +234,15 @@ def nowcast_cases_per_day(dt, get_lagged_values, get_cases_per_day_from_data_fra
         raise Exception("Unknown minimisation method - {method}".format(method=method))
 
     res = results[0]
+    for i in range(1, len(results)):
+        if results[i].success:
+            res = results[i]
+            best = i
+            break
+
     best = 0
     for i in range(1, len(results)):
-        if results[i].fun < res.fun:
+        if results[i].fun < res.fun and results[i].success:
             res = results[i]
             best = i
 
