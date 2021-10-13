@@ -29,6 +29,7 @@ on_success:
 - "SET PATH=%MINICONDA%;%MINICONDA%\\Scripts;%PATH%"
 - powershell .\dateformat.ps1
 - conda config --set always_yes yes --set changeps1 no
+- conda clean --packages
 - conda update -q conda
 - conda info -a
 - "conda install --file package-list.txt"
