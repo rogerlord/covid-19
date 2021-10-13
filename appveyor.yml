@@ -30,7 +30,7 @@ on_success:
 - powershell .\dateformat.ps1
 - conda config --set always_yes yes --set changeps1 no
 - conda clean --all --yes
-- conda install tqdm -f
+- conda install charset-normalizer -f
 - conda update -q conda
 - conda update -q anaconda
 - conda info -a
