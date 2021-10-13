@@ -2,9 +2,9 @@
 # $ conda create --name <env> --file <this file>
 # platform: win-64
 @EXPLICIT
-https://repo.anaconda.com/pkgs/main/win-64/blas-1.0-mkl.conda
+https://repo.anaconda.com/pkgs/main/win-64/blas-1.0-mkl.tar.bz2
 https://conda.anaconda.org/conda-forge/win-64/ca-certificates-2021.5.30-h5b45459_0.tar.bz2
-https://repo.anaconda.com/pkgs/main/win-64/icc_rt-2019.0.0-h0cc432a_1.conda
+https://repo.anaconda.com/pkgs/main/win-64/icc_rt-2019.0.0-h0cc432a_1.tar.bz2
 https://conda.anaconda.org/conda-forge/win-64/intel-openmp-2021.3.0-h57928b3_3372.tar.bz2
 https://conda.anaconda.org/conda-forge/noarch/poppler-data-0.4.10-0.tar.bz2
 https://conda.anaconda.org/conda-forge/win-64/ucrt-10.0.20348.0-h57928b3_0.tar.bz2
@@ -90,7 +90,7 @@ https://conda.anaconda.org/conda-forge/win-64/pandas-1.0.5-py36hcc50265_0.tar.bz
 https://conda.anaconda.org/conda-forge/win-64/postgresql-13.3-h1c22c4f_0.tar.bz2
 https://conda.anaconda.org/conda-forge/win-64/proj-8.0.0-h1cfcee9_0.tar.bz2
 https://conda.anaconda.org/conda-forge/win-64/pysocks-1.7.1-py36ha15d459_3.tar.bz2
-https://repo.anaconda.com/pkgs/main/win-64/scipy-1.5.0-py36h9439919_0.conda
+https://repo.anaconda.com/pkgs/main/win-64/scipy-1.5.0-py36h9439919_0.tar.bz2
 https://conda.anaconda.org/conda-forge/win-64/setuptools-49.6.0-py36ha15d459_3.tar.bz2
 https://conda.anaconda.org/conda-forge/win-64/shapely-1.7.1-py36ha9f6fdf_5.tar.bz2
 https://conda.anaconda.org/conda-forge/win-64/cairo-1.16.0-hb19e0ff_1008.tar.bz2
