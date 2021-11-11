@@ -105,7 +105,17 @@ def get_rki_file_historical_from_github(dt: datetime.date):
     df_rki = get_rki_file_historical_from_ihucos(dt)
     if df_rki is not None:
         return df_rki
+    df_rki = get_rki_file_historical_from_rki_github(dt)
+    if df_rki is not None:
+        return df_rki
     raise Exception("Could not find historical RKI file for date: {date_str}".format(date_str=dt.strftime("%Y-%m-%d")))
+
+
+def get_rki_file_historical_from_rki_github(dt: datetime.date):
+    url = "https://media.githubusercontent.com/media/robert-koch-institut/SARS-CoV-2_Infektionen_in_Deutschland/master/Archiv/"
+    url += dt.strftime("%Y-%m-%d") + "_Deutschland_SarsCov2_Infektionen.csv"
+
+    return get_rki_data_frame_supplement_datenstand(url, dt)
 
 
 def get_rki_file_historical_from_micb25(dt: datetime.date):
@@ -211,6 +221,16 @@ def __convert_date_column(ds):
     return pd.to_datetime(ds, format="%Y/%m/%d", utc=True)
 
 
+def get_rki_data_frame_supplement_datenstand(url, dt):
+    try:
+        df_rki = pd.read_csv(url, sep=",", usecols=USED_COLS.remove('Datenstand'))
+    except (HTTPError, FileNotFoundError):
+        return None
+
+    df_rki['Datenstand'] = dt.strftime("%Y/%m/%d")
+    return process_df_rki(df_rki)
+
+
 def get_rki_data_frame(url):
     # An explanation of variables available in this dataset can be found at:
     # https://npgeo-corona-npgeo-de.hub.arcgis.com/datasets/dd4580c810204019a7b8eb3e0b329dd6_0
@@ -220,6 +240,10 @@ def get_rki_data_frame(url):
     except (HTTPError, FileNotFoundError):
         return None
 
+    return process_df_rki(df_rki)
+
+
+def process_df_rki(df_rki):
     df_rki["Meldedatum"] = __convert_date_column(df_rki["Meldedatum"])
     df_rki["Refdatum"] = __convert_date_column(df_rki["Refdatum"])
     df_rki["Datenstand"] = __convert_date_column(df_rki["Datenstand"])
