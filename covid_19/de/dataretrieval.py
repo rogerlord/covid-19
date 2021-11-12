@@ -223,7 +223,7 @@ def __convert_date_column(ds):
 
 def get_rki_data_frame_supplement_datenstand(url, dt):
     try:
-        df_rki = pd.read_csv(url, sep=",", usecols=USED_COLS.remove('Datenstand'))
+        df_rki = pd.read_csv(url, sep=",", usecols=USED_COLS.copy().remove('Datenstand'))
     except (HTTPError, FileNotFoundError):
         return None
 
