@@ -67,8 +67,8 @@ def test_update_lagged_values():
 def test_run_script():
     from covid_19.nl.script import run_script
 
-    date_to_run = datetime.date(2021, 4, 9)
-    while date_to_run < datetime.date(2021, 5, 13):
+    date_to_run = datetime.date(2021, 12, 18)
+    while date_to_run < datetime.date(2021, 12, 20):
         run_script(r"c:\\projects\\covid-19\\", date_to_run)
         date_to_run = date_to_run + datetime.timedelta(days=1)
         print(date_to_run)
