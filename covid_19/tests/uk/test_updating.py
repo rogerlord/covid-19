@@ -28,3 +28,12 @@ def test_retrieve_missing_file():
     df.to_csv(r"{folder}\data\uk\historical\overview_{dt}.csv"
               .format(folder=folder,
                       dt=(date_to_run - datetime.timedelta(days=1)).strftime("%Y-%m-%d")), index=False)
+
+
+@pytest.mark.skip("Only run manually")
+def test_updating():
+    current_path = os.path.dirname(os.path.realpath(__file__))
+    folder = os.path.join(current_path, r"../../../")
+    repo = FileRepository(folder)
+    date_to_run = datetime.date(2021, 12, 19)   # Date on which to update
+    update_files(r"c:\\projects\\covid-19\\", repo, date_to_run)
