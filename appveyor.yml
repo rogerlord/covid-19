@@ -1,4 +1,5 @@
 # appveyor.yml
+# Cron expression was - 20 7,14,16 * * * - disabled now
 ---
 environment:
   access_token:
