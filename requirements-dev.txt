@@ -4,6 +4,6 @@ numpy==1.19.5
 cbsodata==1.3.2
 seaborn==0.10.1
 xlrd==1.2.0
-scipy==1.5.0
+scipy==1.10.0
 requests==2.25.1
 cachetools==4.2.0
